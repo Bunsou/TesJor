@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Bookmark, MapPin, DollarSign, Check } from "lucide-react";
 import confetti from "canvas-confetti";
 import { ContentItem } from "@/types";
+import { getDefaultImage } from "@/lib/default-images";
 
 interface ItemDetailResponse {
   item: ContentItem;
@@ -106,6 +107,7 @@ export default function ItemDetailPage() {
   const [data, setData] = useState<ItemDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   // Fetch item data
   useEffect(() => {
@@ -200,22 +202,22 @@ export default function ItemDetailPage() {
   const isBookmarked = data.isBookmarked;
   const isVisited = data.isVisited;
 
+  const imageSrc =
+    imageError || !item.imageUrl
+      ? getDefaultImage(item.category)
+      : item.imageUrl;
+
   return (
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       {/* Image */}
       <div className="relative w-full h-96 bg-gray-200 rounded-lg overflow-hidden mb-6">
-        {item.imageUrl ? (
-          <Image
-            src={item.imageUrl}
-            alt={item.name}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-foreground-muted">No image available</p>
-          </div>
-        )}
+        <Image
+          src={imageSrc}
+          alt={item.name}
+          fill
+          className="object-cover"
+          onError={() => setImageError(true)}
+        />
       </div>
 
       {/* Content */}

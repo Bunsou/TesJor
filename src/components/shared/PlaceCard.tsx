@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, Check } from "lucide-react";
@@ -7,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { ContentItem } from "@/types";
 import { truncate } from "@/lib/utils";
+import { getDefaultImage } from "@/lib/default-images";
 
 interface PlaceCardProps {
   item: ContentItem;
@@ -21,28 +23,25 @@ export function PlaceCard({
   isBookmarked = false,
   isVisited = false,
 }: PlaceCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const imageSrc =
+    imageError || !item.imageUrl
+      ? getDefaultImage(item.category)
+      : item.imageUrl;
+
   return (
     <Link href={`/item/${item.id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
         {/* Image */}
         <div className="relative h-48 bg-muted">
-          {item.imageUrl ? (
-            <Image
-              src={item.imageUrl}
-              alt={item.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full text-6xl">
-              {item.category === "place" && "🏛️"}
-              {item.category === "activity" && "🎯"}
-              {item.category === "food" && "🍜"}
-              {item.category === "drink" && "🥤"}
-              {item.category === "souvenir" && "🎁"}
-            </div>
-          )}
+          <Image
+            src={imageSrc}
+            alt={item.name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => setImageError(true)}
+          />
 
           {/* Badges */}
           <div className="absolute top-2 right-2 flex gap-2">
