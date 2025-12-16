@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { QueryProvider } from "@/components/providers/QueryProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -31,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ "--font-kantumruy": "Kantumruy Pro" } as any}>
       <body className={`${poppins.variable} antialiased font-sans`}>
-        <QueryProvider>{children}</QueryProvider>
+        {children}
       </body>
     </html>
   );

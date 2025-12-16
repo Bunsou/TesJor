@@ -29,7 +29,7 @@ TesJor is a gamified travel discovery web application designed to solve the prob
 
 ### State Management & Fetching
 
-- **TanStack Query (React Query):** Critical for handling server state, caching data (reducing API calls), and managing "Infinite Scroll" pagination features.
+- **NextJS fetching:** Critical for handling server state, caching data (reducing API calls), and managing "Infinite Scroll" pagination features.
 
 ### Frontend UI
 
@@ -190,7 +190,7 @@ This table aggregates all user interactions to avoid querying 5 separate join ta
   - **Khmer:** Kantumruy Pro (Modern screen-optimized Khmer font).
 - **Icons:** Lucide React (Consistent stroke width).
 - **Feedback UI:**
-  - **Loading:** Skeleton screens (shimmer effect) while TanStack Query fetches data.
+  - **Loading:** Skeleton screens (shimmer effect) while NextJs fetching fetches data.
   - **Success:** Confetti animation triggers when a user successfully "Checks In" to a location.
 
 ## 7. Backend API Specification

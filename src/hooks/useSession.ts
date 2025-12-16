@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { Session } from "@/lib/auth";
 
 async function getSession(): Promise<Session | null> {
@@ -17,12 +17,31 @@ async function getSession(): Promise<Session | null> {
 }
 
 export function useSession() {
-  const { data: session, isLoading } = useQuery({
-    queryKey: ["session"],
-    queryFn: getSession,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: false,
-  });
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadSession() {
+      try {
+        const sessionData = await getSession();
+        if (isMounted) {
+          setSession(sessionData);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return { session, isLoading };
 }

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useSession } from "@/hooks/useSession";
-import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,10 +51,12 @@ export default function AdminPage() {
     nameKh: "",
     description: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const createMutation = useMutation({
-    mutationFn: createContent,
-    onSuccess: (data) => {
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      const data = await createContent(formData);
       alert(`Successfully created: ${data.item.name}`);
       // Reset form
       setFormData({
@@ -65,11 +66,16 @@ export default function AdminPage() {
         description: "",
       });
       setStep(1);
-    },
-    onError: (error: Error) => {
-      alert(`Error: ${error.message}`);
-    },
-  });
+    } catch (error) {
+      alert(
+        `Error: ${
+          error instanceof Error ? error.message : "Failed to create content"
+        }`
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Check if user is admin
   if (session?.user?.role !== "admin") {
@@ -103,12 +109,12 @@ export default function AdminPage() {
   const isStep3Valid =
     !hasLocation || (formData.province && formData.lat && formData.lng);
 
-  const handleSubmit = () => {
+  const handleSubmitForm = () => {
     if (!isStep2Valid || !isStep3Valid) {
       alert("Please fill in all required fields");
       return;
     }
-    createMutation.mutate(formData);
+    handleSubmit();
   };
 
   return (
@@ -485,11 +491,11 @@ export default function AdminPage() {
                 <ChevronLeft className="w-5 h-5 mr-2" /> Back
               </Button>
               <Button
-                onClick={handleSubmit}
-                disabled={createMutation.isPending}
+                onClick={handleSubmitForm}
+                disabled={isSubmitting}
                 size="lg"
               >
-                {createMutation.isPending ? "Creating..." : "Create Content"}
+                {isSubmitting ? "Creating..." : "Create Content"}
               </Button>
             </div>
           </div>

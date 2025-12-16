@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -95,29 +95,82 @@ function triggerConfetti() {
 export default function ItemDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["item", id],
-    queryFn: () => fetchItem(id),
-  });
+  const [data, setData] = useState<{
+    item: any;
+    isBookmarked: boolean;
+    isVisited: boolean;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const bookmarkMutation = useMutation({
-    mutationFn: toggleBookmark,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["item", id] });
-    },
-  });
+  // Fetch item data
+  useEffect(() => {
+    let isMounted = true;
 
-  const visitedMutation = useMutation({
-    mutationFn: toggleVisited,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["item", id] });
-      if (data.visited) {
+    async function loadItem() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const itemData = await fetchItem(id);
+        if (isMounted) {
+          setData(itemData);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load item");
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadItem();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  const handleBookmark = async (action: "add" | "remove") => {
+    if (!data) return;
+
+    try {
+      await toggleBookmark({
+        itemId: id,
+        category: data.category,
+        action,
+      });
+      // Refetch item data
+      const itemData = await fetchItem(id);
+      setData(itemData);
+    } catch (err) {
+      console.error("Failed to toggle bookmark:", err);
+    }
+  };
+
+  const handleVisited = async (action: "add" | "remove") => {
+    if (!data) return;
+
+    try {
+      const result = await toggleVisited({
+        itemId: id,
+        category: data.category,
+        action,
+      });
+      // Refetch item data
+      const itemData = await fetchItem(id);
+      setData(itemData);
+
+      if (result.visited) {
         triggerConfetti();
       }
-    },
-  });
+    } catch (err) {
+      console.error("Failed to toggle visited:", err);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -184,14 +237,7 @@ export default function ItemDetailPage() {
           <Button
             variant={isBookmarked ? "default" : "outline"}
             size="lg"
-            onClick={() =>
-              bookmarkMutation.mutate({
-                itemId: item.id,
-                category: item.category,
-                action: isBookmarked ? "remove" : "add",
-              })
-            }
-            disabled={bookmarkMutation.isPending}
+            onClick={() => handleBookmark(isBookmarked ? "remove" : "add")}
           >
             <Bookmark
               className={`w-5 h-5 mr-2 ${isBookmarked ? "fill-current" : ""}`}
@@ -202,14 +248,7 @@ export default function ItemDetailPage() {
           <Button
             variant={isVisited ? "default" : "outline"}
             size="lg"
-            onClick={() =>
-              visitedMutation.mutate({
-                itemId: item.id,
-                category: item.category,
-                action: isVisited ? "remove" : "add",
-              })
-            }
-            disabled={visitedMutation.isPending}
+            onClick={() => handleVisited(isVisited ? "remove" : "add")}
           >
             <Check className="w-5 h-5 mr-2" />
             {isVisited ? "Visited" : "Check In"}

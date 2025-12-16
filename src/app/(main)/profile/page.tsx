@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "@/hooks/useSession";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,9 +9,21 @@ import { Bookmark, MapPin, Trophy, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 async function fetchUserStats() {
-  const res = await fetch("/api/user/stats");
-  if (!res.ok) throw new Error("Failed to fetch user stats");
-  return res.json();
+  const url = "/api/user/stats";
+  console.log("[Profile] Fetching from:", url);
+
+  const res = await fetch(url);
+  console.log("[Profile] Response status:", res.status, res.ok);
+
+  if (!res.ok) {
+    console.error("[Profile] Failed to fetch:", res.statusText);
+    throw new Error("Failed to fetch user stats");
+  }
+
+  const json = await res.json();
+  console.log("[Profile] Response data:", json);
+
+  return json.data;
 }
 
 async function signOut() {
@@ -23,10 +35,44 @@ export default function ProfilePage() {
   const { session } = useSession();
   const router = useRouter();
 
-  const { data: stats, isLoading } = useQuery({
-    queryKey: ["user-stats"],
-    queryFn: fetchUserStats,
-  });
+  const [stats, setStats] = useState<{
+    bookmarkedCount: number;
+    visitedCount: number;
+    points: number;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch user stats on mount
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadData() {
+      try {
+        setIsLoading(true);
+
+        const data = await fetchUserStats();
+
+        if (isMounted) {
+          setStats(data);
+          console.log("[Profile] Loaded stats:", data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error("[Profile] Error:", err);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const user = session?.user;
   const initials = user?.name
@@ -79,7 +125,7 @@ export default function ProfilePage() {
                 <Bookmark className="w-6 h-6 text-primary" />
               </div>
               <p className="text-2xl font-bold text-foreground">
-                {stats?.bookmarked || 0}
+                {stats?.bookmarkedCount || 0}
               </p>
               <p className="text-sm text-foreground-muted">Bookmarked</p>
             </div>
@@ -89,7 +135,7 @@ export default function ProfilePage() {
                 <MapPin className="w-6 h-6 text-primary" />
               </div>
               <p className="text-2xl font-bold text-foreground">
-                {stats?.visited || 0}
+                {stats?.visitedCount || 0}
               </p>
               <p className="text-sm text-foreground-muted">Visited</p>
             </div>
@@ -130,8 +176,8 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      {stats?.recentVisits && stats.recentVisits.length > 0 && (
+      {/* Recent Activity - Hidden until API implemented */}
+      {/* {stats?.recentVisits && stats.recentVisits.length > 0 && (
         <div className="bg-card rounded-lg border border-border p-6">
           <h3 className="text-xl font-bold text-foreground mb-4">
             Recent Visits
@@ -162,7 +208,7 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

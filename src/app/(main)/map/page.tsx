@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { GoogleMapContainer } from "@/components/map/GoogleMapContainer";
 import { MapFilters } from "@/components/map/MapFilters";
@@ -26,21 +25,37 @@ async function fetchNearbyItems({
     limit: "100",
   });
 
-  const res = await fetch(`/api/listings/nearby?${params}`);
-  if (!res.ok) throw new Error("Failed to fetch nearby items");
+  const url = `/api/listings/nearby?${params}`;
+  console.log("[Map] Fetching from:", url);
+
+  const res = await fetch(url);
+  console.log("[Map] Response status:", res.status, res.ok);
+
+  if (!res.ok) {
+    console.error("[Map] Failed to fetch:", res.statusText);
+    throw new Error("Failed to fetch nearby items");
+  }
+
   const data = await res.json();
+  console.log("[Map] Response data:", {
+    success: data.success,
+    itemCount: data.data?.items?.length,
+    categories: categories,
+  });
 
   // Filter by selected categories
   if (categories.length > 0) {
-    return {
-      ...data,
-      items: data.items.filter((item: ContentItem) =>
+    const filtered = {
+      ...data.data,
+      items: data.data.items.filter((item: ContentItem) =>
         categories.includes(item.category)
       ),
     };
+    console.log("[Map] Filtered items:", filtered.items.length);
+    return filtered;
   }
 
-  return data;
+  return data.data;
 }
 
 export default function MapPage() {
@@ -58,6 +73,9 @@ export default function MapPage() {
     "souvenir",
   ]);
   const [radius, setRadius] = useState(50); // km
+
+  const [items, setItems] = useState<ContentItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get user location
   useEffect(() => {
@@ -77,39 +95,63 @@ export default function MapPage() {
     }
   }, []);
 
-  const { data, isLoading } = useQuery({
-    queryKey: [
-      "nearby-items",
-      userLocation?.lat,
-      userLocation?.lng,
-      radius,
-      selectedCategories,
-    ],
-    queryFn: () =>
-      fetchNearbyItems({
-        lat: userLocation!.lat,
-        lng: userLocation!.lng,
-        radius,
-        categories: selectedCategories,
-      }),
-    enabled: !!userLocation,
-  });
+  // Fetch nearby items when location, radius, or categories change
+  useEffect(() => {
+    if (!userLocation) return;
+
+    let isMounted = true;
+
+    async function loadData() {
+      try {
+        setIsLoading(true);
+
+        const data = await fetchNearbyItems({
+          lat: userLocation.lat,
+          lng: userLocation.lng,
+          radius,
+          categories: selectedCategories,
+        });
+
+        if (isMounted) {
+          setItems(data.items || []);
+          console.log("[Map] Loaded items:", data.items?.length);
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error("[Map] Error:", err);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [userLocation, radius, selectedCategories]);
 
   const markers =
-    data?.items
-      ?.filter(
-        (item: ContentItem) =>
-          "lat" in item && "lng" in item && item.lat && item.lng
-      )
-      .map((item: ContentItem & { lat: string; lng: string }) => ({
-        id: item.id,
-        position: {
-          lat: Number(item.lat),
-          lng: Number(item.lng),
-        },
-        title: item.name,
-        category: item.category,
-      })) ?? [];
+    items
+      ?.filter((item) => "lat" in item && "lng" in item && item.lat && item.lng)
+      .map((item) => {
+        const itemWithLocation = item as ContentItem & {
+          lat: string;
+          lng: string;
+        };
+        return {
+          id: itemWithLocation.id,
+          position: {
+            lat: Number(itemWithLocation.lat),
+            lng: Number(itemWithLocation.lng),
+          },
+          title: itemWithLocation.name,
+          category: itemWithLocation.category,
+        };
+      }) ?? [];
 
   const handleMarkerClick = (id: string) => {
     router.push(`/item/${id}`);

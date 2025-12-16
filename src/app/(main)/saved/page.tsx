@@ -1,16 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { ContentItem } from "@/types";
 import { PlaceCard } from "@/components/shared/PlaceCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategoryFilter } from "@/components/shared/CategoryFilter";
 
 async function fetchSavedItems(type: "bookmarked" | "visited") {
-  const res = await fetch(`/api/user/progress?type=${type}`);
-  if (!res.ok) throw new Error("Failed to fetch saved items");
-  return res.json();
+  const url = `/api/user/progress?type=${type}`;
+  console.log("[Saved] Fetching from:", url);
+
+  const res = await fetch(url);
+  console.log("[Saved] Response status:", res.status, res.ok);
+
+  if (!res.ok) {
+    console.error("[Saved] Failed to fetch:", res.statusText);
+    throw new Error("Failed to fetch saved items");
+  }
+
+  const json = await res.json();
+  console.log("[Saved] Response data:", {
+    success: json.success,
+    itemCount: json.data?.items?.length,
+  });
+
+  return json.data;
 }
 
 export default function SavedPage() {
@@ -19,12 +33,46 @@ export default function SavedPage() {
   );
   const [category, setCategory] = useState("all");
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["saved", activeTab],
-    queryFn: () => fetchSavedItems(activeTab),
-  });
+  const [items, setItems] = useState<ContentItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const items = (data?.items as ContentItem[]) ?? [];
+  // Fetch saved items when tab changes
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadData() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const data = await fetchSavedItems(activeTab);
+
+        if (isMounted) {
+          setItems(data?.items || []);
+          console.log("[Saved] Loaded items:", data?.items?.length);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(
+            err instanceof Error ? err.message : "Failed to load saved items"
+          );
+          console.error("[Saved] Error:", err);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTab]);
+
   const filteredItems =
     category === "all"
       ? items
