@@ -35,13 +35,14 @@ export const auth = betterAuth({
       user,
     }: {
       session: typeof auth.$Infer.Session;
-      user: typeof auth.$Infer.Session.user & { role?: string };
+      user: typeof auth.$Infer.Session.user & { role?: string; name?: string };
     }) {
-      // Add role to session
+      // Add role and name to session
       return {
         ...session,
         user: {
           ...session.user,
+          name: user.name || session.user.name,
           role: user.role || "user",
         },
       };
