@@ -20,9 +20,9 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      prompt: "select_account",
       clientId: config.googleClientId,
       clientSecret: config.googleClientSecret,
+      prompt: "select_account",
     },
   },
   secret: config.betterAuthSecret,

@@ -55,7 +55,9 @@ export default function ExplorePage() {
   });
 
   const items =
-    data?.pages.flatMap((page) => page.items as ContentItem[]) ?? [];
+    data?.pages
+      .flatMap((page) => page.items as ContentItem[])
+      .filter((item) => item && item.id) ?? [];
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">

@@ -20,15 +20,21 @@ export async function GET(request: NextRequest) {
 
     // Parse query params
     const searchParams = request.nextUrl.searchParams;
-    const result = listingsQuerySchema.safeParse({
-      category: searchParams.get("category"),
-      province: searchParams.get("province"),
-      q: searchParams.get("q"),
-      cursor: searchParams.get("cursor"),
-      limit: searchParams.get("limit"),
-    });
+    const rawParams = {
+      category: searchParams.get("category") || undefined,
+      province: searchParams.get("province") || undefined,
+      q: searchParams.get("q") || undefined,
+      cursor: searchParams.get("cursor") || undefined,
+      limit: searchParams.get("limit") || undefined,
+    };
+
+    const result = listingsQuerySchema.safeParse(rawParams);
 
     if (!result.success) {
+      log.error("Validation failed for listings query", {
+        rawParams,
+        errors: result.error.flatten(),
+      });
       return errorResponse(
         "Invalid query parameters",
         400,
@@ -155,8 +161,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Sort by createdAt and limit
+    // Filter out any undefined items and sort by createdAt
     items = items
+      .filter((item) => item && item.id)
       .sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -165,7 +172,7 @@ export async function GET(request: NextRequest) {
 
     // Simple cursor pagination (use last item's ID)
     const nextCursor =
-      items.length === limit ? items[items.length - 1].id : null;
+      items.length === limit ? items[items.length - 1]?.id : null;
 
     return successResponse({
       items,
