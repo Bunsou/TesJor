@@ -1,27 +1,34 @@
-import { Loader } from "@googlemaps/js-api-loader";
+import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { config } from "./config";
 
-let loaderInstance: Loader | null = null;
-let loadPromise: Promise<typeof google.maps> | null = null;
+let isInitialized = false;
+let loadPromise: Promise<google.maps.MapsLibrary> | null = null;
 
 export async function loadGoogleMaps(): Promise<typeof google.maps> {
+  // Return cached promise if already loading/loaded
   if (loadPromise) {
-    return loadPromise;
+    await loadPromise;
+    return google.maps;
   }
 
-  if (!loaderInstance) {
-    const apiKey = config.googleMapsApiKey;
-    if (!apiKey) {
-      throw new Error("Google Maps API key is not configured");
-    }
+  const apiKey = config.googleMapsApiKey;
+  if (!apiKey) {
+    throw new Error("Google Maps API key is not configured");
+  }
 
-    loaderInstance = new Loader({
-      apiKey,
-      version: "weekly",
+  // Set options only once before first import
+  if (!isInitialized) {
+    setOptions({
+      key: apiKey,
+      v: "weekly",
       libraries: ["places", "marker"],
     });
+    isInitialized = true;
   }
 
-  loadPromise = loaderInstance.load();
-  return loadPromise;
+  // Import the maps library (this loads the Google Maps script)
+  loadPromise = importLibrary("maps");
+  await loadPromise;
+
+  return google.maps;
 }

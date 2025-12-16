@@ -28,7 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ "--font-kantumruy": "Kantumruy Pro" } as any}>
+    <html
+      lang="en"
+      style={{ "--font-kantumruy": "Kantumruy Pro" } as React.CSSProperties}
+    >
       <body className={`${poppins.variable} antialiased font-sans`}>
         {children}
       </body>

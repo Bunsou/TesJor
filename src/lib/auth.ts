@@ -30,8 +30,13 @@ export const auth = betterAuth({
 
   // Callbacks
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async session({ session, user }: { session: any; user: any }) {
+    async session({
+      session,
+      user,
+    }: {
+      session: typeof auth.$Infer.Session;
+      user: typeof auth.$Infer.Session.user & { role?: string };
+    }) {
       // Add role to session
       return {
         ...session,
@@ -41,8 +46,13 @@ export const auth = betterAuth({
         },
       };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async signIn({ user, account }: { user: any; account: any }) {
+    async signIn({
+      user,
+      account,
+    }: {
+      user: { id: string; email: string; name: string };
+      account: { provider: string };
+    }) {
       log.info("User signed in", {
         userId: user.id,
         email: user.email,
@@ -50,8 +60,7 @@ export const auth = betterAuth({
       });
       return true;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async signOut({ session }: { session: any }) {
+    async signOut({ session }: { session: { user: { id: string } } }) {
       log.info("User signed out", {
         userId: session.user.id,
       });

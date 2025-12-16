@@ -121,31 +121,35 @@ export async function POST(request: NextRequest) {
           .where(eq(userProgress.id, existing[0].id));
       } else {
         // Create new entry with explicit column based on category
-        const values: Record<string, string | boolean | Date> = {
+        const baseValues = {
           userId,
           isBookmarked: false,
           isVisited: true,
           visitedAt,
         };
+
+        let insertValues;
         switch (category) {
           case "place":
-            values.placeId = itemId;
+            insertValues = { ...baseValues, placeId: itemId };
             break;
           case "activity":
-            values.activityId = itemId;
+            insertValues = { ...baseValues, activityId: itemId };
             break;
           case "food":
-            values.foodId = itemId;
+            insertValues = { ...baseValues, foodId: itemId };
             break;
           case "drink":
-            values.drinkId = itemId;
+            insertValues = { ...baseValues, drinkId: itemId };
             break;
           case "souvenir":
-            values.souvenirId = itemId;
+            insertValues = { ...baseValues, souvenirId: itemId };
             break;
+          default:
+            return errorResponse("Invalid category", 400);
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await db.insert(userProgress).values(values as any);
+
+        await db.insert(userProgress).values(insertValues);
       }
 
       log.info("Item marked as visited", { userId, itemId, category });

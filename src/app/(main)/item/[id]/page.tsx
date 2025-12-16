@@ -6,6 +6,13 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Bookmark, MapPin, DollarSign, Check } from "lucide-react";
 import confetti from "canvas-confetti";
+import { ContentItem } from "@/types";
+
+interface ItemDetailResponse {
+  item: ContentItem;
+  isBookmarked: boolean;
+  isVisited: boolean;
+}
 
 async function fetchItem(id: string) {
   const res = await fetch(`/api/listings/${id}`);
@@ -96,11 +103,7 @@ export default function ItemDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [data, setData] = useState<{
-    item: any;
-    isBookmarked: boolean;
-    isVisited: boolean;
-  } | null>(null);
+  const [data, setData] = useState<ItemDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -140,7 +143,7 @@ export default function ItemDetailPage() {
     try {
       await toggleBookmark({
         itemId: id,
-        category: data.category,
+        category: data.item.category,
         action,
       });
       // Refetch item data
@@ -157,7 +160,7 @@ export default function ItemDetailPage() {
     try {
       const result = await toggleVisited({
         itemId: id,
-        category: data.category,
+        category: data.item.category,
         action,
       });
       // Refetch item data
@@ -201,9 +204,9 @@ export default function ItemDetailPage() {
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       {/* Image */}
       <div className="relative w-full h-96 bg-gray-200 rounded-lg overflow-hidden mb-6">
-        {item.image ? (
+        {item.imageUrl ? (
           <Image
-            src={item.image}
+            src={item.imageUrl}
             alt={item.name}
             fill
             className="object-cover"
@@ -266,7 +269,7 @@ export default function ItemDetailPage() {
         </div>
 
         {/* Location (if available) */}
-        {item.lat && item.lng && (
+        {"lat" in item && "lng" in item && item.lat && item.lng && (
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-3">
               Location
@@ -274,7 +277,7 @@ export default function ItemDetailPage() {
             <div className="flex items-start gap-2">
               <MapPin className="w-5 h-5 text-primary mt-1" />
               <div>
-                {item.province && (
+                {"province" in item && item.province && (
                   <p className="text-foreground font-medium">{item.province}</p>
                 )}
                 <p className="text-foreground-muted text-sm">
