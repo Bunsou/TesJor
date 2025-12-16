@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Rate limiting
@@ -20,7 +20,8 @@ export async function GET(
       return errorResponse("Too many requests", 429);
     }
 
-    const { id } = params;
+    const { id } = await params;
+    console.log("Fetching item with ID:", id);
 
     // Try to find the item in all tables
     const [place, activity, food, drink, souvenir] = await Promise.all([
@@ -57,7 +58,7 @@ export async function GET(
 
     return successResponse({ ...item, category });
   } catch (error) {
-    log.error("Failed to fetch item", { error, id: params.id });
+    log.error("Failed to fetch item", { error });
     return errorResponse("Failed to fetch item", 500);
   }
 }

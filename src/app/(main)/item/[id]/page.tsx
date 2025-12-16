@@ -18,7 +18,16 @@ interface ItemDetailResponse {
 async function fetchItem(id: string) {
   const res = await fetch(`/api/listings/${id}`);
   if (!res.ok) throw new Error("Failed to fetch item");
-  return res.json();
+  const json = await res.json();
+  console.log("Fetched item data:", json);
+
+  // API returns { success, data: { ...item, category } }
+  // Transform to match ItemDetailResponse structure
+  return {
+    item: json.data,
+    isBookmarked: false, // TODO: Fetch from user progress
+    isVisited: false, // TODO: Fetch from user progress
+  };
 }
 
 async function toggleBookmark({
@@ -103,6 +112,8 @@ function triggerConfetti() {
 export default function ItemDetailPage() {
   const params = useParams();
   const id = params.id as string;
+
+  console.log("item id", id);
 
   const [data, setData] = useState<ItemDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
