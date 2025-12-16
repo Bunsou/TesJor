@@ -1,0 +1,266 @@
+"use client";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Bookmark, MapPin, DollarSign, Check } from "lucide-react";
+import confetti from "canvas-confetti";
+
+async function fetchItem(id: string) {
+  const res = await fetch(`/api/listings/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch item");
+  return res.json();
+}
+
+async function toggleBookmark({
+  itemId,
+  category,
+  action,
+}: {
+  itemId: string;
+  category: string;
+  action: "add" | "remove";
+}) {
+  const res = await fetch("/api/user/bookmark", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ itemId, category, action }),
+  });
+  if (!res.ok) throw new Error("Failed to toggle bookmark");
+  return res.json();
+}
+
+async function toggleVisited({
+  itemId,
+  category,
+  action,
+}: {
+  itemId: string;
+  category: string;
+  action: "add" | "remove";
+}) {
+  const res = await fetch("/api/user/visited", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ itemId, category, action }),
+  });
+  if (!res.ok) throw new Error("Failed to toggle visited");
+  return res.json();
+}
+
+function triggerConfetti() {
+  const count = 200;
+  const defaults = {
+    origin: { y: 0.7 },
+    zIndex: 9999,
+  };
+
+  function fire(particleRatio: number, opts: confetti.Options) {
+    confetti({
+      ...defaults,
+      ...opts,
+      particleCount: Math.floor(count * particleRatio),
+    });
+  }
+
+  fire(0.25, {
+    spread: 26,
+    startVelocity: 55,
+  });
+
+  fire(0.2, {
+    spread: 60,
+  });
+
+  fire(0.35, {
+    spread: 100,
+    decay: 0.91,
+    scalar: 0.8,
+  });
+
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 25,
+    decay: 0.92,
+    scalar: 1.2,
+  });
+
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 45,
+  });
+}
+
+export default function ItemDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["item", id],
+    queryFn: () => fetchItem(id),
+  });
+
+  const bookmarkMutation = useMutation({
+    mutationFn: toggleBookmark,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["item", id] });
+    },
+  });
+
+  const visitedMutation = useMutation({
+    mutationFn: toggleVisited,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["item", id] });
+      if (data.visited) {
+        triggerConfetti();
+      }
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-foreground-muted">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data?.item) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-500 text-lg">Failed to load item details</p>
+        </div>
+      </div>
+    );
+  }
+
+  const item = data.item;
+  const isBookmarked = data.isBookmarked;
+  const isVisited = data.isVisited;
+
+  return (
+    <div className="container mx-auto px-4 py-6 max-w-5xl">
+      {/* Image */}
+      <div className="relative w-full h-96 bg-gray-200 rounded-lg overflow-hidden mb-6">
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-foreground-muted">No image available</p>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="space-y-6">
+        {/* Title and Category */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium capitalize">
+              {item.category}
+            </span>
+          </div>
+          <h1 className="text-4xl font-bold text-foreground mb-2">
+            {item.name}
+          </h1>
+          {item.nameKh && (
+            <p className="text-xl text-foreground-muted">{item.nameKh}</p>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <Button
+            variant={isBookmarked ? "default" : "outline"}
+            size="lg"
+            onClick={() =>
+              bookmarkMutation.mutate({
+                itemId: item.id,
+                category: item.category,
+                action: isBookmarked ? "remove" : "add",
+              })
+            }
+            disabled={bookmarkMutation.isPending}
+          >
+            <Bookmark
+              className={`w-5 h-5 mr-2 ${isBookmarked ? "fill-current" : ""}`}
+            />
+            {isBookmarked ? "Bookmarked" : "Bookmark"}
+          </Button>
+
+          <Button
+            variant={isVisited ? "default" : "outline"}
+            size="lg"
+            onClick={() =>
+              visitedMutation.mutate({
+                itemId: item.id,
+                category: item.category,
+                action: isVisited ? "remove" : "add",
+              })
+            }
+            disabled={visitedMutation.isPending}
+          >
+            <Check className="w-5 h-5 mr-2" />
+            {isVisited ? "Visited" : "Check In"}
+          </Button>
+        </div>
+
+        {/* Description */}
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-3">
+            Description
+          </h2>
+          <p className="text-foreground-muted leading-relaxed">
+            {item.description}
+          </p>
+        </div>
+
+        {/* Location (if available) */}
+        {item.lat && item.lng && (
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              Location
+            </h2>
+            <div className="flex items-start gap-2">
+              <MapPin className="w-5 h-5 text-primary mt-1" />
+              <div>
+                {item.province && (
+                  <p className="text-foreground font-medium">{item.province}</p>
+                )}
+                <p className="text-foreground-muted text-sm">
+                  {item.lat}, {item.lng}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Price Range (if available) */}
+        {item.priceRange && (
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              Price Range
+            </h2>
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-primary" />
+              <p className="text-foreground font-medium capitalize">
+                {item.priceRange}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
