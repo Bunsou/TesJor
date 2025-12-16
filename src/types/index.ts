@@ -63,6 +63,12 @@ export type ContentItem = (Place | Activity | Food | Drink | Souvenir) & {
   distance?: number; // For nearby items
 };
 
+export type ContentItemWithProgress = ContentItem & {
+  isBookmarked?: boolean;
+  isVisited?: boolean;
+  visitedAt?: Date | null;
+};
+
 export interface UserProgress {
   id: number;
   userId: string;

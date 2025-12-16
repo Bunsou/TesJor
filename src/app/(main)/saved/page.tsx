@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ContentItem } from "@/types";
+import { ContentItemWithProgress } from "@/types";
 import { PlaceCard } from "@/components/shared/PlaceCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategoryFilter } from "@/components/shared/CategoryFilter";
@@ -33,7 +33,7 @@ export default function SavedPage() {
   );
   const [category, setCategory] = useState("all");
 
-  const [items, setItems] = useState<ContentItem[]>([]);
+  const [items, setItems] = useState<ContentItemWithProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,7 +137,12 @@ export default function SavedPage() {
           {!isLoading && !error && filteredItems.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems.map((item) => (
-                <PlaceCard key={item.id} item={item} />
+                <PlaceCard
+                  key={item.id}
+                  item={item}
+                  isBookmarked={item.isBookmarked}
+                  isVisited={item.isVisited}
+                />
               ))}
             </div>
           )}
@@ -171,7 +176,12 @@ export default function SavedPage() {
           {!isLoading && !error && filteredItems.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems.map((item) => (
-                <PlaceCard key={item.id} item={item} />
+                <PlaceCard
+                  key={item.id}
+                  item={item}
+                  isBookmarked={item.isBookmarked}
+                  isVisited={item.isVisited}
+                />
               ))}
             </div>
           )}

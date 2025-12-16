@@ -21,12 +21,29 @@ async function fetchItem(id: string) {
   const json = await res.json();
   console.log("Fetched item data:", json);
 
+  // Fetch user progress for this item
+  let isBookmarked = false;
+  let isVisited = false;
+  
+  try {
+    const progressRes = await fetch(`/api/user/progress?itemId=${id}`);
+    if (progressRes.ok) {
+      const progressJson = await progressRes.json();
+      isBookmarked = progressJson.data?.isBookmarked || false;
+      isVisited = progressJson.data?.isVisited || false;
+      console.log("Fetched progress data:", progressJson.data);
+    }
+  } catch (err) {
+    // User might not be logged in, or progress doesn't exist
+    console.log("Could not fetch progress (user may not be logged in):", err);
+  }
+
   // API returns { success, data: { ...item, category } }
   // Transform to match ItemDetailResponse structure
   return {
     item: json.data,
-    isBookmarked: false, // TODO: Fetch from user progress
-    isVisited: false, // TODO: Fetch from user progress
+    isBookmarked,
+    isVisited,
   };
 }
 
