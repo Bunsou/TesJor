@@ -3,8 +3,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  MapPin,
+  Activity,
+  UtensilsCrossed,
+  Coffee,
+  Gift,
+  MapPinned,
+  X,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MapFiltersProps {
   categories: string[];
@@ -12,23 +21,47 @@ interface MapFiltersProps {
   onCategoriesChange: (categories: string[]) => void;
   radius: number;
   onRadiusChange: (radius: number) => void;
+  useRadiusFilter: boolean;
+  onUseRadiusFilterChange: (use: boolean) => void;
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  place: "Places",
-  activity: "Activities",
-  food: "Food",
-  drink: "Drinks",
-  souvenir: "Souvenirs",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  place: "bg-blue-500",
-  activity: "bg-green-500",
-  food: "bg-amber-500",
-  drink: "bg-purple-500",
-  souvenir: "bg-pink-500",
-};
+const CATEGORY_CONFIG = [
+  {
+    value: "place",
+    label: "Places",
+    icon: MapPin,
+    color: "text-red-500",
+    bgColor: "bg-red-500",
+  },
+  {
+    value: "activity",
+    label: "Activities",
+    icon: Activity,
+    color: "text-green-500",
+    bgColor: "bg-green-500",
+  },
+  {
+    value: "food",
+    label: "Food",
+    icon: UtensilsCrossed,
+    color: "text-amber-500",
+    bgColor: "bg-amber-500",
+  },
+  {
+    value: "drink",
+    label: "Drinks",
+    icon: Coffee,
+    color: "text-purple-500",
+    bgColor: "bg-purple-500",
+  },
+  {
+    value: "souvenir",
+    label: "Souvenirs",
+    icon: Gift,
+    color: "text-pink-500",
+    bgColor: "bg-pink-500",
+  },
+];
 
 export function MapFilters({
   categories,
@@ -36,8 +69,10 @@ export function MapFilters({
   onCategoriesChange,
   radius,
   onRadiusChange,
+  useRadiusFilter,
+  onUseRadiusFilterChange,
 }: MapFiltersProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isRadiusPopupOpen, setIsRadiusPopupOpen] = useState(false);
 
   const toggleCategory = (category: string) => {
     if (selectedCategories.includes(category)) {
@@ -51,118 +86,146 @@ export function MapFilters({
     onCategoriesChange(categories);
   };
 
-  const clearAll = () => {
-    onCategoriesChange([]);
-  };
+  const isAllSelected = selectedCategories.length === categories.length;
 
   return (
     <>
-      {/* Toggle Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 right-4 z-50 shadow-lg"
-      >
-        Filters ({selectedCategories.length})
-      </Button>
+      {/* Top Filter Bar - Centered */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 w-full max-w-4xl px-4">
+        <div className="flex items-center justify-center gap-2 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-2">
+          {/* All Button */}
+          <Button
+            variant={isAllSelected ? "default" : "outline"}
+            size="sm"
+            onClick={selectAll}
+            className="whitespace-nowrap"
+          >
+            <span className="md:inline">All</span>
+          </Button>
 
-      {/* Filter Panel */}
-      {isOpen && (
-        <div className="fixed inset-y-0 right-0 z-50 w-80 bg-card border-l border-border shadow-xl overflow-y-auto">
-          <div className="p-6">
+          {/* Category Filters */}
+          {CATEGORY_CONFIG.map((cat) => {
+            const Icon = cat.icon;
+            const isSelected = selectedCategories.includes(cat.value);
+
+            return (
+              <Button
+                key={cat.value}
+                variant={isSelected ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleCategory(cat.value)}
+                className="whitespace-nowrap"
+              >
+                <Icon
+                  className={cn(
+                    "h-4 w-4",
+                    !isSelected && cat.color,
+                    "md:mr-1.5"
+                  )}
+                />
+                <span className="hidden md:inline">{cat.label}</span>
+              </Button>
+            );
+          })}
+
+          {/* Separator */}
+          <div className="h-6 w-px bg-border mx-1" />
+
+          {/* Radius Filter Button */}
+          <Button
+            variant={useRadiusFilter ? "default" : "outline"}
+            size="sm"
+            onClick={() => setIsRadiusPopupOpen(true)}
+            className={cn(
+              "whitespace-nowrap",
+              useRadiusFilter && "ring-2 ring-primary ring-offset-2"
+            )}
+          >
+            <MapPinned className="h-4 w-4 md:mr-1.5" />
+            <span className="hidden md:inline">
+              {useRadiusFilter ? `${radius} km` : "Radius"}
+            </span>
+          </Button>
+        </div>
+      </div>
+
+      {/* Radius Filter Popup */}
+      {isRadiusPopupOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsRadiusPopupOpen(false)}
+          />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md bg-card border border-border rounded-lg shadow-xl p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Filters</h2>
+              <h3 className="text-lg font-semibold text-foreground">
+                Radius Filter
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsOpen(false)}
+                onClick={() => setIsRadiusPopupOpen(false)}
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </Button>
             </div>
 
-            {/* Categories */}
+            {/* Use Radius Checkbox */}
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <Label>Categories</Label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={selectAll}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    All
-                  </button>
-                  <span className="text-foreground-muted">|</span>
-                  <button
-                    onClick={clearAll}
-                    className="text-sm text-foreground-muted hover:underline"
-                  >
-                    None
-                  </button>
+              <div className="flex items-center gap-3 p-3 rounded-lg border border-border bg-background/50">
+                <Checkbox
+                  id="use-radius"
+                  checked={useRadiusFilter}
+                  onCheckedChange={(checked: boolean) =>
+                    onUseRadiusFilterChange(checked)
+                  }
+                />
+                <Label
+                  htmlFor="use-radius"
+                  className="cursor-pointer font-medium flex-1"
+                >
+                  Enable Radius Filter
+                </Label>
+              </div>
+              <p className="text-xs text-foreground-muted mt-2 px-1">
+                {useRadiusFilter
+                  ? "Showing items within the selected radius from your location"
+                  : "Currently showing all items in Cambodia"}
+              </p>
+            </div>
+
+            {/* Radius Slider */}
+            {useRadiusFilter && (
+              <div className="mb-6">
+                <Label className="mb-3 block">
+                  Search Radius: <span className="font-bold">{radius} km</span>
+                </Label>
+                <input
+                  type="range"
+                  min="1"
+                  max="100"
+                  value={radius}
+                  onChange={(e) => onRadiusChange(Number(e.target.value))}
+                  className="w-full accent-primary"
+                />
+                <div className="flex justify-between text-xs text-foreground-muted mt-2">
+                  <span>1 km</span>
+                  <span>50 km</span>
+                  <span>100 km</span>
                 </div>
               </div>
+            )}
 
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => toggleCategory(category)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-                      selectedCategories.includes(category)
-                        ? "border-primary bg-primary/10"
-                        : "border-border bg-background hover:bg-accent"
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full ${CATEGORY_COLORS[category]}`}
-                    />
-                    <span className="font-medium">
-                      {CATEGORY_LABELS[category]}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <Separator className="my-6" />
-
-            {/* Radius */}
-            <div>
-              <Label>Search Radius: {radius} km</Label>
-              <input
-                type="range"
-                min="1"
-                max="100"
-                value={radius}
-                onChange={(e) => onRadiusChange(Number(e.target.value))}
-                className="w-full mt-3"
-              />
-              <div className="flex justify-between text-xs text-foreground-muted mt-1">
-                <span>1 km</span>
-                <span>100 km</span>
-              </div>
-            </div>
-
-            <Separator className="my-6" />
-
-            {/* Apply Button */}
+            {/* Close Button */}
             <Button
-              onClick={() => setIsOpen(false)}
+              onClick={() => setIsRadiusPopupOpen(false)}
               className="w-full"
-              size="lg"
             >
-              Apply Filters
+              Done
             </Button>
           </div>
-        </div>
-      )}
-
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        </>
       )}
     </>
   );

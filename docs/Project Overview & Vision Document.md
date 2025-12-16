@@ -4,13 +4,13 @@ This document is designed for investors, partners, tourism officials, or general
 
 ---
 
-# Project Proposal: Kampuchea Quests
+# Project Proposal: TesJor
 
 **"Unlock the Real Cambodia, One Quest at a Time"**
 
 ## 1. The Concept in Brief
 
-**Kampuchea Quests** is a digital travel companion designed to solve the biggest problem in Cambodian tourism: **"Where do I go after Angkor Wat?"**
+**TesJor** is a digital travel companion designed to solve the biggest problem in Cambodian tourism: **"Where do I go after Angkor Wat?"**
 
 Instead of a boring directory of places, we turn travel into a **game**. We provide tourists with curated "checklists" of hidden villages, authentic foods, and local activities. Users explore the country, check off items on their digital passport, and earn badges for discovering the "real" Cambodia.
 
@@ -86,4 +86,4 @@ While we are starting with the "Checklist" features, our roadmap includes:
 
 ### Summary
 
-**Kampuchea Quests** bridges the gap between the adventurous tourist and the hidden beauty of Cambodia. It is simple to use, fun to play, and powerful for the local economy.
+**TesJor** bridges the gap between the adventurous tourist and the hidden beauty of Cambodia. It is simple to use, fun to play, and powerful for the local economy.

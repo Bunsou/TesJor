@@ -1,6 +1,6 @@
 # Project Requirement Document (PRD)
 
-**Project Name:** Kampuchea Quests (Working Title)
+**Project Name:** TesJor (Working Title)
 **Platform:** Web Application (Responsive & PWA supported)
 **Date:** December 16, 2025
 

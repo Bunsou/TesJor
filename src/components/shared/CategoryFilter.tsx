@@ -5,18 +5,23 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const categories = [
-  { value: "place", label: "Places", icon: MapPin, color: "text-primary" },
+  {
+    value: "place",
+    label: "Places",
+    icon: MapPin,
+    color: "text-secondary-600",
+  },
   {
     value: "activity",
     label: "Activities",
     icon: Activity,
-    color: "text-secondary",
+    color: "text-secondary-600",
   },
   {
     value: "food",
     label: "Foods",
     icon: UtensilsCrossed,
-    color: "text-warning",
+    color: "text-secondary-600",
   },
   {
     value: "drink",
