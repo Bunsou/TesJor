@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
-import { env } from "./env";
+import { config } from "./config";
 import { log } from "./logger";
 
 export const auth = betterAuth({
@@ -20,12 +20,13 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: config.googleClientId,
+      clientSecret: config.googleClientSecret,
+      redirectURI: `${config.betterAuthUrl}/api/auth/callback/google`,
     },
   },
-  secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL,
+  secret: config.betterAuthSecret,
+  baseURL: config.betterAuthUrl,
 
   // Callbacks
   callbacks: {

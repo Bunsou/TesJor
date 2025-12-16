@@ -1,4 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader";
+import { config } from "./config";
 
 let loaderInstance: Loader | null = null;
 let loadPromise: Promise<typeof google.maps> | null = null;
@@ -9,7 +10,7 @@ export async function loadGoogleMaps(): Promise<typeof google.maps> {
   }
 
   if (!loaderInstance) {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const apiKey = config.googleMapsApiKey;
     if (!apiKey) {
       throw new Error("Google Maps API key is not configured");
     }
