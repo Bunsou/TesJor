@@ -22,7 +22,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-primary-50 via-background to-secondary-50 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 via-background to-secondary-50 px-4">
       <div className="max-w-md w-full space-y-8 text-center">
         {/* Logo/Brand */}
         <div>
