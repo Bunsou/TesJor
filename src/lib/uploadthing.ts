@@ -1,6 +1,5 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { auth } from "./auth";
-import type { Session } from "./auth";
 
 const f = createUploadthing();
 
@@ -10,15 +9,26 @@ export const uploadRouter = {
   })
     .middleware(async ({ req }) => {
       // Check if user is authenticated and is admin
-      const session = (await auth.api.getSession({
+      const session = await auth.api.getSession({
         headers: req.headers,
-      })) as Session | null;
+      });
 
-      const userRole = session?.user
-        ? (session.user as Session["user"]).role
-        : undefined;
+      if (!session?.user) {
+        throw new Error("Unauthorized - Please sign in");
+      }
 
-      if (!session?.user || userRole !== "admin") {
+      // Get user from database to check role
+      const { db } = await import("@/db");
+      const { users } = await import("@/db/schema");
+      const { eq } = await import("drizzle-orm");
+
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1);
+
+      if (!user || user.role !== "admin") {
         throw new Error("Unauthorized - Admin access required");
       }
 
