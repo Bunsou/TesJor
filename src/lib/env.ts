@@ -14,9 +14,10 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1, "GOOGLE_CLIENT_ID is required"),
   GOOGLE_CLIENT_SECRET: z.string().min(1, "GOOGLE_CLIENT_SECRET is required"),
 
-  // UploadThing
-  UPLOADTHING_SECRET: z.string().min(1, "UPLOADTHING_SECRET is required"),
-  UPLOADTHING_APP_ID: z.string().min(1, "UPLOADTHING_APP_ID is required"),
+  // Cloudinary
+  CLOUDINARY_CLOUD_NAME: z.string().min(1, "CLOUDINARY_CLOUD_NAME is required"),
+  CLOUDINARY_API_KEY: z.string().min(1, "CLOUDINARY_API_KEY is required"),
+  CLOUDINARY_API_SECRET: z.string().min(1, "CLOUDINARY_API_SECRET is required"),
 
   // Upstash Redis
   UPSTASH_REDIS_REST_URL: z

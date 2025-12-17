@@ -10,9 +10,10 @@ export const config = {
   googleClientId: process.env.GOOGLE_CLIENT_ID || "",
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
 
-  // UploadThing
-  uploadthingSecret: process.env.UPLOADTHING_SECRET || "",
-  uploadthingAppId: process.env.UPLOADTHING_APP_ID || "",
+  // Cloudinary
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
 
   // Upstash Redis
   upstashRedisRestUrl: process.env.UPSTASH_REDIS_REST_URL || "",

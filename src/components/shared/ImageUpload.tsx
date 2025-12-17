@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { UploadButton } from "@uploadthing/react";
-import { OurFileRouter } from "@/lib/uploadthing";
-import { X } from "lucide-react";
+import { useState, useRef } from "react";
+import { X, Upload } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
@@ -14,12 +12,54 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload an image file");
+      return;
+    }
+
+    // Validate file size (4MB max)
+    if (file.size > 4 * 1024 * 1024) {
+      alert("Image must be less than 4MB");
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/cloudinary/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+      onChange(data.url);
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleRemove = async () => {
     if (value) {
       try {
         // Call delete endpoint
-        await fetch("/api/uploadthing/delete", {
+        await fetch("/api/cloudinary/delete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url: value }),
@@ -53,27 +93,27 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         </div>
       ) : (
         <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-          <UploadButton<OurFileRouter, "contentImage">
-            endpoint="contentImage"
-            onClientUploadComplete={(res) => {
-              if (res?.[0]?.url) {
-                onChange(res[0].url);
-              }
-              setIsUploading(false);
-            }}
-            onUploadError={(error: Error) => {
-              alert(`Upload failed: ${error.message}`);
-              setIsUploading(false);
-            }}
-            onUploadBegin={() => {
-              setIsUploading(true);
-            }}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleUpload}
+            disabled={isUploading}
           />
-          {isUploading && (
-            <p className="mt-4 text-sm text-foreground-muted">
-              Uploading image...
-            </p>
-          )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className="w-full"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            {isUploading ? "Uploading..." : "Upload Image"}
+          </Button>
+          <p className="mt-4 text-sm text-foreground-muted">
+            Upload an image (max 4MB)
+          </p>
         </div>
       )}
     </div>
