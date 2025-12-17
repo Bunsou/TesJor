@@ -1,0 +1,30 @@
+# This file creates the /do:test command
+description = "Generates test files for a component or API route."
+
+# Example: /do:test "src/app/api/users/route.ts"
+prompt = """
+You are an expert Testing Engineer.
+Your task is to write comprehensive tests for the code I specify.
+
+**My Request:** Write tests for: "{{args}}"
+
+**YOUR WORKFLOW:**
+1.  **Read the Source File:** Read the file I specified to understand what it does.
+2.  **Read the Context:** Check if there's a related feature file in `docs/features/`.
+3.  **Determine Test Type:**
+    * For components: Use React Testing Library + Jest
+    * For API routes: Use integration tests with supertest or similar
+4.  **Write Tests:** Include:
+    * Happy path tests
+    * Edge cases
+    * Error scenarios
+    * Type checking tests (if applicable)
+5.  **Output Format:**
+    * Suggest the test file name/location
+    * Provide complete test file code
+    * Include setup/teardown if needed
+
+**Test File Naming:**
+* Component: `component-name.test.tsx` (same directory as component)
+* API Route: `route.test.ts` (same directory as route)
+"""

@@ -1,0 +1,320 @@
+# This file creates the /plan:sis command
+description = "Generates a comprehensive Software Implementation Specification (SIS) document from SRS."
+
+# Example: /plan:sis
+prompt = """
+You are a Senior Full-Stack Software Architect and Technical Product Manager with deep expertise in Next.js 14+, TypeScript, Drizzle ORM, PostgreSQL, and modern web architecture.
+
+**Your Mission:** Create a comprehensive, production-ready Software Implementation Specification (SIS) document that transforms the business requirements from the SRS into a detailed technical blueprint.
+
+---
+
+## CRITICAL INSTRUCTIONS - READ FIRST
+
+**THE GOLDEN RULE:**
+1. **Read the Source of Truth:** FIRST, read `docs/source/srs.md` completely to understand ALL business requirements, user stories, and project scope.
+2. **Read the Standards:** Review ALL context files in `.agent/contexts/` to understand the project's technical standards.
+3. **Think Deeply:** Analyze the requirements thoroughly. Make expert architectural decisions based on best practices for the tech stack.
+4. **Generate Complete SIS:** Create a comprehensive, detailed SIS document covering ALL 9 sections below.
+5. **Save the Document:** Output should be a complete Markdown file to be saved as `docs/source/sis.md`
+
+---
+
+## SIS DOCUMENT STRUCTURE
+
+Your SIS must include these 9 comprehensive sections:
+
+### 1. Purpose of the Project
+**What to include:**
+- Project Vision & Mission Statement
+- Core Value Proposition (What problem does this solve? Who benefits?)
+- Success Criteria & Key Metrics
+- Project Scope (What's included and explicitly what's NOT included in v1)
+- Target Audience & User Personas
+
+**Think about:** Extract this from the SRS business logic and user stories. Refine it into a clear, concise vision statement.
+
+---
+
+### 2. Tech Stack
+**What to include:**
+- **Framework:** Next.js 14+ (App Router) - justify why
+- **Language:** TypeScript (Strict mode) - configuration details
+- **Database:** PostgreSQL + Drizzle ORM - connection strategy
+- **Styling:** Tailwind CSS v4 + Shadcn UI - theming approach
+- **Authentication:** BetterAuth or specified provider - strategy
+- **State Management:** (if needed) - Server State vs Client State
+- **API Layer:** Next.js Route Handlers - RESTful patterns
+- **Validation:** Zod - where and how it's used
+- **Testing:** Jest + React Testing Library - coverage goals
+- **Deployment:** Vercel or specified platform
+- **Monitoring:** Error tracking, analytics, logging strategy
+
+**Think about:** Ensure the stack aligns with context files (typescript.md, nextjs.md, tailwind.md, database.md, etc.)
+
+---
+
+### 3. Database Schema
+**What to include:**
+- **Entity-Relationship Diagram (ERD):** Describe all tables in text/ASCII
+- **Table Definitions:** For each table:
+  - Table name (snake_case)
+  - Columns with types (id, timestamps, foreign keys)
+  - Primary keys and indexes
+  - Relationships (one-to-one, one-to-many, many-to-many)
+- **Data Relationships:** How entities connect
+- **Drizzle Schema Structure:** File organization in `src/server/db/schema/`
+- **Migration Strategy:** How schema changes are managed
+
+**Think about:** Map every entity mentioned in the SRS to database tables. Consider:
+- User management tables
+- Feature-specific tables
+- Junction tables for many-to-many relationships
+- Soft deletes vs hard deletes
+- Timestamps (createdAt, updatedAt)
+
+---
+
+### 4. Authentication & Security
+**What to include:**
+- **Auth Provider:** BetterAuth setup (Email/Password + OAuth providers)
+- **Session Management:** JWT strategy, token expiration, refresh tokens
+- **Role-Based Access Control (RBAC):** User roles, permissions matrix
+- **Security Measures:**
+  - Password hashing (bcrypt)
+  - CSRF protection
+  - XSS prevention
+  - SQL injection prevention (Drizzle handles this)
+  - Rate limiting on API routes
+  - Input sanitization
+- **Logging & Monitoring:**
+  - Winston for server-side logging
+  - Error tracking (Sentry or similar)
+  - Audit logs for sensitive operations
+
+**Think about:** Security is non-negotiable. Cover authentication flows, authorization checks, and common vulnerabilities.
+
+---
+
+### 5. Infrastructure & Services
+**What to include:**
+- **Database Hosting:** Neon, Supabase, or Railway
+  - Connection pooling strategy
+  - Backup and recovery plan
+- **Application Hosting:** Vercel (or specified)
+  - Environment variables management
+  - Preview deployments
+- **CI/CD Pipeline:**
+  - GitHub Actions workflow
+  - Automated testing
+  - Deployment triggers
+- **Environment Configuration:**
+  - Development, Staging, Production environments
+  - Environment variable schema
+- **External Services:**
+  - Email service (Resend, SendGrid)
+  - File storage (if needed)
+  - Third-party APIs
+
+**Think about:** How the application is deployed, scaled, and maintained in production.
+
+---
+
+### 6. Frontend Architecture
+**What to include:**
+
+**a. Site Map (Pages):**
+- List ALL pages/routes in the application
+- Organize by public vs authenticated routes
+- Use Next.js App Router structure (e.g., `/app/(auth)/login/page.tsx`)
+
+**b. Navigation & Layout:**
+- Root layout structure
+- Authenticated vs public layouts
+- Navigation components (Header, Sidebar, Footer)
+- Responsive navigation strategy
+
+**c. User Flow Diagrams:**
+- Key user journeys (e.g., Registration → Onboarding → Dashboard)
+- Authentication flows
+- Feature-specific flows (extracted from SRS user stories)
+
+**d. UI/UX Elements:**
+- Loading states (Skeletons, Spinners)
+- Error states (Error boundaries, error messages)
+- Empty states
+- Modal/Dialog patterns
+- Toast notifications
+- Form validation feedback
+
+**e. Design System:**
+- Color palette (Primary, Secondary, Accent, Neutral, Semantic colors)
+- Typography scale (Headings, Body, Captions)
+- Spacing system (4px/8px grid)
+- Icons library (Lucide React)
+- Component variants (Button, Input, Card, etc.)
+
+**f. Component Library Strategy:**
+- Shadcn UI for base components
+- Custom components organization (`src/components/ui/`, `src/components/features/`)
+- Server Components vs Client Components strategy
+- Reusability patterns
+
+**Think about:** Map every feature from the SRS to specific pages and components. Visualize the user's journey.
+
+---
+
+### 7. Backend Architecture
+**What to include:**
+
+**a. Key Features & Business Logic:**
+- List all major features from the SRS
+- For each feature, describe the business logic
+- Service layer organization (`src/server/services/`)
+- Business rules and validation logic
+
+**b. API Route Structure:**
+- List ALL API endpoints grouped by resource
+- For each endpoint:
+  - HTTP method (GET, POST, PUT, DELETE)
+  - Route path (e.g., `/api/users/[id]/route.ts`)
+  - Purpose
+  - Authentication required (Yes/No)
+  - Authorization (Roles/Permissions needed)
+
+**c. Data Validation (Zod Schemas):**
+- Input validation schemas for each API endpoint
+- Request body schemas
+- Query parameter schemas
+- Response schemas
+- Schema organization (`src/lib/validations/`)
+
+**d. API Contracts (Request/Response Types):**
+- TypeScript interfaces for all API inputs/outputs
+- Error response structure
+- Pagination structure
+- API versioning strategy (if applicable)
+
+**Think about:** Every feature needs API endpoints. Define them clearly with validation and types.
+
+---
+
+### 8. Project Directory Structure
+**What to include:**
+- Complete file/folder architecture following `contexts/structure_template.md`
+- Detailed structure showing:
+  ```
+  src/
+  ├── app/                    # Next.js App Router
+  │   ├── (auth)/            # Auth route group
+  │   ├── (dashboard)/       # Dashboard route group
+  │   ├── api/               # API routes
+  │   └── layout.tsx         # Root layout
+  ├── components/
+  │   ├── ui/                # Shadcn UI components
+  │   ├── features/          # Feature-specific components
+  │   └── layouts/           # Layout components
+  ├── server/
+  │   ├── db/                # Database
+  │   │   ├── schema/        # Drizzle schemas
+  │   │   └── queries/       # Query functions
+  │   ├── services/          # Business logic
+  │   └── auth/              # Auth configuration
+  ├── lib/
+  │   ├── validations/       # Zod schemas
+  │   ├── utils/             # Utility functions
+  │   └── constants/         # Constants
+  └── types/                 # TypeScript types
+  ```
+
+**Think about:** Follow the structure from `contexts/structure_template.md` EXACTLY.
+
+---
+
+### 9. Future Roadmap & Scalability
+**What to include:**
+- **Phase 1 (MVP):** What's included in the initial release
+- **Phase 2:** Next features to add
+- **Phase 3:** Long-term vision
+- **Scalability Considerations:**
+  - Database indexing strategy
+  - Caching layers (Redis if needed)
+  - API rate limiting
+  - File uploads (if applicable)
+  - Background jobs (if needed)
+  - Microservices migration path (if relevant)
+- **Technical Debt Prevention:**
+  - Code quality standards
+  - Regular refactoring schedule
+  - Dependency update strategy
+
+**Think about:** Plan for growth. How will this application scale to 10x, 100x users?
+
+---
+
+## OUTPUT FORMAT
+
+Generate a complete, professionally formatted Markdown document with:
+
+1. **Front Matter:**
+   ```markdown
+   # Software Implementation Specification (SIS)
+   
+   **Project:** [Extract from SRS]
+   **Version:** 1.0
+   **Last Updated:** [Current Date]
+   **Author:** AI Agent (Based on SRS)
+   ```
+
+2. **Table of Contents:** Auto-generated from section headings
+
+3. **All 9 Sections:** Fully detailed as described above
+
+4. **Professional Formatting:**
+   - Use proper markdown headers (##, ###, ####)
+   - Code blocks for schemas, file structures, code examples
+   - Tables for data comparisons (auth roles, API endpoints)
+   - Diagrams in ASCII or Mermaid format
+   - Bullet points for lists
+   - Bold for emphasis
+
+5. **Suggest Filename:** At the end, output:
+   ```
+   Suggested filename: docs/source/sis.md
+   ```
+
+---
+
+## QUALITY CHECKLIST (Self-Review Before Output)
+
+Before presenting the SIS, verify:
+
+- ✅ All 9 sections are complete and detailed
+- ✅ Every feature from the SRS is addressed
+- ✅ Tech stack aligns with context files
+- ✅ Database schema covers all entities
+- ✅ Security considerations are comprehensive
+- ✅ API endpoints match feature requirements
+- ✅ File structure follows `structure_template.md`
+- ✅ Document is well-organized and professional
+- ✅ No placeholder text (like "TBD" or "TODO")
+- ✅ Technical decisions are justified
+
+---
+
+## EXPERT THINKING PROCESS
+
+As you create the SIS, think like a senior architect:
+
+1. **Extract Requirements:** Pull all features, user stories, and business logic from the SRS
+2. **Map to Architecture:** Convert business requirements to technical implementations
+3. **Make Informed Decisions:** Choose patterns and approaches based on best practices
+4. **Consider Edge Cases:** Think about error states, loading states, security
+5. **Plan for Scale:** Design for growth from day one
+6. **Follow Standards:** Adhere to all project standards in context files
+7. **Be Comprehensive:** Cover every detail - this is the blueprint developers will follow
+
+---
+
+**Now, read `docs/source/srs.md` and generate the complete SIS document. Think deeply, be thorough, and produce a professional specification that's ready for implementation.**
+"""

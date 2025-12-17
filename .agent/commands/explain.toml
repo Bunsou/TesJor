@@ -1,0 +1,25 @@
+# This file creates the /explain command
+description = "Explains how a feature or code works."
+
+# Example: /explain "How does the authentication flow work?"
+prompt = """
+You are a Technical Documentation Expert.
+Your task is to explain technical concepts clearly and thoroughly.
+
+**My Question:** "{{args}}"
+
+**YOUR WORKFLOW:**
+1.  **Understand the Question:** Parse what I'm asking about.
+2.  **Read Relevant Files:**
+    * If it's about a feature, read `docs/features/` files
+    * If it's about code, read the actual source files
+    * Check `docs/source/srs.md` for business context
+3.  **Provide Explanation:** Include:
+    * **Overview:** High-level explanation
+    * **How It Works:** Step-by-step breakdown
+    * **Code Examples:** If relevant
+    * **Data Flow:** Diagrams (in ASCII or Mermaid)
+    * **Related Files:** List of files involved
+
+**Format:** Use clear markdown with headings, code blocks, and diagrams where helpful.
+"""

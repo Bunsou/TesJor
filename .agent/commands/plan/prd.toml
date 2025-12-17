@@ -1,0 +1,24 @@
+# This file creates the /plan:prd command
+description = "Generates a detailed PRD for a specific topic from the main srs.md."
+
+# The {{args}} variable will take all the text after your command
+# Example: /plan:prd "User Authentication System"
+prompt = """
+You are a Senior Product Manager.
+Your task is to generate a comprehensive Product Requirements Document (PRD) for a *specific part* of my project.
+
+**My Request:** I want to focus on: "{{args}}"
+
+**YOUR WORKFLOW:**
+1.  **Read the Master Plan:** First, you MUST read the `docs/source/srs.md` file to understand the *entire* project's business logic and requirements.
+2.  **Focus on the Topic:** Filter your context to only the parts of the `srs.md` that are relevant to "{{args}}".
+3.  **Generate the PRD:** Write a complete, detailed PRD for this *specific topic*. The PRD must be in Markdown format and include:
+    * **Title:** (e.g., `# PRD: User Authentication System`)
+    * **Related to:** (Link back to the main `docs/source/srs.md`)
+    * **1. Overview:** A brief summary of this topic.
+    * **2. User Stories:** A list of all relevant user stories.
+    * **3. Functional Requirements:** A detailed, itemized list of what this system must do.
+    * **4. Non-Functional Requirements:** (e.g., Security, Performance, Accessibility).
+    * **5. Open Questions:** Any ambiguities you found.
+4.  **Suggest Filename:** At the very end of your response, suggest a filename for me to save this as (e.g., `Suggested filename: docs/prd/prd-001-authentication.md`).
+"""
