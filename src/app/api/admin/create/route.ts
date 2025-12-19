@@ -1,131 +1,109 @@
 import { NextRequest } from "next/server";
-import { db } from "@/db";
-import { places, activities, foods, drinks, souvenirs } from "@/db/schema";
+import {
+  asyncHandler,
+  requireAdmin,
+  checkRateLimit,
+} from "@/server/middleware";
+import { sendSuccessResponse } from "@/shared/utils";
+import { log, AppError } from "@/shared/utils";
 import {
   createPlaceSchema,
   createActivitySchema,
   createFoodSchema,
   createDrinkSchema,
   createSouvenirSchema,
-} from "@/lib/validators";
-import { errorResponse, successResponse } from "@/lib/utils";
-import { ratelimit, getIdentifier } from "@/lib/ratelimit";
-import { log } from "@/lib/logger";
-import { auth } from "@/lib/auth";
+} from "@/features/admin/schemas";
+import { createContent } from "@/server/services/listings";
+import type { Category } from "@/shared/types";
 
-export async function POST(request: NextRequest) {
-  try {
-    // Get session
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
+export const POST = asyncHandler(async (request: NextRequest) => {
+  // Get session and verify admin
+  const session = await requireAdmin(request);
+  const userId = session.user.id;
 
-    if (!session) {
-      return errorResponse("Unauthorized", 401);
-    }
+  // Rate limiting
+  await checkRateLimit(request, userId);
 
-    // Check admin role
-    const user = session.user as { role?: string };
-    if (user.role !== "admin") {
-      log.warn("Non-admin attempted to create content", {
-        userId: session.user.id,
-        email: session.user.email,
-      });
-      return errorResponse("Forbidden: Admin access required", 403);
-    }
+  // Parse request body
+  const body = await request.json();
+  const { category, ...data } = body;
 
-    // Rate limiting
-    const identifier = getIdentifier(request, session.user.id);
-    const { success } = await ratelimit.limit(identifier);
+  // Validate based on category
+  let validatedData;
+  switch (category) {
+    case "place":
+      const placeResult = createPlaceSchema.safeParse(data);
+      if (!placeResult.success) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          "Invalid place data",
+          placeResult.error.flatten().fieldErrors
+        );
+      }
+      validatedData = placeResult.data;
+      break;
 
-    if (!success) {
-      log.warn("Rate limit exceeded", { identifier, userId: session.user.id });
-      return errorResponse("Too many requests", 429);
-    }
+    case "activity":
+      const activityResult = createActivitySchema.safeParse(data);
+      if (!activityResult.success) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          "Invalid activity data",
+          activityResult.error.flatten().fieldErrors
+        );
+      }
+      validatedData = activityResult.data;
+      break;
 
-    // Parse request body
-    const body = await request.json();
-    const { category, ...data } = body;
+    case "food":
+      const foodResult = createFoodSchema.safeParse(data);
+      if (!foodResult.success) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          "Invalid food data",
+          foodResult.error.flatten().fieldErrors
+        );
+      }
+      validatedData = foodResult.data;
+      break;
 
-    let result;
-    let newItem;
+    case "drink":
+      const drinkResult = createDrinkSchema.safeParse(data);
+      if (!drinkResult.success) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          "Invalid drink data",
+          drinkResult.error.flatten().fieldErrors
+        );
+      }
+      validatedData = drinkResult.data;
+      break;
 
-    switch (category) {
-      case "place":
-        result = createPlaceSchema.safeParse(data);
-        if (!result.success) {
-          return errorResponse(
-            "Invalid place data",
-            400,
-            result.error.flatten().fieldErrors
-          );
-        }
-        [newItem] = await db.insert(places).values(result.data).returning();
-        break;
+    case "souvenir":
+      const souvenirResult = createSouvenirSchema.safeParse(data);
+      if (!souvenirResult.success) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          "Invalid souvenir data",
+          souvenirResult.error.flatten().fieldErrors
+        );
+      }
+      validatedData = souvenirResult.data;
+      break;
 
-      case "activity":
-        result = createActivitySchema.safeParse(data);
-        if (!result.success) {
-          return errorResponse(
-            "Invalid activity data",
-            400,
-            result.error.flatten().fieldErrors
-          );
-        }
-        [newItem] = await db.insert(activities).values(result.data).returning();
-        break;
-
-      case "food":
-        result = createFoodSchema.safeParse(data);
-        if (!result.success) {
-          return errorResponse(
-            "Invalid food data",
-            400,
-            result.error.flatten().fieldErrors
-          );
-        }
-        [newItem] = await db.insert(foods).values(result.data).returning();
-        break;
-
-      case "drink":
-        result = createDrinkSchema.safeParse(data);
-        if (!result.success) {
-          return errorResponse(
-            "Invalid drink data",
-            400,
-            result.error.flatten().fieldErrors
-          );
-        }
-        [newItem] = await db.insert(drinks).values(result.data).returning();
-        break;
-
-      case "souvenir":
-        result = createSouvenirSchema.safeParse(data);
-        if (!result.success) {
-          return errorResponse(
-            "Invalid souvenir data",
-            400,
-            result.error.flatten().fieldErrors
-          );
-        }
-        [newItem] = await db.insert(souvenirs).values(result.data).returning();
-        break;
-
-      default:
-        return errorResponse("Invalid category", 400);
-    }
-
-    log.info("Content created by admin", {
-      userId: session.user.id,
-      email: session.user.email,
-      category,
-      itemId: newItem.id,
-      itemName: newItem.name,
-    });
-
-    return successResponse({ item: newItem }, 201);
-  } catch (error) {
-    log.error("Failed to create content", { error });
-    return errorResponse("Failed to create content", 500);
+    default:
+      throw new AppError("VALIDATION_ERROR", "Invalid category");
   }
-}
+
+  const newItem = await createContent(category as Category, validatedData);
+
+  log.info("Content created by admin", {
+    userId,
+    email: session.user.email,
+    category,
+    itemId: newItem.id,
+    itemName: newItem.name,
+  });
+
+  return sendSuccessResponse({ item: newItem }, undefined, 201);
+});

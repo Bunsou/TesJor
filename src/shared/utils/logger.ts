@@ -7,7 +7,7 @@ const formatMessage = (level: string, message: string, meta?: unknown) => {
   const timestamp = new Date().toISOString();
   let msg = `${timestamp} [${level.toUpperCase()}]: ${message}`;
 
-  if (meta && Object.keys(meta).length > 0) {
+  if (meta && Object.keys(meta as object).length > 0) {
     msg += `\n${JSON.stringify(meta, null, 2)}`;
   }
 

@@ -1,3 +1,7 @@
+// ========================================
+// Content Item Types
+// ========================================
+
 export interface Place {
   id: string;
   name: string;
@@ -58,8 +62,10 @@ export interface Souvenir {
   createdAt: Date;
 }
 
+export type Category = "place" | "activity" | "food" | "drink" | "souvenir";
+
 export type ContentItem = (Place | Activity | Food | Drink | Souvenir) & {
-  category: "place" | "activity" | "food" | "drink" | "souvenir";
+  category: Category;
   distance?: number; // For nearby items
 };
 
@@ -68,27 +74,3 @@ export type ContentItemWithProgress = ContentItem & {
   isVisited?: boolean;
   visitedAt?: Date | null;
 };
-
-export interface UserProgress {
-  id: number;
-  userId: string;
-  isBookmarked: boolean;
-  isVisited: boolean;
-  visitedAt?: Date | null;
-  placeId?: string | null;
-  activityId?: string | null;
-  foodId?: string | null;
-  drinkId?: string | null;
-  souvenirId?: string | null;
-  createdAt: Date;
-}
-
-export interface ListingsResponse {
-  items: ContentItem[];
-  nextCursor: string | null;
-  hasMore: boolean;
-}
-
-export interface NearbyResponse {
-  items: (ContentItem & { distance: number })[];
-}

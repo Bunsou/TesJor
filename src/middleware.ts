@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
-import { log } from "@/lib/logger";
+import { auth } from "@/server/services/auth";
+import { log } from "@/shared/utils/logger";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

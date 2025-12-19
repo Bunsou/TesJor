@@ -1,64 +1,29 @@
 import { NextRequest } from "next/server";
-import { db } from "@/db";
-import { places, activities, foods, drinks, souvenirs } from "@/db/schema";
-import { errorResponse, successResponse } from "@/lib/utils";
-import { ratelimit, getIdentifier } from "@/lib/ratelimit";
-import { log } from "@/lib/logger";
-import { eq } from "drizzle-orm";
+import { asyncHandler, checkRateLimit } from "@/server/middleware";
+import type { RouteContext } from "@/server/middleware";
+import { validateRequestParams } from "@/shared/middleware";
+import { sendSuccessResponse } from "@/shared/utils";
+import { log } from "@/shared/utils";
+import { AppError } from "@/shared/utils";
+import { itemIdSchema } from "@/features/listings/schemas";
+import { getItemById } from "@/server/services/listings";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
+export const GET = asyncHandler<{ id: string }>(
+  async (request: NextRequest, context?: RouteContext<{ id: string }>) => {
     // Rate limiting
-    const identifier = getIdentifier(request);
-    const { success } = await ratelimit.limit(identifier);
+    await checkRateLimit(request);
 
-    if (!success) {
-      log.warn("Rate limit exceeded", { identifier });
-      return errorResponse("Too many requests", 429);
-    }
+    const params = await context!.params;
+    const validated = validateRequestParams(itemIdSchema, { id: params.id });
 
-    const { id } = await params;
-    console.log("Fetching item with ID:", id);
+    log.info("Fetching item", { id: validated.id });
 
-    // Try to find the item in all tables
-    const [place, activity, food, drink, souvenir] = await Promise.all([
-      db.select().from(places).where(eq(places.id, id)).limit(1),
-      db.select().from(activities).where(eq(activities.id, id)).limit(1),
-      db.select().from(foods).where(eq(foods.id, id)).limit(1),
-      db.select().from(drinks).where(eq(drinks.id, id)).limit(1),
-      db.select().from(souvenirs).where(eq(souvenirs.id, id)).limit(1),
-    ]);
-
-    let item = null;
-    let category = null;
-
-    if (place[0]) {
-      item = place[0];
-      category = "place";
-    } else if (activity[0]) {
-      item = activity[0];
-      category = "activity";
-    } else if (food[0]) {
-      item = food[0];
-      category = "food";
-    } else if (drink[0]) {
-      item = drink[0];
-      category = "drink";
-    } else if (souvenir[0]) {
-      item = souvenir[0];
-      category = "souvenir";
-    }
+    const item = await getItemById(validated.id);
 
     if (!item) {
-      return errorResponse("Item not found", 404);
+      throw new AppError("NOT_FOUND", "Item not found");
     }
 
-    return successResponse({ ...item, category });
-  } catch (error) {
-    log.error("Failed to fetch item", { error });
-    return errorResponse("Failed to fetch item", 500);
+    return sendSuccessResponse(item);
   }
-}
+);

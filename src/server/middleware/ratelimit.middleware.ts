@@ -1,6 +1,7 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { config } from "./config";
+import { config } from "@/shared/config";
+import { AppError } from "@/shared/utils/error-handler";
 
 // Create Redis client
 const redis = new Redis({
@@ -26,4 +27,16 @@ export function getIdentifier(request: Request, userId?: string): string {
   const cfConnectingIp = request.headers.get("cf-connecting-ip");
 
   return forwarded?.split(",")[0] || realIp || cfConnectingIp || "anonymous";
+}
+
+// Check rate limit and throw error if exceeded
+export async function checkRateLimit(request: Request, userId?: string) {
+  const identifier = getIdentifier(request, userId);
+  const { success } = await ratelimit.limit(identifier);
+
+  if (!success) {
+    throw new AppError("RATE_LIMIT_EXCEEDED", "Too many requests");
+  }
+
+  return identifier;
 }

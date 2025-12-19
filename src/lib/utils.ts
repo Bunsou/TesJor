@@ -1,6 +1,14 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+// Re-export from shared utils
+export {
+  AppError,
+  log,
+  sendSuccessResponse,
+  sendErrorResponse,
+} from "@/shared/utils";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -25,7 +33,9 @@ export function calculateDistance(
   return R * c;
 }
 
-// API response formatters
+/**
+ * @deprecated Use sendSuccessResponse from @/shared/utils instead
+ */
 export function successResponse<T>(data: T, messageOrStatus?: string | number) {
   const isStatus = typeof messageOrStatus === "number";
   const status = isStatus ? messageOrStatus : 200;
@@ -41,6 +51,9 @@ export function successResponse<T>(data: T, messageOrStatus?: string | number) {
   );
 }
 
+/**
+ * @deprecated Use sendErrorResponse from @/shared/utils instead
+ */
 export function errorResponse(
   message: string,
   status = 400,

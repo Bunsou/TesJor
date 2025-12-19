@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { Pool } from "@neondatabase/serverless";
 import * as schema from "./schema";
-import { config } from "@/lib/config";
+import { config } from "@/shared/config";
 
 // Create connection pool
 const pool = new Pool({ connectionString: config.databaseUrl });
