@@ -8,9 +8,9 @@ import {
   drinks,
   souvenirs,
 } from "@/server/db/schema";
-import { errorResponse, successResponse } from "@/lib/utils";
+import { errorResponse, successResponse } from "@/shared/utils";
 import { ratelimit, getIdentifier } from "@/lib/ratelimit";
-import { log } from "@/lib/logger";
+import { log } from "@/shared/utils/logger";
 import { auth } from "@/server/services/auth";
 import { eq, and } from "drizzle-orm";
 

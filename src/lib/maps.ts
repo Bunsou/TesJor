@@ -1,5 +1,5 @@
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
-import { config } from "./config";
+import { config } from "@/shared/config";
 
 let isInitialized = false;
 let loadPromise: Promise<google.maps.MapsLibrary> | null = null;

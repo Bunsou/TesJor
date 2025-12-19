@@ -9,8 +9,9 @@ async function getSession(): Promise<Session | null> {
       credentials: "include",
     });
     if (!res.ok) return null;
-    const data = await res.json();
-    return data.session;
+    const responseData = await res.json();
+    // Response structure is { success: true, data: { session: {...} } }
+    return responseData.data?.session || null;
   } catch {
     return null;
   }

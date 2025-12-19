@@ -41,8 +41,10 @@ const envSchema = z.object({
 
 // Validate environment variables at build time
 const parsedEnv = envSchema.safeParse(process.env);
+console.log("pasrsedEnv: ", parsedEnv.success);
 
 if (!parsedEnv.success) {
+  console.log("inside: ", parsedEnv.success);
   console.error(
     "❌ Invalid environment variables:",
     parsedEnv.error.flatten().fieldErrors

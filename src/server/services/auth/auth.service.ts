@@ -28,46 +28,6 @@ export const auth = betterAuth({
   secret: config.betterAuthSecret,
   baseURL: config.betterAuthUrl,
 
-  // Callbacks
-  callbacks: {
-    async session({
-      session,
-      user,
-    }: {
-      session: typeof auth.$Infer.Session;
-      user: typeof auth.$Infer.Session.user & { role?: string; name?: string };
-    }) {
-      // Add role and name to session
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          name: user.name || session.user.name,
-          role: user.role || "user",
-        },
-      };
-    },
-    async signIn({
-      user,
-      account,
-    }: {
-      user: { id: string; email: string; name: string };
-      account: { provider: string };
-    }) {
-      log.info("User signed in", {
-        userId: user.id,
-        email: user.email,
-        provider: account.provider,
-      });
-      return true;
-    },
-    async signOut({ session }: { session: { user: { id: string } } }) {
-      log.info("User signed out", {
-        userId: session.user.id,
-      });
-    },
-  },
-
   // Session configuration
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
