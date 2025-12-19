@@ -6,9 +6,14 @@ import { log } from "@/shared/utils/logger";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for public routes
-  const publicRoutes = ["/", "/api/auth"];
+  // Skip middleware for public routes (sign-in page and auth API)
+  const publicRoutes = ["/sign-in", "/api/auth"];
   if (publicRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
+  // Allow homepage to handle its own redirect logic
+  if (pathname === "/") {
     return NextResponse.next();
   }
 
@@ -28,7 +33,7 @@ export async function middleware(request: NextRequest) {
   ) {
     if (!session) {
       log.warn("Unauthorized access attempt", { pathname });
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/sign-in", request.url));
     }
   }
 
@@ -36,7 +41,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     if (!session) {
       log.warn("Unauthorized admin access attempt", { pathname });
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
     const user = session.user as { role?: string };

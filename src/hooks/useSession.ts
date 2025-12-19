@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Session } from "@/lib/auth";
+import { Session } from "@/server/services/auth";
 
 async function getSession(): Promise<Session | null> {
   try {

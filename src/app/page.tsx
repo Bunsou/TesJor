@@ -1,8 +1,17 @@
 import { redirect } from "next/navigation";
+import { auth } from "@/server/services/auth";
+import { headers } from "next/headers";
 
-export default function Home() {
-  // This function throws an error that Next.js catches to handle the redirect
-  redirect("/explore");
+export default async function Home() {
+  // Check if user is authenticated
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  // You don't need to return anything because the redirect happens immediately
+  // Redirect based on authentication status
+  if (session) {
+    redirect("/explore");
+  } else {
+    redirect("/sign-in");
+  }
 }

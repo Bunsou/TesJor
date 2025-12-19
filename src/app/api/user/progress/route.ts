@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { db } from "@/db";
+import { db } from "@/server/db";
 import {
   userProgress,
   places,
@@ -7,11 +7,11 @@ import {
   foods,
   drinks,
   souvenirs,
-} from "@/db/schema";
+} from "@/server/db/schema";
 import { errorResponse, successResponse } from "@/lib/utils";
 import { ratelimit, getIdentifier } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
-import { auth } from "@/lib/auth";
+import { auth } from "@/server/services/auth";
 import { eq, and } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
