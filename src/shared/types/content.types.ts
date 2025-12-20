@@ -2,78 +2,80 @@
 // Content Item Types (Unified Listings)
 // ========================================
 
-export type Category = "place" | "food" | "drink" | "souvenir" | "event";
-export type PriceLevel = "$" | "$$" | "$$$" | "Free";
+import { Listing, ListingPhoto, Review } from "@/server/db/schema";
 
-export interface PriceDetail {
-  label: string;
-  price: string;
-  currency: "KHR" | "USD";
-}
+// export type Category = "place" | "food" | "drink" | "souvenir" | "event";
+// export type PriceLevel = "$" | "$$" | "$$$" | "Free";
 
-export interface TimeSlot {
-  open: string; // HH:MM format
-  close: string; // HH:MM format
-}
+// export interface PriceDetail {
+//   label: string;
+//   price: string;
+//   currency: "KHR" | "USD";
+// }
 
-export interface OperatingHours {
-  monday?: TimeSlot[];
-  tuesday?: TimeSlot[];
-  wednesday?: TimeSlot[];
-  thursday?: TimeSlot[];
-  friday?: TimeSlot[];
-  saturday?: TimeSlot[];
-  sunday?: TimeSlot[];
-}
+// export interface TimeSlot {
+//   open: string; // HH:MM format
+//   close: string; // HH:MM format
+// }
 
-export interface ContactInfo {
-  phone?: string;
-  facebook?: string;
-  website?: string;
-}
+// export interface OperatingHours {
+//   monday?: TimeSlot[];
+//   tuesday?: TimeSlot[];
+//   wednesday?: TimeSlot[];
+//   thursday?: TimeSlot[];
+//   friday?: TimeSlot[];
+//   saturday?: TimeSlot[];
+//   sunday?: TimeSlot[];
+// }
 
-export interface Listing {
-  id: string;
-  slug: string;
-  category: Category;
-  title: string;
-  titleKh?: string | null;
-  description: string;
-  addressText?: string | null;
-  lat: number;
-  lng: number;
-  mainImage?: string | null;
-  priceLevel?: PriceLevel | null;
-  priceDetails?: PriceDetail[] | null;
-  operatingHours?: OperatingHours | null;
-  contactInfo?: ContactInfo | null;
-  googlePlaceId?: string | null;
-  views: number;
-  avgRating?: string | null;
-  createdAt: Date;
-  distance?: number; // For nearby items
-}
+// export interface ContactInfo {
+//   phone?: string;
+//   facebook?: string;
+//   website?: string;
+// }
 
-export interface ListingPhoto {
-  id: string;
-  listingId: string;
-  imageUrl: string;
-  caption?: string | null;
-  createdAt: Date;
-}
+// export interface Listing {
+//   id: string;
+//   slug: string;
+//   category: Category;
+//   title: string;
+//   titleKh?: string | null;
+//   description: string;
+//   addressText?: string | null;
+//   lat: number;
+//   lng: number;
+//   mainImage?: string | null;
+//   priceLevel?: PriceLevel | null;
+//   priceDetails?: PriceDetail[] | null;
+//   operatingHours?: OperatingHours | null;
+//   contactInfo?: ContactInfo | null;
+//   googlePlaceId?: string | null;
+//   views: number;
+//   avgRating?: string | null;
+//   createdAt: Date;
+//   distance?: number; // For nearby items
+// }
 
-export interface Review {
-  id: string;
-  listingId: string;
-  userId: string;
-  rating: number;
-  content?: string | null;
-  createdAt: Date;
-  user?: {
-    name: string;
-    image?: string | null;
-  };
-}
+// export interface ListingPhoto {
+//   id: string;
+//   listingId: string;
+//   imageUrl: string;
+//   caption?: string | null;
+//   createdAt: Date;
+// }
+
+// export interface Review {
+//   id: string;
+//   listingId: string;
+//   userId: string;
+//   rating: number;
+//   content?: string | null;
+//   createdAt: Date;
+//   user?: {
+//     name: string;
+//     image?: string | null;
+//   };
+// }
 
 export type ListingWithProgress = Listing & {
   isBookmarked?: boolean;

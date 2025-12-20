@@ -32,6 +32,7 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   image: text("image"),
   role: userRoleEnum("role").default("user").notNull(),
+  xpPoints: integer("xp_points").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -89,6 +90,7 @@ export const listings = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     slug: text("slug").notNull().unique(),
     category: categoryEnum("category").notNull(),
+    tags: text("tags").array().default([]).notNull(),
     title: text("title").notNull(),
     titleKh: text("title_kh"),
     description: text("description").notNull(),

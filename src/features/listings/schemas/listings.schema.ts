@@ -66,6 +66,7 @@ export const slugParamSchema = z.object({
 export const createListingSchema = z.object({
   slug: z.string().min(1).max(255),
   category: categoryEnum,
+  tags: z.array(z.string().min(1).max(50)).optional(),
   title: z.string().min(1).max(500),
   titleKh: z.string().max(500).optional(),
   description: z.string().min(10),
