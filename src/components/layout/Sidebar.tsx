@@ -2,69 +2,64 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Map, Heart, User, LogOut } from "lucide-react";
+import { Home, Map, Bookmark, User, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { signOut } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
+import { useSession } from "@/hooks/useSession";
 
 const navItems = [
-  { href: "/explore", label: "Explore", icon: Compass },
+  { href: "/explore", label: "Explore", icon: Home },
   { href: "/map", label: "Map", icon: Map },
-  { href: "/saved", label: "Saved", icon: Heart },
+  { href: "/my-trips", label: "My Trips", icon: Bookmark },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
+const adminNavItem = {
+  href: "/admin",
+  label: "Admin",
+  icon: Shield,
+};
+
 export function Sidebar() {
   const pathname = usePathname();
+  const { session } = useSession();
+  const isAdmin = session?.user?.role === "admin";
 
-  const handleSignOut = async () => {
-    await signOut();
-    window.location.href = "/";
-  };
+  const allItems = isAdmin ? [...navItems, adminNavItem] : navItems;
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-background border-r border-border">
-      <div className="p-6 border-b border-border">
+    <aside className="hidden md:flex flex-col w-64 h-screen bg-primary-foreground border-r border-border fixed left-0 top-0 z-40">
+      <div className="p-6">
         <Link href="/explore" className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-primary">TesJor</h1>
+          <h1 className="text-3xl font-bold text-primary">TesJor</h1>
         </Link>
-        <p className="text-xs text-foreground-muted mt-1">
-          Discover Hidden Cambodia
-        </p>
       </div>
 
-      <nav className="flex-1 px-3 py-4">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-md mb-1 transition-colors",
-                isActive
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-foreground-muted hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <Icon className="h-5 w-5" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
+      <nav className="flex-1 px-3">
+        <ul className="space-y-2">
+          {allItems.map(({ href, label, icon: Icon }) => {
+            const isActive = pathname.startsWith(href);
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground-muted hover:bg-accent hover:text-primary-foreground"
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </nav>
 
-      <div className="p-4 border-t border-border">
-        <Button
-          onClick={handleSignOut}
-          variant="ghost"
-          className="w-full justify-start"
-        >
-          <LogOut className="h-5 w-5 mr-3" />
-          Sign Out
-        </Button>
+      <div className="p-6 border-t border-border">
+        <p className="text-sm text-foreground-muted">{session?.user?.email}</p>
       </div>
     </aside>
   );

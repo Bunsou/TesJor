@@ -9,6 +9,13 @@ import {
 import { getDefaultImage } from "@/lib/default-images";
 
 import type { Listing } from "@/shared/types";
+import {
+  LocateFixed,
+  Minus,
+  Plus,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 
 async function fetchNearbyItems({
   lat,
@@ -258,7 +265,7 @@ export default function MapPage() {
           {/* Search Input */}
           <div className="relative flex items-center">
             <span className="material-symbols-outlined absolute left-3 text-[#926154] text-xl">
-              search
+              <Search />
             </span>
             <input
               type="text"
@@ -279,7 +286,9 @@ export default function MapPage() {
                 : "bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-[#1a110f] dark:text-[#f2eae8]"
             }`}
           >
-            <span className="material-symbols-outlined text-lg">tune</span>
+            <span className="material-symbols-outlined text-lg">
+              <SlidersHorizontal />
+            </span>
             <span className="hidden md:inline">Filters</span>
           </button>
 
@@ -384,31 +393,17 @@ export default function MapPage() {
       </div>
 
       {/* Map Controls - Right Side */}
-      <div className="absolute bottom-28 md:bottom-8 right-4 md:right-8 flex flex-col gap-3 z-20">
+      <div className="absolute bottom-28 md:bottom-8 right-8 md:right-16 flex flex-col gap-3 z-20">
         {/* My Location Button */}
         <button
           onClick={handleRecenter}
           className="w-12 h-12 rounded-xl bg-white dark:bg-[#2A201D] text-[#1a110f] dark:text-[#f2eae8] shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border border-gray-200 dark:border-gray-700"
           title="Recenter to my location"
         >
-          <span className="material-symbols-outlined">my_location</span>
+          <span className="material-symbols-outlined">
+            <LocateFixed />
+          </span>
         </button>
-
-        {/* Zoom Controls */}
-        <div className="flex flex-col rounded-xl bg-white dark:bg-[#2A201D] shadow-lg overflow-hidden divide-y divide-gray-100 dark:divide-gray-800 border border-gray-200 dark:border-gray-700">
-          <button
-            onClick={handleZoomIn}
-            className="w-12 h-12 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-[#1a110f] dark:text-[#f2eae8]"
-          >
-            <span className="material-symbols-outlined">add</span>
-          </button>
-          <button
-            onClick={handleZoomOut}
-            className="w-12 h-12 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-[#1a110f] dark:text-[#f2eae8]"
-          >
-            <span className="material-symbols-outlined">remove</span>
-          </button>
-        </div>
       </div>
 
       {/* Selected Place Preview Card */}

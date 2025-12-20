@@ -6,6 +6,17 @@ import Image from "next/image";
 import type { Listing } from "@/shared/types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { getDefaultImage } from "@/lib/default-images";
+import {
+  BookCheck,
+  CalendarHeart,
+  Heart,
+  MapPinCheck,
+  Search,
+  ShoppingBag,
+  SlidersHorizontal,
+  Utensils,
+  Wine,
+} from "lucide-react";
 
 async function fetchListings({
   category,
@@ -36,11 +47,11 @@ async function fetchListings({
 
 const categories = [
   { id: "all", label: "All", icon: null },
-  { id: "place", label: "Places", icon: "place" },
-  { id: "activity", label: "Activities", icon: "event" },
-  { id: "food", label: "Foods", icon: "restaurant" },
-  { id: "drink", label: "Drinks", icon: "local_bar" },
-  { id: "souvenir", label: "Souvenirs", icon: "local_mall" },
+  { id: "place", label: "Places", icon: <MapPinCheck /> },
+  { id: "activity", label: "Activities", icon: <CalendarHeart /> },
+  { id: "food", label: "Foods", icon: <Utensils /> },
+  { id: "drink", label: "Drinks", icon: <Wine /> },
+  { id: "souvenir", label: "Souvenirs", icon: <ShoppingBag /> },
 ];
 
 function getCategoryStyle(category: string) {
@@ -106,7 +117,7 @@ function PlaceCardNew({
                   isVisited ? "icon-filled" : ""
                 }`}
               >
-                beenhere
+                <BookCheck />
               </span>
             </button>
             <button
@@ -123,7 +134,7 @@ function PlaceCardNew({
                   isBookmarked ? "icon-filled" : ""
                 }`}
               >
-                favorite
+                <Heart />
               </span>
             </button>
           </div>
@@ -207,7 +218,7 @@ function FeaturedCard({ item }: { item: Listing }) {
 
           {/* Trending badge */}
           <div className="absolute top-4 left-4">
-            <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold border border-white/30">
+            <span className="px-3 py-1 rounded-full bg-primary/80 backdrop-blur-sm text-white text-xs font-bold border border-primary/30">
               Trending
             </span>
           </div>
@@ -220,7 +231,7 @@ function FeaturedCard({ item }: { item: Listing }) {
               onClick={(e) => e.preventDefault()}
             >
               <span className="material-symbols-outlined text-xl">
-                beenhere
+                <BookCheck />
               </span>
             </button>
             <button
@@ -229,7 +240,7 @@ function FeaturedCard({ item }: { item: Listing }) {
               onClick={(e) => e.preventDefault()}
             >
               <span className="material-symbols-outlined text-xl">
-                favorite
+                <Heart />
               </span>
             </button>
           </div>
@@ -353,12 +364,12 @@ export default function ExplorePage() {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden relative">
       {/* Search Header */}
-      <header className="w-full px-4 py-6 lg:px-10 lg:pt-8 bg-[#FDFCF6] dark:bg-[#201512] z-10 sticky top-0">
+      <header className="w-full px-4 py-6 lg:px-10 lg:pt-8 bg-background dark:bg-[#201512] z-10 sticky top-0">
         <div className="max-w-5xl mx-auto w-full">
           <div className="flex w-full items-center rounded-2xl h-14 bg-white dark:bg-[#2C211F] shadow-sm border border-transparent focus-within:border-[#E07A5F]/50 focus-within:ring-4 focus-within:ring-[#E07A5F]/10 transition-all">
             <div className="flex items-center justify-center pl-5 pr-3">
               <span className="material-symbols-outlined text-[#E07A5F] text-2xl">
-                search
+                <Search />
               </span>
             </div>
             <input
@@ -369,7 +380,9 @@ export default function ExplorePage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button className="mr-2 p-2 rounded-xl bg-[#2D6A4F]/10 hover:bg-[#2D6A4F]/20 text-[#2D6A4F] transition-colors">
-              <span className="material-symbols-outlined text-xl">tune</span>
+              <span className="material-symbols-outlined text-xl">
+                <SlidersHorizontal />
+              </span>
             </button>
           </div>
         </div>

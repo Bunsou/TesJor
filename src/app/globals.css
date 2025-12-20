@@ -6,7 +6,7 @@
 
 :root {
   /* Base colors - Light Mode - TesJor Cream Background */
-  --background: oklch(0.95 0.02 90);
+  --background: oklch(0.9754 0.0032 17.21);
   --foreground: oklch(0.2 0 0);
 
   /* Primary - TesJor Terracotta Orange */

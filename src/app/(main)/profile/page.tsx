@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, JSX } from "react";
 import Link from "next/link";
 import {
   Dialog,
@@ -16,6 +16,21 @@ import { useSession } from "@/hooks/useSession";
 import { TERMS_OF_SERVICE } from "@/constants/terms-of-service";
 import { PRIVACY_POLICY } from "@/constants/privacy-policy";
 import { HELP_CENTER } from "@/constants/help-center";
+import {
+  CircleStar,
+  Heart,
+  History,
+  MapPlus,
+  MessageSquareHeart,
+  CalendarCheck,
+  CircleCheck,
+  Trees,
+  Utensils,
+  TreePalm,
+  Martini,
+  Mountain,
+} from "lucide-react";
+import Image from "next/image";
 
 interface UserStats {
   bookmarkedCount: number;
@@ -26,7 +41,7 @@ interface UserStats {
 
 interface TravelHistoryItem {
   id: string;
-  type: "visit" | "quest" | "review" | "checkin";
+  type: "visit" | "quest" | "review";
   title: string;
   subtitle: string;
   date: string;
@@ -46,7 +61,7 @@ interface SavedItem {
 interface Badge {
   id: string;
   name: string;
-  icon: string;
+  icon: string | JSX.Element;
   earned: boolean;
   color: string;
 }
@@ -86,7 +101,7 @@ export default function ProfilePage() {
       subtitle: "Cultural Event • Siem Reap",
       date: "2 days ago",
       xp: 100,
-      image: "/default-image/placeholder.jpg",
+      image: "/default-image/placeholder.png",
       note: "Amazing energy! The boat races were the highlight.",
     },
     {
@@ -105,13 +120,6 @@ export default function ProfilePage() {
       date: "2 weeks ago",
       rating: 5,
     },
-    {
-      id: "4",
-      type: "checkin",
-      title: "Checked in at Kampot Pepper Farms",
-      subtitle: "Nature • Kampot",
-      date: "3 weeks ago",
-    },
   ]);
 
   const [savedItems] = useState<SavedItem[]>([
@@ -119,13 +127,13 @@ export default function ProfilePage() {
       id: "1",
       title: "Angkor Sangkran",
       subtitle: "Apr 14 • Siem Reap",
-      image: "/default-image/placeholder.jpg",
+      image: "/default-image/placeholder.png",
     },
     {
       id: "2",
       title: "Kulen Waterfall Hike",
       subtitle: "Nature • Siem Reap",
-      image: "/default-image/placeholder.jpg",
+      image: "/default-image/placeholder.png",
     },
   ]);
 
@@ -133,42 +141,42 @@ export default function ProfilePage() {
     {
       id: "1",
       name: "Temple Master",
-      icon: "temple_buddhist",
+      icon: "/icons/angkor-wat.png",
       earned: true,
-      color: "yellow",
+      color: "blue",
     },
     {
       id: "2",
       name: "Nature Lover",
-      icon: "forest",
+      icon: <Trees />,
       earned: true,
       color: "green",
     },
     {
       id: "3",
       name: "Foodie",
-      icon: "restaurant",
+      icon: <Utensils />,
       earned: true,
-      color: "blue",
+      color: "yellow",
     },
     {
       id: "4",
       name: "Island Hopper",
-      icon: "water_drop",
+      icon: <TreePalm />,
       earned: false,
       color: "gray",
     },
     {
       id: "5",
       name: "Night Owl",
-      icon: "nightlife",
+      icon: <Martini />,
       earned: false,
       color: "gray",
     },
     {
       id: "6",
       name: "Adventurer",
-      icon: "hiking",
+      icon: <Mountain />,
       earned: false,
       color: "gray",
     },
@@ -239,13 +247,11 @@ export default function ProfilePage() {
   const getHistoryIcon = (type: string) => {
     switch (type) {
       case "visit":
-        return "event_available";
+        return <CalendarCheck className="size-[1.2rem]" />;
       case "quest":
-        return "check_circle";
+        return <CircleCheck className="size-[1.2rem]" />;
       case "review":
-        return "rate_review";
-      case "checkin":
-        return "location_on";
+        return <MessageSquareHeart className="size-[1.2rem]" />;
       default:
         return "location_on";
     }
@@ -259,8 +265,6 @@ export default function ProfilePage() {
         return "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400";
       case "review":
         return "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
-      case "checkin":
-        return "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400";
       default:
         return "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400";
     }
@@ -476,7 +480,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-[#2A201D] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
             <span className="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform">
-              travel_explore
+              <MapPlus />
             </span>
             <span className="text-2xl font-bold text-[#1a110f] dark:text-[#f2eae8]">
               {stats.visitedCount}
@@ -487,7 +491,7 @@ export default function ProfilePage() {
           </div>
           <div className="bg-white dark:bg-[#2A201D] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
             <span className="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform">
-              stars
+              <CircleStar />
             </span>
             <span className="text-2xl font-bold text-[#1a110f] dark:text-[#f2eae8]">
               {stats.points.toLocaleString()}
@@ -498,7 +502,7 @@ export default function ProfilePage() {
           </div>
           <div className="bg-white dark:bg-[#2A201D] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
             <span className="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform">
-              rate_review
+              <MessageSquareHeart />
             </span>
             <span className="text-2xl font-bold text-[#1a110f] dark:text-[#f2eae8]">
               {stats.reviewCount || 0}
@@ -512,7 +516,7 @@ export default function ProfilePage() {
               className="material-symbols-outlined text-3xl text-primary mb-1 icon-filled"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
-              favorite
+              <Heart fill="currentColor" strokeWidth={0} />
             </span>
             <span className="text-2xl font-bold text-[#1a110f] dark:text-[#f2eae8]">
               {stats.bookmarkedCount}
@@ -556,7 +560,7 @@ export default function ProfilePage() {
             <div className="flex flex-col">
               <h3 className="font-bold text-xl mb-6 flex items-center gap-2 text-[#1a110f] dark:text-[#f2eae8]">
                 <span className="material-symbols-outlined text-primary">
-                  history
+                  <History />
                 </span>
                 Travel History
               </h3>
@@ -691,10 +695,15 @@ export default function ProfilePage() {
                     href={`/explore/${item.id}`}
                     className="flex gap-3 items-center p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group"
                   >
-                    <div
-                      className="w-16 h-16 rounded-lg bg-gray-300 bg-cover bg-center shrink-0 group-hover:scale-95 transition-transform"
-                      style={{ backgroundImage: `url('${item.image}')` }}
-                    />
+                    <div className="w-16 h-16 rounded-lg bg-gray-300 bg-cover bg-center shrink-0 group-hover:scale-95 transition-transform">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        width={64}
+                        height={64}
+                        className="w-full h-full rounded-lg object-cover"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm truncate group-hover:text-primary transition-colors text-[#1a110f] dark:text-[#f2eae8]">
                         {item.title}
@@ -708,7 +717,11 @@ export default function ProfilePage() {
                         className="material-symbols-outlined text-lg"
                         style={{ fontVariationSettings: "'FILL' 1" }}
                       >
-                        favorite
+                        <Heart
+                          fill="currentColor"
+                          strokeWidth={0}
+                          style={{ width: "1.2rem", height: "1.2rem" }}
+                        />
                       </span>
                     </div>
                   </Link>
@@ -741,7 +754,16 @@ export default function ProfilePage() {
                       )} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}
                     >
                       <span className="material-symbols-outlined text-3xl">
-                        {badge.icon}
+                        {typeof badge.icon === "string" ? (
+                          <Image
+                            src={badge.icon}
+                            alt={badge.name}
+                            width={40}
+                            height={40}
+                          />
+                        ) : (
+                          badge.icon
+                        )}
                       </span>
                     </div>
                     <p className="text-[10px] font-semibold text-center leading-tight text-[#1a110f] dark:text-[#f2eae8]">

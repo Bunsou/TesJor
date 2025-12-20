@@ -3,8 +3,8 @@
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { BottomNav } from "@/components/navigation/BottomNav";
-import { Sidebar } from "@/components/navigation/Sidebar";
+import { BottomNav } from "@/components/layout/BottomNav";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 export default function MainLayout({
