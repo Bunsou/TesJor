@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ContentItem } from "@/types";
+import type { Listing } from "@/shared/types";
 import { PlaceCard } from "@/components/shared/PlaceCard";
 import { CategoryFilter } from "@/components/shared/CategoryFilter";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,7 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 500);
 
-  const [items, setItems] = useState<ContentItem[]>([]);
+  const [items, setItems] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export default function ExplorePage() {
         });
 
         if (isMounted) {
-          setItems(data.items.filter((item: ContentItem) => item && item.id));
+          setItems(data.items.filter((item: Listing) => item && item.id));
           setNextCursor(data.nextCursor);
           console.log("[Explore] Loaded items:", data.items.length);
         }
@@ -112,7 +112,7 @@ export default function ExplorePage() {
 
       setItems((prev) => [
         ...prev,
-        ...data.items.filter((item: ContentItem) => item && item.id),
+        ...data.items.filter((item: Listing) => item && item.id),
       ]);
       setNextCursor(data.nextCursor);
       console.log("[Explore] Loaded more items:", data.items.length);

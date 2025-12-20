@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ContentItemWithProgress } from "@/types";
+import type { ListingWithProgress } from "@/shared/types";
 import { PlaceCard } from "@/components/shared/PlaceCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategoryFilter } from "@/components/shared/CategoryFilter";
@@ -33,7 +33,7 @@ export default function SavedPage() {
   );
   const [category, setCategory] = useState("all");
 
-  const [items, setItems] = useState<ContentItemWithProgress[]>([]);
+  const [items, setItems] = useState<ListingWithProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -9,7 +9,7 @@ import {
 import { MapFilters } from "@/components/map/MapFilters";
 import { Navigation } from "lucide-react";
 
-import { ContentItem } from "@/types";
+import type { Listing } from "@/shared/types";
 
 async function fetchNearbyItems({
   lat,
@@ -51,7 +51,7 @@ async function fetchNearbyItems({
   if (categories.length > 0) {
     const filtered = {
       ...data.data,
-      items: data.data.items.filter((item: ContentItem) =>
+      items: data.data.items.filter((item: Listing) =>
         categories.includes(item.category)
       ),
     };
@@ -108,7 +108,7 @@ export default function MapPage() {
   const [radius, setRadius] = useState(50); // km
   const [useRadiusFilter, setUseRadiusFilter] = useState(false); // Default OFF
 
-  const [items, setItems] = useState<ContentItem[]>([]);
+  const [items, setItems] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Get user location
@@ -186,23 +186,19 @@ export default function MapPage() {
 
   const markers =
     items
-      ?.filter((item) => "lat" in item && "lng" in item && item.lat && item.lng)
+      ?.filter((item) => item.lat && item.lng)
       .map((item) => {
-        const itemWithLocation = item as ContentItem & {
-          lat: string;
-          lng: string;
-        };
         return {
-          id: itemWithLocation.id,
+          id: item.id,
           position: {
-            lat: Number(itemWithLocation.lat),
-            lng: Number(itemWithLocation.lng),
+            lat: Number(item.lat),
+            lng: Number(item.lng),
           },
-          title: itemWithLocation.name,
-          category: itemWithLocation.category,
-          imageUrl: itemWithLocation.imageUrl ?? undefined,
-          description: itemWithLocation.description,
-          priceRange: itemWithLocation.priceRange ?? undefined,
+          title: item.title,
+          category: item.category,
+          imageUrl: item.mainImage ?? undefined,
+          description: item.description,
+          priceRange: item.priceLevel ?? undefined,
         };
       }) ?? [];
 

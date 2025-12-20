@@ -4,6 +4,7 @@ import {
   listingPhotos,
   reviews,
   type NewListing,
+  Listing,
 } from "@/server/db/schema";
 import { eq, and, or, ilike, desc, lt, sql, inArray } from "drizzle-orm";
 
@@ -33,12 +34,16 @@ export async function findListings(options: ListingsQueryOptions) {
 
   // Filter by category
   if (category) {
-    conditions.push(eq(listings.category, category as any));
+    conditions.push(eq(listings.category, category as Listing["category"]));
   }
 
   // Filter by price level
   if (priceLevel) {
-    conditions.push(eq(listings.priceLevel, priceLevel as any));
+    if (!priceLevel === null) {
+      conditions.push(
+        eq(listings.priceLevel, priceLevel as "$" | "$$" | "$$$" | "Free")
+      );
+    }
   }
 
   // Search by title or description
@@ -88,7 +93,7 @@ export async function findNearbyListings(options: NearbyListingsOptions) {
   const conditions = [sql`${distanceQuery} <= ${radius}`];
 
   if (category) {
-    conditions.push(eq(listings.category, category as any));
+    conditions.push(eq(listings.category, category as Listing["category"]));
   }
 
   const results = await db

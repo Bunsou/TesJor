@@ -6,12 +6,12 @@ import Link from "next/link";
 import { Heart, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { ContentItem } from "@/types";
+import type { Listing } from "@/shared/types";
 import { truncate } from "@/lib/utils";
 import { getDefaultImage } from "@/lib/default-images";
 
 interface PlaceCardProps {
-  item: ContentItem;
+  item: Listing;
   isBookmarked?: boolean;
   isVisited?: boolean;
   onBookmark?: () => void;
@@ -25,9 +25,9 @@ export function PlaceCard({
 }: PlaceCardProps) {
   const [imageError, setImageError] = useState(false);
   const imageSrc =
-    imageError || !item.imageUrl
+    imageError || !item.mainImage
       ? getDefaultImage(item.category)
-      : item.imageUrl;
+      : item.mainImage;
 
   return (
     <Link href={`/item/${item.id}`}>
@@ -36,7 +36,7 @@ export function PlaceCard({
         <div className="relative h-48 bg-muted">
           <Image
             src={imageSrc}
-            alt={item.name}
+            alt={item.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -71,11 +71,11 @@ export function PlaceCard({
         <CardContent className="p-4">
           {/* Title */}
           <h3 className="font-semibold text-lg text-foreground mb-1">
-            {item.name}
+            {item.title}
           </h3>
-          {item.nameKh && (
+          {item.titleKh && (
             <p className="text-sm text-foreground-muted font-khmer mb-2">
-              {item.nameKh}
+              {item.titleKh}
             </p>
           )}
 
@@ -86,15 +86,15 @@ export function PlaceCard({
 
           {/* Footer */}
           <div className="flex items-center justify-between">
-            {item.priceRange && (
+            {item.priceLevel && (
               <span className="text-sm font-medium text-primary">
-                {item.priceRange}
+                {item.priceLevel}
               </span>
             )}
 
-            {"province" in item && (
+            {item.addressText && (
               <span className="text-xs text-foreground-muted">
-                📍 {item.province}
+                📍 {item.addressText}
               </span>
             )}
           </div>
