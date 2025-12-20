@@ -10,7 +10,7 @@
   --foreground: oklch(0.2 0 0);
 
   /* Primary - TesJor Terracotta Orange */
-  --primary: oklch(0.65 0.12 40);
+  --primary: oklch(0.6925 0.1321 36.39);
   --primary-dark: oklch(0.55 0.14 35);
   --primary-foreground: oklch(0.99 0 0);
 
@@ -40,7 +40,7 @@
   --ring: var(--primary);
 
   /* Chart colors - TesJor theme */
-  --chart-1: oklch(0.65 0.12 40);
+  --chart-1: oklch(0.6925 0.1321 36.39);
   --chart-2: oklch(0.68 0.08 160);
   --chart-3: oklch(0.75 0.1 50);
   --chart-4: oklch(0.6 0.1 150);
