@@ -9,7 +9,10 @@ import {
   souvenirs,
 } from "@/server/db/schema";
 import { errorResponse, successResponse } from "@/shared/utils";
-import { ratelimit, getIdentifier } from "@/lib/ratelimit";
+import {
+  ratelimit,
+  getIdentifier,
+} from "@/server/middleware/ratelimit.middleware";
 import { log } from "@/shared/utils/logger";
 import { auth } from "@/server/services/auth";
 import { eq, and } from "drizzle-orm";
