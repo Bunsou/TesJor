@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TesJor - User Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e17c60",
+                        "primary-hover": "#d1684e",
+                        "background-light": "#F9F7F5",
+                        "background-dark": "#201512",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2A201D",
+                        "text-primary-light": "#1a110f",
+                        "text-secondary-light": "#926154",
+                        "text-primary-dark": "#f2eae8",
+                        "text-secondary-dark": "#d6c1bd",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "khmer": ["'Noto Serif Khmer'", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }.timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+        .dark .timeline-line::before {
+            background-color: #374151;
+        }
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark font-display antialiased h-screen overflow-hidden flex transition-colors duration-200">
+<aside class="w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex flex-col justify-between shrink-0 transition-colors duration-200 z-20 hidden md:flex">
+<div class="p-6">
+<div class="flex flex-col mb-10">
+<h1 class="text-2xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">TesJor</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Travel Cambodia</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span>Discover</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span>Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">luggage</span>
+<span>My Trips</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary font-medium transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 bg-center bg-cover" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxMEAiPMgC3LCpW1b6S26VkP2L8AIZtccDBjuFRT1jxjBPw92Fnkfxl3KC3iEb7DAhx4E4JcaQZZInqcekQ83r469NHwAVRgFu5dU8RX1C4wJE9xJwzwFR-WBZWTint-Zephw098KZGEOtIYdG40crQRhixokrVsK-HojyXaudX6q5c4xftlGXLGzTJw1silynBlh6YF8VJo1sllKRElImiXnfVHBARCQZdJRxXejPWggk5RzE4qiFA_Ty3LWFdN_XaI7U0O9HMo4');"></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">Sokha Chen</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Level 5 Explorer</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 h-full overflow-y-auto relative bg-background-light dark:bg-background-dark scroll-smooth">
+<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 flex flex-col gap-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div class="flex items-center gap-6">
+<div class="relative">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white dark:border-surface-dark shadow-lg bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxMEAiPMgC3LCpW1b6S26VkP2L8AIZtccDBjuFRT1jxjBPw92Fnkfxl3KC3iEb7DAhx4E4JcaQZZInqcekQ83r469NHwAVRgFu5dU8RX1C4wJE9xJwzwFR-WBZWTint-Zephw098KZGEOtIYdG40crQRhixokrVsK-HojyXaudX6q5c4xftlGXLGzTJw1silynBlh6YF8VJo1sllKRElImiXnfVHBARCQZdJRxXejPWggk5RzE4qiFA_Ty3LWFdN_XaI7U0O9HMo4');"></div>
+</div>
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">Sokha Chen</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark">Digital Nomad • Siem Reap, Cambodia</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Level 5 Explorer</span>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Join date: Jan 2024</span>
+</div>
+</div>
+</div>
+<button class="px-5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 text-text-primary-light dark:text-text-primary-dark font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">settings</span>
+                Settings
+            </button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
+<span class="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform">travel_explore</span>
+<span class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">42</span>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium uppercase tracking-wider">Places Visited</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
+<span class="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform">stars</span>
+<span class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">2,450</span>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium uppercase tracking-wider">XP Earned</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
+<span class="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform">rate_review</span>
+<span class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">18</span>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium uppercase tracking-wider">Reviews</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center gap-1 group hover:border-primary/30 transition-colors">
+<span class="material-symbols-outlined text-3xl text-primary mb-1 group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">12</span>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium uppercase tracking-wider">Bookmarked</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex justify-between items-end mb-3">
+<div>
+<h3 class="font-bold text-lg">Level Progress</h3>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">550 XP to Level 6</p>
+</div>
+<span class="text-primary font-bold text-xl">82%</span>
+</div>
+<div class="w-full h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[82%] rounded-full relative overflow-hidden">
+<div class="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-bold text-xl mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                        Travel History
+                    </h3>
+<div class="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="timeline-item relative pl-12 pb-10">
+<div class="timeline-line absolute left-0 top-0 h-full w-10 flex justify-center">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center z-10 border-4 border-white dark:border-surface-dark">
+<span class="material-symbols-outlined text-xl">event_available</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark">Attended "Sangkran at Kampong Phluk"</h4>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Cultural Event • Siem Reap</p>
+</div>
+<span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">2 days ago</span>
+</div>
+<div class="p-3 rounded-lg bg-background-light dark:bg-background-dark border border-gray-100 dark:border-gray-800 flex gap-3 items-center">
+<div class="w-16 h-12 rounded bg-gray-300 bg-cover bg-center shrink-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRG0MoF_Oz92xOFO0cTeglMsfZT_MUrR6TvnRqeJ8Vp2ti3CXekWCqVPVOePgloPrdcCbXE5e4-nPu5Tmc-2TjQoJQnsHhuC2QLmlQkGsXOJ8SwoFLssEFD-Jwv-BwYoHQ7Ng2tYWPr88ZOKAjjzUGO4brcx1ivDNPuHxaIO3vyPbRWd0hxOXWHMu00KfKMssUjoUf_TnH7F2azfolHTJgIuc_NjVDp3Y1mJy6BUYNF8JAQqGNQa0-3DbRLYED_yeEgziW9cYaFh4');"></div>
+<p class="text-sm italic text-text-secondary-light dark:text-text-secondary-dark">"Amazing energy! The boat races were the highlight."</p>
+<div class="ml-auto flex items-center text-primary text-xs font-bold gap-1">
+<span>+100 XP</span>
+</div>
+</div>
+</div>
+</div>
+<div class="timeline-item relative pl-12 pb-10">
+<div class="timeline-line absolute left-0 top-0 h-full w-10 flex justify-center">
+<div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center z-10 border-4 border-white dark:border-surface-dark">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark">Completed Quest: "Temple Hunter"</h4>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Achievement Unlocked</p>
+</div>
+<span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">1 week ago</span>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500 text-xs font-bold flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-sm">emoji_events</span>
+                                        Gold Badge
+                                    </span>
+<span class="px-2 py-1 rounded bg-primary/10 text-primary text-xs font-bold flex items-center gap-1 w-fit">
+                                        +500 XP
+                                    </span>
+</div>
+</div>
+</div>
+<div class="timeline-item relative pl-12 pb-10">
+<div class="timeline-line absolute left-0 top-0 h-full w-10 flex justify-center">
+<div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center z-10 border-4 border-white dark:border-surface-dark">
+<span class="material-symbols-outlined text-xl">rate_review</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark">Reviewed "Nom Banh Chok Teuk Sray"</h4>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Local Food • Battambang</p>
+</div>
+<span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">2 weeks ago</span>
+</div>
+<div class="flex text-primary text-sm">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<div class="timeline-item relative pl-12">
+<div class="timeline-line absolute left-0 top-0 h-full w-10 flex justify-center">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center z-10 border-4 border-white dark:border-surface-dark">
+<span class="material-symbols-outlined text-xl">location_on</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark">Checked in at Kampot Pepper Farms</h4>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Nature • Kampot</p>
+</div>
+<span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">3 weeks ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-lg">Saved for Later</h4>
+<a class="text-xs font-semibold text-primary hover:text-primary-hover" href="#">View All</a>
+</div>
+<div class="flex flex-col gap-3">
+<a class="flex gap-3 items-center p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<div class="w-16 h-16 rounded-lg bg-gray-300 bg-cover bg-center shrink-0 group-hover:scale-95 transition-transform" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXrBbQe5IxX5foWOosENknR0NPVL95Mz9ihMHUW_X7IdaujMouz9F7yrmiBNr2Fmqwx4YOF1XNesQ4jfKpsEAKn9FyOw4BEdiWBeJICSqdk1YMSB0mEVsOpmXs_kq-rT_lwlU_Q-cqEinN4M4fomN-ON-wg2K6JVYqmuD_n3-aOdt_RqyP2Wqd0pOvAjeH8XO1ZU77CHnFIjRsz3d8-ydE-E-ZUTzCUxGels4RFyvjKOA3kMgYJP5thgmFQoWbYUuyRKC1dvN4aMc');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-semibold text-sm truncate group-hover:text-primary transition-colors">Angkor Sangkran</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate">Apr 14 • Siem Reap</p>
+</div>
+<div class="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-black/20 shadow-sm text-primary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</a>
+<a class="flex gap-3 items-center p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<div class="w-16 h-16 rounded-lg bg-gray-300 bg-cover bg-center shrink-0 group-hover:scale-95 transition-transform" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJ3N_XoFvocXj5stfDDJQD5j7ynTpU2DEW_zHIb8l97My4TT_dm_QT6MbLJSuC-MFGGb4cVh4aDDH9J_YxMzON8NnIrolPkbGzaqEpogpzbEwuxmz_9P83iuWoMxpyNnT9ktQ9n_u5CYLxQFjXrgAIZtsPpwuqIqF_6VmMftcYzeulPBs6g3m6Ab0U4Wpn6yeUAC3dJeUKJQRFT0kYWzPOrCi_UGMnBQUDslNEgG3q_RaQNBnCJU7QOR7erVnME-XRb0nQpdeowQk');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-semibold text-sm truncate group-hover:text-primary transition-colors">Kulen Waterfall Hike</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate">Nature • Siem Reap</p>
+</div>
+<div class="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-black/20 shadow-sm text-primary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</a>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-lg">Badges</h4>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">5/12 Earned</span>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-600 dark:text-yellow-500 group-hover:scale-110 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-3xl">temple_buddhist</span>
+</div>
+<p class="text-[10px] font-semibold text-center leading-tight">Temple Master</p>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-500 group-hover:scale-110 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-3xl">forest</span>
+</div>
+<p class="text-[10px] font-semibold text-center leading-tight">Nature Lover</p>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-500 group-hover:scale-110 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-3xl">restaurant</span>
+</div>
+<p class="text-[10px] font-semibold text-center leading-tight">Foodie</p>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer opacity-40 hover:opacity-100 transition-opacity">
+<div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 border border-dashed border-gray-300 dark:border-gray-600">
+<span class="material-symbols-outlined text-3xl">water_drop</span>
+</div>
+<p class="text-[10px] font-semibold text-center leading-tight">Island Hopper</p>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer opacity-40 hover:opacity-100 transition-opacity">
+<div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 border border-dashed border-gray-300 dark:border-gray-600">
+<span class="material-symbols-outlined text-3xl">nightlife</span>
+</div>
+<p class="text-[10px] font-semibold text-center leading-tight">Night Owl</p>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer opacity-40 hover:opacity-100 transition-opacity">
+<div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 border border-dashed border-gray-300 dark:border-gray-600">
+<span class="material-symbols-outlined text-3xl">hiking</span>
+</div>
+<p class="text-[10px] font-semibold text-center leading-tight">Adventurer</p>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-primary to-orange-400 p-5 rounded-2xl text-white shadow-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-2 opacity-90">
+<span class="material-symbols-outlined text-sm">explore</span>
+<span class="text-xs font-bold uppercase tracking-wider">Suggested Quest</span>
+</div>
+<h4 class="font-bold text-lg mb-1">Hidden Markets of Phnom Penh</h4>
+<p class="text-sm text-white/90 mb-4 line-clamp-2">Discover the secret food stalls and vintage shops in the Russian Market area.</p>
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold bg-white/20 px-2 py-1 rounded">+300 XP Reward</span>
+<button class="w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center hover:scale-110 transition-transform shadow-md">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

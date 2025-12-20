@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TesJor - My Trips</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e17c60",
+                        "primary-hover": "#d1684e",
+                        "background-light": "#F9F7F5",
+                        "background-dark": "#201512",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2A201D",
+                        "text-primary-light": "#1a110f",
+                        "text-secondary-light": "#926154",
+                        "text-primary-dark": "#f2eae8",
+                        "text-secondary-dark": "#d6c1bd",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "khmer": ["'Noto Serif Khmer'", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark font-display antialiased h-screen overflow-hidden flex transition-colors duration-200">
+<aside class="w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex flex-col justify-between shrink-0 transition-colors duration-200 z-20 hidden md:flex">
+<div class="p-6">
+<div class="flex flex-col mb-10">
+<h1 class="text-2xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">TesJor</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Travel Cambodia</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span>Discover</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span>Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary font-medium transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">luggage</span>
+<span>My Trips</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 bg-center bg-cover" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxMEAiPMgC3LCpW1b6S26VkP2L8AIZtccDBjuFRT1jxjBPw92Fnkfxl3KC3iEb7DAhx4E4JcaQZZInqcekQ83r469NHwAVRgFu5dU8RX1C4wJE9xJwzwFR-WBZWTint-Zephw098KZGEOtIYdG40crQRhixokrVsK-HojyXaudX6q5c4xftlGXLGzTJw1silynBlh6YF8VJo1sllKRElImiXnfVHBARCQZdJRxXejPWggk5RzE4qiFA_Ty3LWFdN_XaI7U0O9HMo4');"></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">Sokha Chen</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Level 5 Explorer</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 h-full overflow-y-auto relative bg-background-light dark:bg-background-dark scroll-smooth">
+<div class="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h1 class="text-3xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">My Trips</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">Manage your saved adventures and travel history.</p>
+</div>
+<div class="flex gap-4">
+<div class="px-4 py-3 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+<div>
+<p class="text-2xl font-bold leading-none">12</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium">Saved</p>
+</div>
+</div>
+<div class="px-4 py-3 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">beenhere</span>
+</div>
+<div>
+<p class="text-2xl font-bold leading-none">8</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium">Visited</p>
+</div>
+</div>
+</div>
+</div>
+<div class="border-b border-gray-200 dark:border-gray-800">
+<nav aria-label="Tabs" class="flex gap-8">
+<a aria-current="page" class="border-b-2 border-primary py-4 px-1 text-sm font-semibold text-primary" href="#">
+                        Bookmarked
+                    </a>
+<a class="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-text-primary-dark hover:border-gray-300 transition-colors" href="#">
+                        Visited
+                    </a>
+</nav>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRG0MoF_Oz92xOFO0cTeglMsfZT_MUrR6TvnRqeJ8Vp2ti3CXekWCqVPVOePgloPrdcCbXE5e4-nPu5Tmc-2TjQoJQnsHhuC2QLmlQkGsXOJ8SwoFLssEFD-Jwv-BwYoHQ7Ng2tYWPr88ZOKAjjzUGO4brcx1ivDNPuHxaIO3vyPbRWd0hxOXWHMu00KfKMssUjoUf_TnH7F2azfolHTJgIuc_NjVDp3Y1mJy6BUYNF8JAQqGNQa0-3DbRLYED_yeEgziW9cYaFh4');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+<div class="absolute top-3 right-3 z-10">
+<button class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="absolute top-3 left-3 z-10">
+<span class="px-2.5 py-1 rounded-md bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Culture</span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark line-clamp-1">Kampong Phluk</h3>
+<p class="font-khmer text-sm text-text-secondary-light dark:text-text-secondary-dark">កំពង់ភ្លុក</p>
+</div>
+<div class="flex items-center gap-1 text-primary text-xs font-bold bg-primary/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.9
+                            </div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Siem Reap • 16km away</span>
+</div>
+<div class="pt-3 mt-1 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-white/5 text-xs font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-text-primary-light dark:text-text-primary-dark">Details</button>
+<button class="flex-1 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-hover transition-colors shadow-sm shadow-primary/20">Plan Trip</button>
+</div>
+</div>
+</div>
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXrBbQe5IxX5foWOosENknR0NPVL95Mz9ihMHUW_X7IdaujMouz9F7yrmiBNr2Fmqwx4YOF1XNesQ4jfKpsEAKn9FyOw4BEdiWBeJICSqdk1YMSB0mEVsOpmXs_kq-rT_lwlU_Q-cqEinN4M4fomN-ON-wg2K6JVYqmuD_n3-aOdt_RqyP2Wqd0pOvAjeH8XO1ZU77CHnFIjRsz3d8-ydE-E-ZUTzCUxGels4RFyvjKOA3kMgYJP5thgmFQoWbYUuyRKC1dvN4aMc');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+<div class="absolute top-3 right-3 z-10">
+<button class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="absolute top-3 left-3 z-10">
+<span class="px-2.5 py-1 rounded-md bg-blue-500/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Event</span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark line-clamp-1">Angkor Sangkran</h3>
+<p class="font-khmer text-sm text-text-secondary-light dark:text-text-secondary-dark">អង្គរសង្ក្រាន្ត</p>
+</div>
+<div class="flex items-center gap-1 text-primary text-xs font-bold bg-primary/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                5.0
+                            </div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>Apr 14 - Apr 16</span>
+</div>
+<div class="pt-3 mt-1 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-white/5 text-xs font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-text-primary-light dark:text-text-primary-dark">Details</button>
+<button class="flex-1 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-hover transition-colors shadow-sm shadow-primary/20">Plan Trip</button>
+</div>
+</div>
+</div>
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJ3N_XoFvocXj5stfDDJQD5j7ynTpU2DEW_zHIb8l97My4TT_dm_QT6MbLJSuC-MFGGb4cVh4aDDH9J_YxMzON8NnIrolPkbGzaqEpogpzbEwuxmz_9P83iuWoMxpyNnT9ktQ9n_u5CYLxQFjXrgAIZtsPpwuqIqF_6VmMftcYzeulPBs6g3m6Ab0U4Wpn6yeUAC3dJeUKJQRFT0kYWzPOrCi_UGMnBQUDslNEgG3q_RaQNBnCJU7QOR7erVnME-XRb0nQpdeowQk');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+<div class="absolute top-3 right-3 z-10">
+<button class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="absolute top-3 left-3 z-10">
+<span class="px-2.5 py-1 rounded-md bg-green-600/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Nature</span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark line-clamp-1">Kulen Waterfall</h3>
+<p class="font-khmer text-sm text-text-secondary-light dark:text-text-secondary-dark">ទឹកធ្លាក់ភ្នំគូលេន</p>
+</div>
+<div class="flex items-center gap-1 text-primary text-xs font-bold bg-primary/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.7
+                            </div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+<span class="material-symbols-outlined text-sm">hiking</span>
+<span>Kulen Mountain • 48km away</span>
+</div>
+<div class="pt-3 mt-1 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-white/5 text-xs font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-text-primary-light dark:text-text-primary-dark">Details</button>
+<button class="flex-1 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-hover transition-colors shadow-sm shadow-primary/20">Plan Trip</button>
+</div>
+</div>
+</div>
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCVJ8DHqRsPlhm1yv_kAuBw5wvN0OfGe5N0oW76FOlPuuFyrM4kNlUI7-Za9esuhX1it5GRQoyN6Yzvu75M7mRKmoVfBzH7cLP3Bte8tW07Yv30gDdgaJaRPE6ezKm4V9XCKO-DbB_1XoEEYMncUO8gjvwvPBVCcuzyihabhAoVdfU699RuFE_dHhn1EldM6CM_fl3zl-fMPZduN2G-GKU7mDUklY97UrlEccbfrrjJMke6EmUT8vuLiluEUZcTG3IIp43tBe16sUc');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+<div class="absolute top-3 right-3 z-10">
+<button class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="absolute top-3 left-3 z-10">
+<span class="px-2.5 py-1 rounded-md bg-orange-500/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Food</span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark line-clamp-1">Psar Chas Market</h3>
+<p class="font-khmer text-sm text-text-secondary-light dark:text-text-secondary-dark">ផ្សារចាស់</p>
+</div>
+<div class="flex items-center gap-1 text-primary text-xs font-bold bg-primary/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.5
+                            </div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+<span class="material-symbols-outlined text-sm">restaurant</span>
+<span>Siem Reap City • 0.5km away</span>
+</div>
+<div class="pt-3 mt-1 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-white/5 text-xs font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-text-primary-light dark:text-text-primary-dark">Details</button>
+<button class="flex-1 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-hover transition-colors shadow-sm shadow-primary/20">Plan Trip</button>
+</div>
+</div>
+</div>
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 opacity-75 hover:opacity-100">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAZmxUP-Jl3ki4bmM22aMvIrDFcQ7gKM4g-HgN_ciLuWN7tr2aUHL0Q4tgnIcxfx6s3kL4OUSstZe21F635M_rgsGtwZk2BHNsTwK7YfvzkOjmnHh3JEi_9-WIvsRa4-Z91hxPr6YLdoeOCsCqLLFznlSjI_Iv0oqSW-mBavMaIECPjai9-rUZShQXg0OB7cJDkP0j_4cAWFI0P57Xhc6k8Gx2OwGe2CY5BOIoDDtIgIobShDZ9Dwfhs_aNOUgWN2ZWmRPrv3T_6Yc');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+<div class="absolute top-3 right-3 z-10">
+<button class="w-8 h-8 rounded-full bg-green-500 text-white shadow-md flex items-center justify-center cursor-default">
+<span class="material-symbols-outlined text-lg">check</span>
+</button>
+</div>
+<div class="absolute top-3 left-3 z-10">
+<span class="px-2.5 py-1 rounded-md bg-gray-800/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Village</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+<p class="text-white text-xs font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">history</span>
+                                Visited 2 months ago
+                            </p>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg text-text-primary-light dark:text-text-primary-dark line-clamp-1">Chong Kneas</h3>
+<p class="font-khmer text-sm text-text-secondary-light dark:text-text-secondary-dark">ចុងឃ្នាស</p>
+</div>
+<div class="flex items-center gap-1 text-primary text-xs font-bold bg-primary/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.2
+                            </div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Tonle Sap • 12km away</span>
+</div>
+<div class="pt-3 mt-1 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+<button class="w-full py-2 rounded-lg border border-primary/20 text-primary text-xs font-semibold hover:bg-primary/5 transition-colors">Write Review</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>
