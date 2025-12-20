@@ -1,236 +1,216 @@
 import { db } from "@/server/db";
 import {
-  places,
-  activities,
-  foods,
-  drinks,
-  souvenirs,
+  listings,
+  listingPhotos,
+  reviews,
+  type NewListing,
 } from "@/server/db/schema";
-import { eq, and, or, ilike, desc, lt } from "drizzle-orm";
-import type { Category } from "@/shared/types";
+import { eq, and, or, ilike, desc, lt, sql, inArray } from "drizzle-orm";
 
 interface ListingsQueryOptions {
-  category?: Category;
-  province?: string;
+  category?: string;
+  priceLevel?: string;
   q?: string;
   cursor?: Date | null;
   limit: number;
 }
 
-// Find all listings with optional filters
+interface NearbyListingsOptions {
+  lat: number;
+  lng: number;
+  radius: number; // in kilometers
+  category?: string;
+  limit: number;
+}
+
+/**
+ * Find listings with optional filters
+ */
 export async function findListings(options: ListingsQueryOptions) {
-  const { category, province, q, cursor, limit } = options;
+  const { category, priceLevel, q, cursor, limit } = options;
 
-  const items: Array<{
-    id: string;
-    name: string;
-    nameKh?: string | null;
-    description: string;
-    category: string;
-    createdAt: Date;
-    [key: string]: unknown;
-  }> = [];
+  const conditions = [];
 
-  if (!category || category === "place") {
-    const conditions = [];
-    if (province) conditions.push(ilike(places.province, province));
-    if (q) {
-      conditions.push(
-        or(
-          ilike(places.name, `%${q}%`),
-          ilike(places.nameKh, `%${q}%`),
-          ilike(places.description, `%${q}%`)
-        )!
-      );
-    }
-    if (cursor) {
-      conditions.push(lt(places.createdAt, cursor));
-    }
-
-    const query = db.select().from(places);
-    const placeResults = await (conditions.length > 0
-      ? query.where(and(...conditions)!)
-      : cursor
-      ? query.where(lt(places.createdAt, cursor))
-      : query
-    )
-      .orderBy(desc(places.createdAt))
-      .limit(limit);
-
-    items.push(...placeResults.map((p) => ({ ...p, category: "place" })));
+  // Filter by category
+  if (category) {
+    conditions.push(eq(listings.category, category as any));
   }
 
-  if (!category || category === "activity") {
-    const conditions = [];
-    if (province) conditions.push(ilike(activities.province, province));
-    if (q) {
-      conditions.push(
-        or(
-          ilike(activities.name, `%${q}%`),
-          ilike(activities.nameKh, `%${q}%`),
-          ilike(activities.description, `%${q}%`)
-        )!
-      );
-    }
-    if (cursor) {
-      conditions.push(lt(activities.createdAt, cursor));
-    }
-
-    const query = db.select().from(activities);
-    const activityResults = await (conditions.length > 0
-      ? query.where(and(...conditions)!)
-      : cursor
-      ? query.where(lt(activities.createdAt, cursor))
-      : query
-    )
-      .orderBy(desc(activities.createdAt))
-      .limit(limit);
-
-    items.push(...activityResults.map((a) => ({ ...a, category: "activity" })));
+  // Filter by price level
+  if (priceLevel) {
+    conditions.push(eq(listings.priceLevel, priceLevel as any));
   }
 
-  if (!category || category === "food") {
-    const conditions = [];
-    if (q) {
-      conditions.push(
-        or(
-          ilike(foods.name, `%${q}%`),
-          ilike(foods.nameKh, `%${q}%`),
-          ilike(foods.description, `%${q}%`)
-        )!
-      );
-    }
-    if (cursor) {
-      conditions.push(lt(foods.createdAt, cursor));
-    }
-
-    const query = db.select().from(foods);
-    const foodResults = await (conditions.length > 0
-      ? query.where(and(...conditions)!)
-      : cursor
-      ? query.where(lt(foods.createdAt, cursor))
-      : query
-    )
-      .orderBy(desc(foods.createdAt))
-      .limit(limit);
-
-    items.push(...foodResults.map((f) => ({ ...f, category: "food" })));
+  // Search by title or description
+  if (q) {
+    conditions.push(
+      or(
+        ilike(listings.title, `%${q}%`),
+        ilike(listings.titleKh, `%${q}%`),
+        ilike(listings.description, `%${q}%`)
+      )!
+    );
   }
 
-  if (!category || category === "drink") {
-    const conditions = [];
-    if (q) {
-      conditions.push(
-        or(
-          ilike(drinks.name, `%${q}%`),
-          ilike(drinks.nameKh, `%${q}%`),
-          ilike(drinks.description, `%${q}%`)
-        )!
-      );
-    }
-    if (cursor) {
-      conditions.push(lt(drinks.createdAt, cursor));
-    }
-
-    const query = db.select().from(drinks);
-    const drinkResults = await (conditions.length > 0
-      ? query.where(and(...conditions)!)
-      : cursor
-      ? query.where(lt(drinks.createdAt, cursor))
-      : query
-    )
-      .orderBy(desc(drinks.createdAt))
-      .limit(limit);
-
-    items.push(...drinkResults.map((d) => ({ ...d, category: "drink" })));
+  // Pagination cursor
+  if (cursor) {
+    conditions.push(lt(listings.createdAt, cursor));
   }
 
-  if (!category || category === "souvenir") {
-    const conditions = [];
-    if (q) {
-      conditions.push(
-        or(
-          ilike(souvenirs.name, `%${q}%`),
-          ilike(souvenirs.nameKh, `%${q}%`),
-          ilike(souvenirs.description, `%${q}%`)
-        )!
-      );
-    }
-    if (cursor) {
-      conditions.push(lt(souvenirs.createdAt, cursor));
-    }
+  const query = db.select().from(listings);
+  const results = await (conditions.length > 0
+    ? query.where(and(...conditions)!)
+    : query
+  )
+    .orderBy(desc(listings.createdAt))
+    .limit(limit);
 
-    const query = db.select().from(souvenirs);
-    const souvenirResults = await (conditions.length > 0
-      ? query.where(and(...conditions)!)
-      : cursor
-      ? query.where(lt(souvenirs.createdAt, cursor))
-      : query
-    )
-      .orderBy(desc(souvenirs.createdAt))
-      .limit(limit);
-
-    items.push(...souvenirResults.map((s) => ({ ...s, category: "souvenir" })));
-  }
-
-  return items;
+  return results;
 }
 
-// Find item by ID
+/**
+ * Find nearby listings using Haversine formula
+ */
+export async function findNearbyListings(options: NearbyListingsOptions) {
+  const { lat, lng, radius, category, limit } = options;
+
+  // Haversine formula for calculating distance
+  const distanceQuery = sql`
+    (6371 * acos(
+      cos(radians(${lat})) * 
+      cos(radians(${listings.lat})) * 
+      cos(radians(${listings.lng}) - radians(${lng})) + 
+      sin(radians(${lat})) * 
+      sin(radians(${listings.lat}))
+    ))
+  `;
+
+  const conditions = [sql`${distanceQuery} <= ${radius}`];
+
+  if (category) {
+    conditions.push(eq(listings.category, category as any));
+  }
+
+  const results = await db
+    .select({
+      id: listings.id,
+      slug: listings.slug,
+      category: listings.category,
+      title: listings.title,
+      titleKh: listings.titleKh,
+      description: listings.description,
+      addressText: listings.addressText,
+      lat: listings.lat,
+      lng: listings.lng,
+      mainImage: listings.mainImage,
+      priceLevel: listings.priceLevel,
+      views: listings.views,
+      avgRating: listings.avgRating,
+      createdAt: listings.createdAt,
+      distance: distanceQuery.as("distance"),
+    })
+    .from(listings)
+    .where(and(...conditions)!)
+    .orderBy(sql`distance`)
+    .limit(limit);
+
+  return results;
+}
+
+/**
+ * Find a single listing by slug
+ */
+export async function findBySlug(slug: string) {
+  const [result] = await db
+    .select()
+    .from(listings)
+    .where(eq(listings.slug, slug))
+    .limit(1);
+
+  return result || null;
+}
+
+/**
+ * Find a single listing by ID
+ */
 export async function findById(id: string) {
-  const [place, activity, food, drink, souvenir] = await Promise.all([
-    db.select().from(places).where(eq(places.id, id)).limit(1),
-    db.select().from(activities).where(eq(activities.id, id)).limit(1),
-    db.select().from(foods).where(eq(foods.id, id)).limit(1),
-    db.select().from(drinks).where(eq(drinks.id, id)).limit(1),
-    db.select().from(souvenirs).where(eq(souvenirs.id, id)).limit(1),
-  ]);
+  const [result] = await db
+    .select()
+    .from(listings)
+    .where(eq(listings.id, id))
+    .limit(1);
 
-  if (place[0]) return { ...place[0], category: "place" };
-  if (activity[0]) return { ...activity[0], category: "activity" };
-  if (food[0]) return { ...food[0], category: "food" };
-  if (drink[0]) return { ...drink[0], category: "drink" };
-  if (souvenir[0]) return { ...souvenir[0], category: "souvenir" };
-
-  return null;
+  return result || null;
 }
 
-// Find all places with coordinates
-export async function findAllPlacesWithCoords() {
-  return db.select().from(places);
+/**
+ * Get listing photos
+ */
+export async function findListingPhotos(listingId: string) {
+  return db
+    .select()
+    .from(listingPhotos)
+    .where(eq(listingPhotos.listingId, listingId))
+    .orderBy(listingPhotos.createdAt);
 }
 
-// Find all activities with coordinates
-export async function findAllActivitiesWithCoords() {
-  return db.select().from(activities);
+/**
+ * Get listing reviews
+ */
+export async function findListingReviews(listingId: string) {
+  return db
+    .select()
+    .from(reviews)
+    .where(eq(reviews.listingId, listingId))
+    .orderBy(desc(reviews.createdAt));
 }
 
-// Create place
-export async function createPlace(data: typeof places.$inferInsert) {
-  const [newItem] = await db.insert(places).values(data).returning();
-  return newItem;
+/**
+ * Find all listings with coordinates (for map)
+ */
+export async function findAllListingsWithCoords(categories?: string[]) {
+  const query = db
+    .select({
+      id: listings.id,
+      slug: listings.slug,
+      category: listings.category,
+      title: listings.title,
+      lat: listings.lat,
+      lng: listings.lng,
+      mainImage: listings.mainImage,
+      priceLevel: listings.priceLevel,
+    })
+    .from(listings);
+
+  if (categories && categories.length > 0) {
+    // Cast string[] to the proper enum types
+    return query.where(
+      inArray(
+        listings.category,
+        categories as Array<
+          "place" | "food" | "drink" | "souvenir" | "activity"
+        >
+      )
+    );
+  }
+
+  return query;
 }
 
-// Create activity
-export async function createActivity(data: typeof activities.$inferInsert) {
-  const [newItem] = await db.insert(activities).values(data).returning();
-  return newItem;
+/**
+ * Create a new listing
+ */
+export async function createListing(data: NewListing) {
+  const [newListing] = await db.insert(listings).values(data).returning();
+  return newListing;
 }
 
-// Create food
-export async function createFood(data: typeof foods.$inferInsert) {
-  const [newItem] = await db.insert(foods).values(data).returning();
-  return newItem;
-}
-
-// Create drink
-export async function createDrink(data: typeof drinks.$inferInsert) {
-  const [newItem] = await db.insert(drinks).values(data).returning();
-  return newItem;
-}
-
-// Create souvenir
-export async function createSouvenir(data: typeof souvenirs.$inferInsert) {
-  const [newItem] = await db.insert(souvenirs).values(data).returning();
-  return newItem;
+/**
+ * Increment listing views
+ */
+export async function incrementViews(id: string) {
+  await db
+    .update(listings)
+    .set({ views: sql`${listings.views} + 1` })
+    .where(eq(listings.id, id));
 }

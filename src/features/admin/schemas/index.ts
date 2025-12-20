@@ -1,13 +1,6 @@
 export {
-  createPlaceSchema,
-  createActivitySchema,
-  createFoodSchema,
-  createDrinkSchema,
-  createSouvenirSchema,
+  createListingSchema,
   adminCreateSchema,
-  type CreatePlace,
-  type CreateActivity,
-  type CreateFood,
-  type CreateDrink,
-  type CreateSouvenir,
+  type CreateListing,
+  type AdminCreate,
 } from "./admin.schema";

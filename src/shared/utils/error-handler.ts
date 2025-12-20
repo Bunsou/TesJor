@@ -48,6 +48,7 @@ const ERROR_MAP = {
     statusCode: 500,
     message: "External service error.",
   },
+  LISTING_NOT_FOUND: { statusCode: 404, message: "Listing not found." },
 } as const;
 
 export type AppErrorCode = keyof typeof ERROR_MAP;

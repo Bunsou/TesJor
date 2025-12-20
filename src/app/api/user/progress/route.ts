@@ -1,13 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/server/db";
-import {
-  userProgress,
-  places,
-  activities,
-  foods,
-  drinks,
-  souvenirs,
-} from "@/server/db/schema";
+import { userProgress, listings } from "@/server/db/schema";
 import { errorResponse, successResponse } from "@/shared/utils";
 import {
   ratelimit,
@@ -50,21 +43,13 @@ export async function GET(request: NextRequest) {
         .from(userProgress)
         .where(
           and(
-            eq(userProgress.userId, userId)
-            // Check all possible category ID columns
-            // This is a bit hacky but works since only one will match
+            eq(userProgress.userId, userId),
+            eq(userProgress.listingId, itemId)
           )
-        );
+        )
+        .limit(1);
 
-      // Find the progress entry that matches this itemId
-      const matchedProgress = progress.find(
-        (p) =>
-          p.placeId === itemId ||
-          p.activityId === itemId ||
-          p.foodId === itemId ||
-          p.drinkId === itemId ||
-          p.souvenirId === itemId
-      );
+      const matchedProgress = progress[0];
 
       return successResponse({
         isBookmarked: matchedProgress?.isBookmarked || false,
@@ -73,10 +58,25 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Fetch all user progress
-    const allProgress = await db
-      .select()
+    // Fetch items with user progress metadata using join
+    const items = await db
+      .select({
+        id: listings.id,
+        slug: listings.slug,
+        category: listings.category,
+        title: listings.title,
+        description: listings.description,
+        lat: listings.lat,
+        lng: listings.lng,
+        mainImage: listings.mainImage,
+        priceLevel: listings.priceLevel,
+        operatingHours: listings.operatingHours,
+        isBookmarked: userProgress.isBookmarked,
+        isVisited: userProgress.isVisited,
+        visitedAt: userProgress.visitedAt,
+      })
       .from(userProgress)
+      .innerJoin(listings, eq(userProgress.listingId, listings.id))
       .where(
         and(
           eq(userProgress.userId, userId),
@@ -91,78 +91,8 @@ export async function GET(request: NextRequest) {
     log.info("Fetched user progress", {
       userId,
       type,
-      count: allProgress.length,
+      count: items.length,
     });
-
-    // Now fetch the actual items for each progress entry
-    const items = [];
-
-    for (const progress of allProgress) {
-      let item = null;
-      let category = "";
-
-      if (progress.placeId) {
-        const result = await db
-          .select()
-          .from(places)
-          .where(eq(places.id, progress.placeId))
-          .limit(1);
-        if (result[0]) {
-          item = result[0];
-          category = "place";
-        }
-      } else if (progress.activityId) {
-        const result = await db
-          .select()
-          .from(activities)
-          .where(eq(activities.id, progress.activityId))
-          .limit(1);
-        if (result[0]) {
-          item = result[0];
-          category = "activity";
-        }
-      } else if (progress.foodId) {
-        const result = await db
-          .select()
-          .from(foods)
-          .where(eq(foods.id, progress.foodId))
-          .limit(1);
-        if (result[0]) {
-          item = result[0];
-          category = "food";
-        }
-      } else if (progress.drinkId) {
-        const result = await db
-          .select()
-          .from(drinks)
-          .where(eq(drinks.id, progress.drinkId))
-          .limit(1);
-        if (result[0]) {
-          item = result[0];
-          category = "drink";
-        }
-      } else if (progress.souvenirId) {
-        const result = await db
-          .select()
-          .from(souvenirs)
-          .where(eq(souvenirs.id, progress.souvenirId))
-          .limit(1);
-        if (result[0]) {
-          item = result[0];
-          category = "souvenir";
-        }
-      }
-
-      if (item) {
-        items.push({
-          ...item,
-          category,
-          isBookmarked: progress.isBookmarked,
-          isVisited: progress.isVisited,
-          visitedAt: progress.visitedAt,
-        });
-      }
-    }
 
     return successResponse({
       items,

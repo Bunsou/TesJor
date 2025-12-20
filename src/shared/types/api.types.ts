@@ -2,7 +2,7 @@
 // API Types
 // ========================================
 
-import { ContentItem } from "./content.types";
+import { Listing } from "./content.types";
 
 // Success Response
 export interface ApiSuccessResponse<T> {
@@ -25,14 +25,14 @@ export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 // Listings Response
 export interface ListingsResponse {
-  items: ContentItem[];
+  items: Listing[];
   nextCursor: string | null;
   hasMore: boolean;
 }
 
 // Nearby Response
 export interface NearbyResponse {
-  items: (ContentItem & { distance: number })[];
+  items: (Listing & { distance: number })[];
 }
 
 // Pagination

@@ -1,12 +1,15 @@
 export type {
-  Place,
-  Activity,
-  Food,
-  Drink,
-  Souvenir,
   Category,
-  ContentItem,
-  ContentItemWithProgress,
+  PriceLevel,
+  PriceDetail,
+  TimeSlot,
+  OperatingHours,
+  ContactInfo,
+  Listing,
+  ListingPhoto,
+  Review,
+  ListingWithProgress,
+  ListingWithDetails,
 } from "./content.types";
 
 export type { User, UserProgress, UserStats } from "./user.types";

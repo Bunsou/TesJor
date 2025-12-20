@@ -4,7 +4,7 @@ import { validateRequestQuery } from "@/shared/middleware";
 import { sendSuccessResponse } from "@/shared/utils";
 import { log } from "@/shared/utils";
 import { nearbyQuerySchema } from "@/features/listings/schemas";
-import { getNearbyItems } from "@/server/services/listings";
+import { getNearbyListings } from "@/server/services/listings";
 
 export const GET = asyncHandler(async (request: NextRequest) => {
   // Rate limiting
@@ -16,16 +16,18 @@ export const GET = asyncHandler(async (request: NextRequest) => {
     lat: searchParams.get("lat"),
     lng: searchParams.get("lng"),
     radius: searchParams.get("radius"),
+    category: searchParams.get("category") || undefined,
   };
 
   const query = validateRequestQuery(nearbyQuerySchema, rawParams);
 
-  log.info("Fetching nearby items", { query });
+  log.info("Fetching nearby listings", { query });
 
-  const result = await getNearbyItems({
+  const result = await getNearbyListings({
     lat: query.lat,
     lng: query.lng,
     radius: query.radius,
+    category: query.category,
   });
 
   return sendSuccessResponse(result);

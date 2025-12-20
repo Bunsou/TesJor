@@ -5,7 +5,6 @@ import { sendSuccessResponse } from "@/shared/utils";
 import { log } from "@/shared/utils";
 import { visitedSchema } from "@/features/user/schemas";
 import { toggleVisited, getUserVisited } from "@/server/services/user";
-import type { Category } from "@/shared/types";
 
 export const POST = asyncHandler(async (request: NextRequest) => {
   // Get session
@@ -23,8 +22,7 @@ export const POST = asyncHandler(async (request: NextRequest) => {
 
   const result = await toggleVisited({
     userId,
-    itemId: data.itemId,
-    category: data.category as Category,
+    listingId: data.listingId,
     action: data.action,
   });
 

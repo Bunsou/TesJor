@@ -1,69 +1,52 @@
 import { db } from "@/server/db";
-import { userProgress } from "@/server/db/schema";
+import { userProgress, listings } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
-import type { Category } from "@/shared/types";
 
-// Find user progress entry
-export async function findProgressEntry(
-  userId: string,
-  itemId: string,
-  category: Category
-) {
-  const columnMap = {
-    place: userProgress.placeId,
-    activity: userProgress.activityId,
-    food: userProgress.foodId,
-    drink: userProgress.drinkId,
-    souvenir: userProgress.souvenirId,
-  };
-
-  const column = columnMap[category];
-
-  const existing = await db
+/**
+ * Find user progress entry by listing ID
+ */
+export async function findProgressEntry(userId: string, listingId: string) {
+  const [existing] = await db
     .select()
     .from(userProgress)
-    .where(and(eq(userProgress.userId, userId), eq(column, itemId)))
+    .where(
+      and(
+        eq(userProgress.userId, userId),
+        eq(userProgress.listingId, listingId)
+      )
+    )
     .limit(1);
 
-  return existing[0] || null;
+  return existing || null;
 }
 
-// Create progress entry
+/**
+ * Create progress entry
+ */
 export async function createProgressEntry(
   userId: string,
-  itemId: string,
-  category: Category,
+  listingId: string,
   isBookmarked: boolean = false,
   isVisited: boolean = false,
   visitedAt?: Date
 ) {
-  const insertData: Record<string, unknown> = {
-    userId,
-    isBookmarked,
-    isVisited,
-    visitedAt,
-  };
-
-  // Set the appropriate foreign key
-  const columnMap = {
-    place: "placeId",
-    activity: "activityId",
-    food: "foodId",
-    drink: "drinkId",
-    souvenir: "souvenirId",
-  };
-
-  insertData[columnMap[category]] = itemId;
-
   const [newEntry] = await db
     .insert(userProgress)
-    .values(insertData as typeof userProgress.$inferInsert)
+    .values({
+      userId,
+      listingId,
+      isBookmarked,
+      isVisited,
+      visitedAt,
+    })
     .returning();
 
   return newEntry;
 }
 
-// Update bookmark status
+/**
+ * Update bookmark status
+ */
 export async function updateBookmarkStatus(id: number, isBookmarked: boolean) {
   const [updated] = await db
     .update(userProgress)
@@ -74,7 +57,9 @@ export async function updateBookmarkStatus(id: number, isBookmarked: boolean) {
   return updated;
 }
 
-// Update visited status
+/**
+ * Update visited status
+ */
 export async function updateVisitedStatus(
   id: number,
   isVisited: boolean,
@@ -89,38 +74,87 @@ export async function updateVisitedStatus(
   return updated;
 }
 
-// Get all bookmarked items for user
+/**
+ * Get all bookmarked items with listing details
+ */
 export async function findBookmarkedItems(userId: string) {
   return db
-    .select()
+    .select({
+      id: userProgress.id,
+      userId: userProgress.userId,
+      listingId: userProgress.listingId,
+      isBookmarked: userProgress.isBookmarked,
+      isVisited: userProgress.isVisited,
+      visitedAt: userProgress.visitedAt,
+      createdAt: userProgress.createdAt,
+      listing: listings,
+    })
     .from(userProgress)
+    .innerJoin(listings, eq(userProgress.listingId, listings.id))
     .where(
       and(eq(userProgress.userId, userId), eq(userProgress.isBookmarked, true))
     );
 }
 
-// Get all visited items for user
+/**
+ * Get all visited items with listing details
+ */
 export async function findVisitedItems(userId: string) {
   return db
-    .select()
+    .select({
+      id: userProgress.id,
+      userId: userProgress.userId,
+      listingId: userProgress.listingId,
+      isBookmarked: userProgress.isBookmarked,
+      isVisited: userProgress.isVisited,
+      visitedAt: userProgress.visitedAt,
+      createdAt: userProgress.createdAt,
+      listing: listings,
+    })
     .from(userProgress)
+    .innerJoin(listings, eq(userProgress.listingId, listings.id))
     .where(
       and(eq(userProgress.userId, userId), eq(userProgress.isVisited, true))
     );
 }
 
-// Get user stats
+/**
+ * Get user stats by category
+ */
 export async function getUserStats(userId: string) {
-  const bookmarked = await findBookmarkedItems(userId);
-  const visited = await findVisitedItems(userId);
+  const bookmarked = await db
+    .select({ category: listings.category })
+    .from(userProgress)
+    .innerJoin(listings, eq(userProgress.listingId, listings.id))
+    .where(
+      and(eq(userProgress.userId, userId), eq(userProgress.isBookmarked, true))
+    );
+
+  const visited = await db
+    .select({ category: listings.category })
+    .from(userProgress)
+    .innerJoin(listings, eq(userProgress.listingId, listings.id))
+    .where(
+      and(eq(userProgress.userId, userId), eq(userProgress.isVisited, true))
+    );
+
+  // Count by category
+  const countByCategory = (items: { category: string }[]) => {
+    return items.reduce((acc, item) => {
+      acc[item.category] = (acc[item.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  };
+
+  const visitedByCategory = countByCategory(visited);
 
   return {
     totalBookmarked: bookmarked.length,
     totalVisited: visited.length,
-    placesVisited: visited.filter((v) => v.placeId).length,
-    activitiesVisited: visited.filter((v) => v.activityId).length,
-    foodsVisited: visited.filter((v) => v.foodId).length,
-    drinksVisited: visited.filter((v) => v.drinkId).length,
-    souvenirsVisited: visited.filter((v) => v.souvenirId).length,
+    placesVisited: visitedByCategory["place"] || 0,
+    foodsVisited: visitedByCategory["food"] || 0,
+    drinksVisited: visitedByCategory["drink"] || 0,
+    souvenirsVisited: visitedByCategory["souvenir"] || 0,
+    eventsVisited: visitedByCategory["event"] || 0,
   };
 }

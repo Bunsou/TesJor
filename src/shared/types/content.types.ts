@@ -1,76 +1,89 @@
 // ========================================
-// Content Item Types
+// Content Item Types (Unified Listings)
 // ========================================
 
-export interface Place {
-  id: string;
-  name: string;
-  nameKh?: string | null;
-  description: string;
-  province: string;
-  lat: string;
-  lng: string;
-  mapsUrl?: string | null;
-  imageUrl?: string | null;
-  priceRange?: string | null;
-  openingHours?: string | null;
-  createdAt: Date;
+export type Category = "place" | "food" | "drink" | "souvenir" | "activity";
+export type PriceLevel = "$" | "$$" | "$$$" | "Free";
+
+export interface PriceDetail {
+  label: string;
+  price: string;
+  currency: "KHR" | "USD";
 }
 
-export interface Activity {
-  id: string;
-  name: string;
-  nameKh?: string | null;
-  description: string;
-  province: string;
-  lat: string;
-  lng: string;
-  mapsUrl?: string | null;
-  imageUrl?: string | null;
-  priceRange?: string | null;
-  openingHours?: string | null;
-  createdAt: Date;
+export interface TimeSlot {
+  open: string; // HH:MM format
+  close: string; // HH:MM format
 }
 
-export interface Food {
-  id: string;
-  name: string;
-  nameKh?: string | null;
-  description: string;
-  imageUrl?: string | null;
-  priceRange?: string | null;
-  createdAt: Date;
+export interface OperatingHours {
+  monday?: TimeSlot[];
+  tuesday?: TimeSlot[];
+  wednesday?: TimeSlot[];
+  thursday?: TimeSlot[];
+  friday?: TimeSlot[];
+  saturday?: TimeSlot[];
+  sunday?: TimeSlot[];
 }
 
-export interface Drink {
-  id: string;
-  name: string;
-  nameKh?: string | null;
-  description: string;
-  imageUrl?: string | null;
-  priceRange?: string | null;
-  createdAt: Date;
+export interface ContactInfo {
+  phone?: string;
+  facebook?: string;
+  website?: string;
 }
 
-export interface Souvenir {
+export interface Listing {
   id: string;
-  name: string;
-  nameKh?: string | null;
-  description: string;
-  imageUrl?: string | null;
-  priceRange?: string | null;
-  createdAt: Date;
-}
-
-export type Category = "place" | "activity" | "food" | "drink" | "souvenir";
-
-export type ContentItem = (Place | Activity | Food | Drink | Souvenir) & {
+  slug: string;
   category: Category;
+  title: string;
+  titleKh?: string | null;
+  description: string;
+  addressText?: string | null;
+  lat: number;
+  lng: number;
+  mainImage?: string | null;
+  priceLevel?: PriceLevel | null;
+  priceDetails?: PriceDetail[] | null;
+  operatingHours?: OperatingHours | null;
+  contactInfo?: ContactInfo | null;
+  googlePlaceId?: string | null;
+  views: number;
+  avgRating?: string | null;
+  createdAt: Date;
   distance?: number; // For nearby items
-};
+}
 
-export type ContentItemWithProgress = ContentItem & {
+export interface ListingPhoto {
+  id: string;
+  listingId: string;
+  imageUrl: string;
+  caption?: string | null;
+  createdAt: Date;
+}
+
+export interface Review {
+  id: string;
+  listingId: string;
+  userId: string;
+  rating: number;
+  content?: string | null;
+  createdAt: Date;
+  user?: {
+    name: string;
+    image?: string | null;
+  };
+}
+
+export type ListingWithProgress = Listing & {
   isBookmarked?: boolean;
   isVisited?: boolean;
   visitedAt?: Date | null;
+};
+
+export type ListingWithDetails = Listing & {
+  photos?: ListingPhoto[];
+  reviews?: Review[];
+  isBookmarked?: boolean;
+  isVisited?: boolean;
 };

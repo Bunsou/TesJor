@@ -1,17 +1,14 @@
 import { z } from "zod";
-import { categoryEnum } from "@/features/listings/schemas";
 
-// Bookmark Action Schema
+// Bookmark Action Schema (Simplified - no category needed)
 export const bookmarkSchema = z.object({
-  itemId: z.string().uuid(),
-  category: categoryEnum,
+  listingId: z.string().uuid(),
   action: z.enum(["add", "remove"]),
 });
 
-// Visited Action Schema
+// Visited Action Schema (Simplified - no category needed)
 export const visitedSchema = z.object({
-  itemId: z.string().uuid(),
-  category: categoryEnum,
+  listingId: z.string().uuid(),
   action: z.enum(["add", "remove"]),
 });
 

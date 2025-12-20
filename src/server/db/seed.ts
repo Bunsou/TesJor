@@ -1,285 +1,270 @@
 import "dotenv/config";
 import { db } from "./index";
-import {
-  places,
-  activities,
-  foods,
-  drinks,
-  souvenirs,
-  type NewPlace,
-  type NewActivity,
-  type NewFood,
-  type NewDrink,
-  type NewSouvenir,
-} from "./schema";
+import { listings, type NewListing } from "./schema";
 
-// Sample Places (Villages, Temples, Parks, Markets)
-const samplePlaces: NewPlace[] = [
-  {
-    name: "Kampot Pepper Farm",
-    nameKh: "កសិដ្ឋាន​ម្រេច​កំពត",
-    description:
-      "Experience the world-famous Kampot pepper plantation. Learn about traditional farming methods and taste the finest peppercorns grown on red soil.",
-    province: "Kampot",
-    lat: "10.6104",
-    lng: "104.1886",
-    mapsUrl: "https://maps.google.com/?q=10.6104,104.1886",
-    imageUrl: "/placeholder-kampot-pepper.jpg",
-    priceRange: "$3 - $5",
-    openingHours: "8:00 AM - 5:00 PM",
-  },
-  {
-    name: "Battambang Bamboo Train",
-    nameKh: "រថភ្លើងឬស្សីបាត់ដំបង",
-    description:
-      "Ride the unique bamboo train (Norry) through rice fields and villages. A thrilling journey on bamboo platforms powered by small motors.",
-    province: "Battambang",
-    lat: "13.0957",
-    lng: "103.2022",
-    mapsUrl: "https://maps.google.com/?q=13.0957,103.2022",
-    imageUrl: "/placeholder-bamboo-train.jpg",
-    priceRange: "$5",
-    openingHours: "7:00 AM - 6:00 PM",
-  },
-  {
-    name: "Koh Ker Temple Complex",
-    nameKh: "ប្រាសាទកោះកេរ",
-    description:
-      "Ancient Khmer temple complex far from tourist crowds. Climb the 7-tiered pyramid for stunning forest views.",
-    province: "Preah Vihear",
-    lat: "13.7885",
-    lng: "104.5311",
-    mapsUrl: "https://maps.google.com/?q=13.7885,104.5311",
-    imageUrl: "/placeholder-koh-ker.jpg",
-    priceRange: "$10",
-    openingHours: "7:30 AM - 5:30 PM",
-  },
-  {
-    name: "Kampong Phluk Floating Village",
-    nameKh: "ភូមិអណ្តែតកំពង់ផ្លុក",
-    description:
-      "Traditional stilt village on Tonle Sap Lake. Houses rise up to 10 meters during wet season. Authentic local life experience.",
-    province: "Siem Reap",
-    lat: "12.9100",
-    lng: "104.0900",
-    mapsUrl: "https://maps.google.com/?q=12.9100,104.0900",
-    imageUrl: "/placeholder-floating-village.jpg",
-    priceRange: "$15 - $20",
-    openingHours: "6:00 AM - 6:00 PM",
-  },
-  {
-    name: "Bokor Hill Station",
-    nameKh: "ស្ថានីយ៍ភ្នំបូកគោ",
-    description:
-      "Abandoned French colonial hill station shrouded in mist. Eerie atmosphere with old casino and church ruins.",
-    province: "Kampot",
-    lat: "10.6333",
-    lng: "104.0500",
-    mapsUrl: "https://maps.google.com/?q=10.6333,104.0500",
-    imageUrl: "/placeholder-bokor.jpg",
-    priceRange: "$0 (Free)",
-    openingHours: "Open 24/7",
-  },
-];
+// Helper function to generate slug from title
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
 
-// Sample Activities
-const sampleActivities: NewActivity[] = [
+// Sample Listings Data
+const sampleListings: NewListing[] = [
+  // PLACES
   {
-    name: "Traditional Pottery Workshop",
-    nameKh: "សិក្ខាសាលាធ្វើសំណាប់ប្រពៃណី",
+    slug: generateSlug("Kampot Pepper Farm"),
+    category: "place",
+    title: "Kampot Pepper Farm",
+    titleKh: "កសិដ្ឋាន​ម្រេច​កំពត",
     description:
-      "Learn ancient Khmer pottery techniques from local artisans in Kampong Chhnang. Create your own clay pot to take home.",
-    province: "Kampong Chhnang",
-    lat: "12.2500",
-    lng: "104.6667",
-    mapsUrl: "https://maps.google.com/?q=12.2500,104.6667",
-    imageUrl: "/placeholder-pottery.jpg",
-    priceRange: "$10 - $15",
-    openingHours: "9:00 AM - 4:00 PM",
+      "Experience the world-famous Kampot pepper plantation. Learn about traditional farming methods and taste the finest peppercorns grown on red soil. Take a guided tour through the farm and discover why Kampot pepper has geographical indication status.",
+    addressText: "Kampot Province, Cambodia",
+    lat: 10.6104,
+    lng: 104.1886,
+    mainImage: "/default-image/kampot-pepper.jpg",
+    priceLevel: "$",
+    priceDetails: [
+      { label: "Tour & Tasting", price: "5", currency: "USD" },
+      { label: "Locals", price: "3", currency: "USD" },
+    ],
+    operatingHours: {
+      monday: [{ open: "08:00", close: "17:00" }],
+      tuesday: [{ open: "08:00", close: "17:00" }],
+      wednesday: [{ open: "08:00", close: "17:00" }],
+      thursday: [{ open: "08:00", close: "17:00" }],
+      friday: [{ open: "08:00", close: "17:00" }],
+      saturday: [{ open: "08:00", close: "17:00" }],
+      sunday: [{ open: "08:00", close: "17:00" }],
+    },
+    contactInfo: {
+      phone: "+855 12 345 678",
+      facebook: "https://facebook.com/kampotpepper",
+    },
+    googlePlaceId: "ChIJ_placeholder_1",
   },
   {
-    name: "Basket Weaving Class",
-    nameKh: "ថ្នាក់រៀនចាក់កន្ត្រក",
+    slug: generateSlug("Battambang Bamboo Train"),
+    category: "place",
+    title: "Battambang Bamboo Train",
+    titleKh: "រថភ្លើងឬស្សីបាត់ដំបង",
     description:
-      "Join local women to learn traditional basket weaving using palm leaves. Support rural communities while learning crafts.",
-    province: "Siem Reap",
-    lat: "13.3633",
-    lng: "103.8564",
-    mapsUrl: "https://maps.google.com/?q=13.3633,103.8564",
-    imageUrl: "/placeholder-basket-weaving.jpg",
-    priceRange: "$8 - $12",
-    openingHours: "8:00 AM - 3:00 PM",
+      "Ride the unique bamboo train (Norry) through rice fields and villages. A thrilling journey on bamboo platforms powered by small motors. This iconic Cambodian experience is a must-do when visiting Battambang.",
+    addressText: "Battambang Province, Cambodia",
+    lat: 13.0957,
+    lng: 103.2022,
+    mainImage: "/default-image/bamboo-train.jpg",
+    priceLevel: "$",
+    priceDetails: [{ label: "Round Trip", price: "5", currency: "USD" }],
+    operatingHours: {
+      monday: [{ open: "07:00", close: "18:00" }],
+      tuesday: [{ open: "07:00", close: "18:00" }],
+      wednesday: [{ open: "07:00", close: "18:00" }],
+      thursday: [{ open: "07:00", close: "18:00" }],
+      friday: [{ open: "07:00", close: "18:00" }],
+      saturday: [{ open: "07:00", close: "18:00" }],
+      sunday: [{ open: "07:00", close: "18:00" }],
+    },
+    googlePlaceId: "ChIJ_placeholder_2",
   },
   {
-    name: "Sunset Boat Ride on Tonle Sap",
-    nameKh: "ជិះទូកមើលថ្ងៃលិចនៅទន្លេសាប",
+    slug: generateSlug("Koh Ker Temple Complex"),
+    category: "place",
+    title: "Koh Ker Temple Complex",
+    titleKh: "ប្រាសាទកោះកេរ",
     description:
-      "Peaceful sunset boat tour through floating villages and bird sanctuaries. See pink lotus fields and local fishermen.",
-    province: "Siem Reap",
-    lat: "12.9000",
-    lng: "104.0833",
-    mapsUrl: "https://maps.google.com/?q=12.9000,104.0833",
-    imageUrl: "/placeholder-boat-sunset.jpg",
-    priceRange: "$20 - $30",
-    openingHours: "4:00 PM - 7:00 PM",
+      "Ancient Khmer temple complex far from tourist crowds. Climb the 7-tiered pyramid for stunning forest views. Built in the 10th century as the capital of the Khmer Empire, Koh Ker offers a mysterious and uncrowded alternative to Angkor Wat.",
+    addressText: "Preah Vihear Province, Cambodia",
+    lat: 13.7885,
+    lng: 104.5311,
+    mainImage: "/default-image/koh-ker.jpg",
+    priceLevel: "$$",
+    priceDetails: [
+      { label: "Foreigners", price: "10", currency: "USD" },
+      { label: "Cambodians", price: "5000", currency: "KHR" },
+    ],
+    operatingHours: {
+      monday: [{ open: "07:30", close: "17:30" }],
+      tuesday: [{ open: "07:30", close: "17:30" }],
+      wednesday: [{ open: "07:30", close: "17:30" }],
+      thursday: [{ open: "07:30", close: "17:30" }],
+      friday: [{ open: "07:30", close: "17:30" }],
+      saturday: [{ open: "07:30", close: "17:30" }],
+      sunday: [{ open: "07:30", close: "17:30" }],
+    },
+    googlePlaceId: "ChIJ_placeholder_3",
   },
   {
-    name: "Khmer Cooking Class",
-    nameKh: "ថ្នាក់រៀនធ្វើម្ហូបខ្មែរ",
+    slug: generateSlug("Kampong Phluk Floating Village"),
+    category: "place",
+    title: "Kampong Phluk Floating Village",
+    titleKh: "ភូមិអណ្តែតកំពង់ផ្លុក",
     description:
-      "Master authentic Cambodian dishes like Fish Amok and Khmer curry. Market tour included. Recipes provided.",
-    province: "Siem Reap",
-    lat: "13.3671",
-    lng: "103.8448",
-    mapsUrl: "https://maps.google.com/?q=13.3671,103.8448",
-    imageUrl: "/placeholder-cooking-class.jpg",
-    priceRange: "$25 - $35",
-    openingHours: "9:00 AM - 1:00 PM",
+      "Traditional stilt village on Tonle Sap Lake. Houses rise up to 10 meters during wet season. Authentic local life experience with boat tours through mangrove forests and the opportunity to see fishermen at work.",
+    addressText: "Siem Reap Province, Cambodia",
+    lat: 12.91,
+    lng: 104.09,
+    mainImage: "/default-image/floating-village.jpg",
+    priceLevel: "$$",
+    priceDetails: [{ label: "Boat Tour", price: "20", currency: "USD" }],
+    operatingHours: {
+      monday: [{ open: "06:00", close: "18:00" }],
+      tuesday: [{ open: "06:00", close: "18:00" }],
+      wednesday: [{ open: "06:00", close: "18:00" }],
+      thursday: [{ open: "06:00", close: "18:00" }],
+      friday: [{ open: "06:00", close: "18:00" }],
+      saturday: [{ open: "06:00", close: "18:00" }],
+      sunday: [{ open: "06:00", close: "18:00" }],
+    },
+    googlePlaceId: "ChIJ_placeholder_4",
   },
   {
-    name: "Silk Farm Visit",
-    nameKh: "ទស្សនាកសិដ្ឋានសូត្រ",
+    slug: generateSlug("Bokor Hill Station"),
+    category: "place",
+    title: "Bokor Hill Station",
+    titleKh: "ស្ថានីយ៍ភ្នំបូកគោ",
     description:
-      "Discover the silk production process from silkworm to finished fabric. Watch traditional weaving on wooden looms.",
-    province: "Siem Reap",
-    lat: "13.3800",
-    lng: "103.8900",
-    mapsUrl: "https://maps.google.com/?q=13.3800,103.8900",
-    imageUrl: "/placeholder-silk-farm.jpg",
-    priceRange: "$5",
-    openingHours: "8:00 AM - 5:00 PM",
+      "Abandoned French colonial hill station shrouded in mist. Eerie atmosphere with old casino and church ruins. The misty mountain climate and ghostly buildings create a unique and mysterious experience.",
+    addressText: "Kampot Province, Cambodia",
+    lat: 10.6333,
+    lng: 104.05,
+    mainImage: "/default-image/bokor.jpg",
+    priceLevel: "Free",
+    operatingHours: {},
+    googlePlaceId: "ChIJ_placeholder_5",
   },
-];
 
-// Sample Foods
-const sampleFoods: NewFood[] = [
+  // FOODS
   {
-    name: "Fish Amok",
-    nameKh: "អាម៉ុកត្រី",
+    slug: generateSlug("Fish Amok"),
+    category: "food",
+    title: "Fish Amok",
+    titleKh: "អាម៉ុកត្រី",
     description:
-      "Cambodia's national dish. Steamed fish mousse with coconut milk, lemongrass, and aromatic spices in banana leaf.",
-    imageUrl: "/placeholder-fish-amok.jpg",
-    priceRange: "$3 - $6",
+      "Cambodia's national dish. Steamed fish mousse with coconut milk, lemongrass, and aromatic spices in banana leaf. The creamy texture and fragrant spices make this a must-try dish that represents the essence of Khmer cuisine.",
+    addressText: "Available nationwide",
+    lat: 13.3671,
+    lng: 103.8448,
+    mainImage: "/default-image/fish-amok.jpg",
+    priceLevel: "$",
+    priceDetails: [
+      { label: "Street Vendor", price: "3", currency: "USD" },
+      { label: "Restaurant", price: "6", currency: "USD" },
+    ],
   },
   {
-    name: "Beef Lok Lak",
-    nameKh: "លក់​ឡក់​សាច់​គោ",
+    slug: generateSlug("Beef Lok Lak"),
+    category: "food",
+    title: "Beef Lok Lak",
+    titleKh: "លក់​ឡក់​សាច់​គោ",
     description:
-      "Stir-fried marinated beef cubes served with fresh vegetables, rice, and a tangy lime-pepper dipping sauce.",
-    imageUrl: "/placeholder-lok-lak.jpg",
-    priceRange: "$4 - $7",
+      "Stir-fried marinated beef cubes served with fresh vegetables, rice, and a tangy lime-pepper dipping sauce. Popular lunch dish that's both flavorful and satisfying.",
+    addressText: "Available nationwide",
+    lat: 13.3671,
+    lng: 103.8448,
+    mainImage: "/default-image/lok-lak.jpg",
+    priceLevel: "$",
+    priceDetails: [{ label: "Average Price", price: "5", currency: "USD" }],
   },
   {
-    name: "Nom Banh Chok (Khmer Noodles)",
-    nameKh: "នំបញ្ចុក",
+    slug: generateSlug("Nom Banh Chok"),
+    category: "food",
+    title: "Nom Banh Chok (Khmer Noodles)",
+    titleKh: "នំបញ្ចុក",
     description:
-      "Fresh rice noodles topped with green fish curry gravy and raw vegetables. Traditional breakfast dish.",
-    imageUrl: "/placeholder-nom-banh-chok.jpg",
-    priceRange: "$1 - $2",
+      "Fresh rice noodles topped with green fish curry gravy and raw vegetables. Traditional breakfast dish beloved by locals. The light yet flavorful curry makes it perfect for starting your day.",
+    addressText: "Available nationwide",
+    lat: 13.3671,
+    lng: 103.8448,
+    mainImage: "/default-image/nom-banh-chok.jpg",
+    priceLevel: "$",
+    priceDetails: [{ label: "Typical Price", price: "1.5", currency: "USD" }],
   },
-  {
-    name: "Bai Sach Chrouk (Pork & Rice)",
-    nameKh: "បាយសាច់ជ្រូក",
-    description:
-      "Grilled pork marinated in coconut milk and garlic served over broken rice with pickled vegetables.",
-    imageUrl: "/placeholder-bai-sach-chrouk.jpg",
-    priceRange: "$2 - $3",
-  },
-  {
-    name: "Kuy Teav (Noodle Soup)",
-    nameKh: "គុយទាវ",
-    description:
-      "Savory pork bone broth noodle soup topped with pork slices, shrimp, herbs, and crispy fried garlic.",
-    imageUrl: "/placeholder-kuy-teav.jpg",
-    priceRange: "$2 - $4",
-  },
-];
 
-// Sample Drinks
-const sampleDrinks: NewDrink[] = [
+  // DRINKS
   {
-    name: "Palm Juice (Tuk Tnout Choo)",
-    nameKh: "ទឹកត្នោតជ្រូក",
+    slug: generateSlug("Palm Juice"),
+    category: "drink",
+    title: "Palm Juice (Tuk Tnout Choo)",
+    titleKh: "ទឹកត្នោតជ្រូក",
     description:
-      "Fresh juice from sugar palm trees. Sweet and refreshing with a unique flavor. Best served cold.",
-    imageUrl: "/placeholder-palm-juice.jpg",
-    priceRange: "$0.50 - $1",
+      "Fresh juice from sugar palm trees. Sweet and refreshing with a unique flavor. Best served cold. This traditional drink has been enjoyed for generations and is both delicious and nutritious.",
+    addressText: "Available nationwide",
+    lat: 13.3671,
+    lng: 103.8448,
+    mainImage: "/default-image/palm-juice.jpg",
+    priceLevel: "$",
+    priceDetails: [{ label: "Street Price", price: "0.75", currency: "USD" }],
   },
   {
-    name: "Sugar Cane Juice",
-    nameKh: "ទឹកអំពៅ",
+    slug: generateSlug("Iced Coffee"),
+    category: "drink",
+    title: "Teuk Krola Paeng (Iced Coffee)",
+    titleKh: "ទឹកកាហ្វេប៉េងខ្មៅ",
     description:
-      "Freshly pressed sugar cane juice. Natural sweetness perfect for hot days. Often mixed with lime.",
-    imageUrl: "/placeholder-sugar-cane.jpg",
-    priceRange: "$0.50 - $1",
+      "Strong Cambodian iced coffee made with robusta beans and sweetened condensed milk. Incredibly smooth and energizing. The perfect pick-me-up on a hot Cambodian day.",
+    addressText: "Available nationwide",
+    lat: 13.3671,
+    lng: 103.8448,
+    mainImage: "/default-image/iced-coffee.jpg",
+    priceLevel: "$",
+    priceDetails: [{ label: "Typical Price", price: "1.5", currency: "USD" }],
   },
-  {
-    name: "Teuk Krola Paeng (Iced Coffee)",
-    nameKh: "ទឹកកាហ្វេប៉េងខ្មៅ",
-    description:
-      "Strong Cambodian iced coffee made with robusta beans and sweetened condensed milk. Incredibly smooth.",
-    imageUrl: "/placeholder-iced-coffee.jpg",
-    priceRange: "$1 - $2",
-  },
-  {
-    name: "Coconut Water",
-    nameKh: "ទឹកដូង",
-    description:
-      "Fresh young coconut water served straight from the coconut. Hydrating and naturally sweet.",
-    imageUrl: "/placeholder-coconut.jpg",
-    priceRange: "$1 - $1.50",
-  },
-  {
-    name: "Nom Tkoy Doh (Fruit Shake)",
-    nameKh: "ទឹកផ្លែឈើ",
-    description:
-      "Blended tropical fruit shake with crushed ice. Popular flavors: mango, dragon fruit, avocado.",
-    imageUrl: "/placeholder-fruit-shake.jpg",
-    priceRange: "$1.50 - $2.50",
-  },
-];
 
-// Sample Souvenirs
-const sampleSouvenirs: NewSouvenir[] = [
+  // SOUVENIRS
   {
-    name: "Krama (Traditional Scarf)",
-    nameKh: "ក្រមា",
+    slug: generateSlug("Krama Traditional Scarf"),
+    category: "souvenir",
+    title: "Krama (Traditional Scarf)",
+    titleKh: "ក្រមា",
     description:
-      "Iconic checkered cotton scarf worn by Cambodians. Multiple uses: headwrap, towel, baby carrier. Various colors available.",
-    imageUrl: "/placeholder-krama.jpg",
-    priceRange: "$3 - $8",
+      "Iconic checkered cotton scarf worn by Cambodians. Multiple uses: headwrap, towel, baby carrier. Various colors available. An essential item in Cambodian culture with countless practical applications.",
+    addressText: "Markets nationwide",
+    lat: 13.3671,
+    lng: 103.8448,
+    mainImage: "/default-image/krama.jpg",
+    priceLevel: "$",
+    priceDetails: [
+      { label: "Basic Cotton", price: "3", currency: "USD" },
+      { label: "Premium Quality", price: "8", currency: "USD" },
+    ],
   },
   {
-    name: "Silver Jewelry",
-    nameKh: "គ្រឿងអលង្ការប្រាក់",
+    slug: generateSlug("Kampot Pepper"),
+    category: "souvenir",
+    title: "Kampot Pepper",
+    titleKh: "ម្រេចកំពត",
     description:
-      "Handcrafted silver pieces by local artisans. Intricate designs inspired by Angkorian motifs.",
-    imageUrl: "/placeholder-silver.jpg",
-    priceRange: "$15 - $100",
+      "World-renowned Kampot peppercorns with geographical indication status. Red, black, and white varieties. Considered some of the finest pepper in the world, with a unique aromatic profile.",
+    addressText: "Kampot Province & markets nationwide",
+    lat: 10.6104,
+    lng: 104.1886,
+    mainImage: "/default-image/kampot-pepper.jpg",
+    priceLevel: "$$",
+    priceDetails: [
+      { label: "100g", price: "5", currency: "USD" },
+      { label: "500g", price: "15", currency: "USD" },
+    ],
   },
   {
-    name: "Kampot Pepper",
-    nameKh: "ម្រេចកំពត",
+    slug: generateSlug("Silk Scarf"),
+    category: "souvenir",
+    title: "Silk Scarf",
+    titleKh: "ក្រមាសូត្រ",
     description:
-      "World-renowned Kampot peppercorns with geographical indication status. Red, black, and white varieties.",
-    imageUrl: "/placeholder-pepper.jpg",
-    priceRange: "$5 - $15",
-  },
-  {
-    name: "Palm Sugar",
-    nameKh: "ស្ករត្នោត",
-    description:
-      "Natural palm sugar made from palm tree sap. Used in Khmer desserts and cooking. Rich caramel flavor.",
-    imageUrl: "/placeholder-palm-sugar.jpg",
-    priceRange: "$2 - $5",
-  },
-  {
-    name: "Silk Scarf",
-    nameKh: "ក្រមាសូត្រ",
-    description:
-      "Hand-woven silk scarves with traditional patterns. Made in Cambodian silk villages. Luxury quality.",
-    imageUrl: "/placeholder-silk-scarf.jpg",
-    priceRange: "$20 - $60",
+      "Hand-woven silk scarves with traditional patterns. Made in Cambodian silk villages. Luxury quality with intricate designs inspired by ancient Khmer art.",
+    addressText: "Silk villages & markets",
+    lat: 13.38,
+    lng: 103.89,
+    mainImage: "/default-image/silk-scarf.jpg",
+    priceLevel: "$$",
+    priceDetails: [
+      { label: "Standard Size", price: "20", currency: "USD" },
+      { label: "Premium/Large", price: "60", currency: "USD" },
+    ],
   },
 ];
 
@@ -287,30 +272,10 @@ async function seed() {
   console.log("🌱 Starting database seed...");
 
   try {
-    // Insert Places
-    console.log("📍 Seeding places...");
-    await db.insert(places).values(samplePlaces);
-    console.log(`✅ Inserted ${samplePlaces.length} places`);
-
-    // Insert Activities
-    console.log("🎯 Seeding activities...");
-    await db.insert(activities).values(sampleActivities);
-    console.log(`✅ Inserted ${sampleActivities.length} activities`);
-
-    // Insert Foods
-    console.log("🍜 Seeding foods...");
-    await db.insert(foods).values(sampleFoods);
-    console.log(`✅ Inserted ${sampleFoods.length} foods`);
-
-    // Insert Drinks
-    console.log("🥤 Seeding drinks...");
-    await db.insert(drinks).values(sampleDrinks);
-    console.log(`✅ Inserted ${sampleDrinks.length} drinks`);
-
-    // Insert Souvenirs
-    console.log("🎁 Seeding souvenirs...");
-    await db.insert(souvenirs).values(sampleSouvenirs);
-    console.log(`✅ Inserted ${sampleSouvenirs.length} souvenirs`);
+    // Insert Listings
+    console.log("📍 Seeding listings...");
+    await db.insert(listings).values(sampleListings);
+    console.log(`✅ Inserted ${sampleListings.length} listings`);
 
     console.log("\n🎉 Seed completed successfully!");
     console.log("\n📝 Next step: Create first admin user");
@@ -322,8 +287,14 @@ async function seed() {
     console.error("❌ Seed failed:", error);
     throw error;
   }
-
-  process.exit(0);
 }
 
-seed();
+seed()
+  .catch((error) => {
+    console.error("Seed process failed:", error);
+    process.exit(1);
+  })
+  .finally(async () => {
+    console.log("🔚 Seed process finished");
+    process.exit(0);
+  });
