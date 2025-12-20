@@ -430,7 +430,7 @@ export default function ExplorePage() {
           {/* Error State */}
           {error && (
             <div className="text-center py-12">
-              <p className="text-red-500">Failed to load listings</p>
+              <p className="text-primary text-2xl">Failed to load listings</p>
             </div>
           )}
 
