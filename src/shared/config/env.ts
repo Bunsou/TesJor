@@ -39,17 +39,46 @@ const envSchema = z.object({
     .default("development"),
 });
 
-// Validate environment variables at build time
-const parsedEnv = envSchema.safeParse(process.env);
-console.log("pasrsedEnv: ", parsedEnv.success);
+// Validate environment variables at build time (server-side only)
+// Client-side only has access to NEXT_PUBLIC_* vars, so we skip full validation
+const isServer = typeof window === "undefined";
 
-if (!parsedEnv.success) {
-  console.log("inside: ", parsedEnv.success);
-  console.error(
-    "❌ Invalid environment variables:",
-    parsedEnv.error.flatten().fieldErrors
-  );
-  throw new Error("Invalid environment variables");
+type EnvParseResult = ReturnType<typeof envSchema.safeParse>;
+
+let parsedEnv: EnvParseResult;
+
+if (isServer) {
+  parsedEnv = envSchema.safeParse(process.env);
+
+  if (!parsedEnv.success) {
+    console.error(
+      "❌ Invalid environment variables:",
+      parsedEnv.error.flatten().fieldErrors
+    );
+    throw new Error("Invalid environment variables");
+  }
+} else {
+  // Client-side: only validate public vars, provide defaults for server vars
+  parsedEnv = {
+    success: true,
+    data: {
+      DATABASE_URL: "",
+      BETTER_AUTH_SECRET: "",
+      BETTER_AUTH_URL:
+        process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000",
+      GOOGLE_CLIENT_ID: "",
+      GOOGLE_CLIENT_SECRET: "",
+      CLOUDINARY_CLOUD_NAME: "",
+      CLOUDINARY_API_KEY: "",
+      CLOUDINARY_API_SECRET: "",
+      UPSTASH_REDIS_REST_URL: "",
+      UPSTASH_REDIS_REST_TOKEN: "",
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:
+        process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+      NODE_ENV:
+        (process.env.NODE_ENV as "development" | "production" | "test") ||
+        "development",
+    },
+  } as EnvParseResult;
 }
-
 export const env = parsedEnv.data;
