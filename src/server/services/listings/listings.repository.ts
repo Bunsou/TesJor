@@ -101,6 +101,7 @@ export async function findNearbyListings(options: NearbyListingsOptions) {
       id: listings.id,
       slug: listings.slug,
       category: listings.category,
+      tags: listings.tags,
       title: listings.title,
       titleKh: listings.titleKh,
       description: listings.description,
