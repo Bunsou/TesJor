@@ -8,7 +8,7 @@ TRUNCATE TABLE user_progress CASCADE;
 
 -- Drop old foreign key columns from user_progress
 ALTER TABLE user_progress DROP COLUMN IF EXISTS place_id;
-ALTER TABLE user_progress DROP COLUMN IF EXISTS activity_id;
+ALTER TABLE user_progress DROP COLUMN IF EXISTS event_id;
 ALTER TABLE user_progress DROP COLUMN IF EXISTS food_id;
 ALTER TABLE user_progress DROP COLUMN IF EXISTS drink_id;
 ALTER TABLE user_progress DROP COLUMN IF EXISTS souvenir_id;

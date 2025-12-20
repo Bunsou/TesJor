@@ -38,7 +38,7 @@ export interface UserProgress {
   isVisited: boolean;
   visitedAt?: Date | null;
   placeId?: string | null;
-  activityId?: string | null;
+  eventId?: string | null;
   foodId?: string | null;
   drinkId?: string | null;
   souvenirId?: string | null;
@@ -49,7 +49,7 @@ export interface UserStats {
   totalVisited: number;
   totalBookmarked: number;
   placesVisited: number;
-  activitiesVisited: number;
+  eventsVisited: number;
   foodsVisited: number;
   drinksVisited: number;
   souvenirsVisited: number;

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Successfully migrated from separate content tables (places, activities, foods, drinks, souvenirs) to a **unified listings table** with flexible JSONB fields, following the SIS specification.
+Successfully migrated from separate content tables (places, events, foods, drinks, souvenirs) to a **unified listings table** with flexible JSONB fields, following the SIS specification.
 
 ## Migration Date
 

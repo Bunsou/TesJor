@@ -10,12 +10,12 @@ export const TERMS_OF_SERVICE = {
     {
       title: "2. Use of Service",
       content:
-        "TesJor provides a platform for discovering and exploring places, activities, food, drinks, and souvenirs. You agree to use the service only for lawful purposes and in accordance with these Terms of Service.",
+        "TesJor provides a platform for discovering and exploring places, events, food, drinks, and souvenirs. You agree to use the service only for lawful purposes and in accordance with these Terms of Service.",
     },
     {
       title: "3. User Accounts",
       content:
-        "You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account. We use Google OAuth for secure authentication.",
+        "You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all events that occur under your account. We use Google OAuth for secure authentication.",
     },
     {
       title: "4. Content and Intellectual Property",
@@ -28,9 +28,9 @@ export const TERMS_OF_SERVICE = {
         "By bookmarking or visiting places, you grant TesJor a non-exclusive, worldwide, royalty-free license to use, reproduce, and display such information for the purpose of providing and improving our services.",
     },
     {
-      title: "6. Prohibited Activities",
+      title: "6. Prohibited Events",
       content:
-        "You agree not to engage in any of the following prohibited activities: (a) copying or distributing any content without permission; (b) using the service for any unlawful purpose; (c) attempting to interfere with the service's functionality; (d) impersonating others or providing false information.",
+        "You agree not to engage in any of the following prohibited events: (a) copying or distributing any content without permission; (b) using the service for any unlawful purpose; (c) attempting to interfere with the service's functionality; (d) impersonating others or providing false information.",
     },
     {
       title: "7. Points and Rewards System",

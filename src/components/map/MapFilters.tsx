@@ -34,8 +34,8 @@ const CATEGORY_CONFIG = [
     bgColor: "bg-red-500",
   },
   {
-    value: "activity",
-    label: "Activities",
+    value: "event",
+    label: "Events",
     icon: Activity,
     color: "text-green-500",
     bgColor: "bg-green-500",

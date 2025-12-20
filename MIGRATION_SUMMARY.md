@@ -17,14 +17,14 @@ Completed database schema migration from verbose column names to simpler, more i
 - **Tables Updated:**
 
   - ✅ places
-  - ✅ activities
+  - ✅ events
   - ✅ foods
   - ✅ drinks
   - ✅ souvenirs
 
 - **Indexes Updated:**
   - `places_name_en_idx` → `places_name_idx`
-  - `activities_name_en_idx` → `activities_name_idx`
+  - `events_name_en_idx` → `events_name_idx`
 
 ### Seed Data Updated (src/db/seed.ts)
 
@@ -45,7 +45,7 @@ Completed database schema migration from verbose column names to simpler, more i
 
 ### Type Definitions Updated (src/types/index.ts)
 
-- ✅ All interfaces updated: Place, Activity, Food, Drink, Souvenir
+- ✅ All interfaces updated: Place, Event, Food, Drink, Souvenir
 - ✅ Changed from `nameEn`/`descriptionEn` to `name`/`description`
 
 ### Components Updated

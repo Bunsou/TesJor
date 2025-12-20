@@ -100,7 +100,7 @@ export default function MapPage() {
   }>({ lat: 13.3622, lng: 103.8597 });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     "place",
-    "activity",
+    "event",
     "food",
     "drink",
     "souvenir",
@@ -234,7 +234,7 @@ export default function MapPage() {
       />
 
       <MapFilters
-        categories={["place", "activity", "food", "drink", "souvenir"]}
+        categories={["place", "event", "food", "drink", "souvenir"]}
         selectedCategories={selectedCategories}
         onCategoriesChange={setSelectedCategories}
         radius={radius}

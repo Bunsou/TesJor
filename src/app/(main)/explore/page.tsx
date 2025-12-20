@@ -141,7 +141,7 @@ export default function ExplorePage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground-muted" />
           <Input
             type="text"
-            placeholder="Search places, activities, food..."
+            placeholder="Search places, events, food..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"

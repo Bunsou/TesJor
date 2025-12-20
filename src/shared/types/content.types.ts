@@ -2,7 +2,7 @@
 // Content Item Types (Unified Listings)
 // ========================================
 
-export type Category = "place" | "food" | "drink" | "souvenir" | "activity";
+export type Category = "place" | "food" | "drink" | "souvenir" | "event";
 export type PriceLevel = "$" | "$$" | "$$$" | "Free";
 
 export interface PriceDetail {

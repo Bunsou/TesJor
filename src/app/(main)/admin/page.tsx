@@ -95,7 +95,7 @@ export default function AdminPage() {
   }
 
   const hasLocation =
-    formData.category === "place" || formData.category === "activity";
+    formData.category === "place" || formData.category === "event";
   const hasPrice =
     formData.category === "food" ||
     formData.category === "drink" ||
@@ -183,7 +183,7 @@ export default function AdminPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="place">Place</SelectItem>
-                  <SelectItem value="activity">Activity</SelectItem>
+                  <SelectItem value="event">Event</SelectItem>
                   <SelectItem value="food">Food</SelectItem>
                   <SelectItem value="drink">Drink</SelectItem>
                   <SelectItem value="souvenir">Souvenir</SelectItem>

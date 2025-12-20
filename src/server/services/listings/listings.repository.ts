@@ -192,9 +192,7 @@ export async function findAllListingsWithCoords(categories?: string[]) {
     return query.where(
       inArray(
         listings.category,
-        categories as Array<
-          "place" | "food" | "drink" | "souvenir" | "activity"
-        >
+        categories as Array<"place" | "food" | "drink" | "souvenir" | "event">
       )
     );
   }

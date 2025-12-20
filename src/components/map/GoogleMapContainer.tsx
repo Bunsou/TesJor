@@ -34,7 +34,7 @@ export interface MapRef {
 
 const CATEGORY_COLORS: Record<string, string> = {
   place: "#EF4444", // red
-  activity: "#10B981", // green
+  event: "#10B981", // green
   food: "#F59E0B", // amber
   drink: "#8B5CF6", // purple
   souvenir: "#EC4899", // pink
@@ -93,7 +93,7 @@ function createLocationPinMarker(category: string): HTMLElement {
   const categoryIcons: Record<string, string> = {
     place:
       '<g transform="translate(9.5, 5.5)"><path d="M2.5 1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1ZM1 2.5h1M1 4h1M1 5.5h1M4.5 2.5h1M4.5 4h1M4.5 5.5h1" stroke="#374151" stroke-width="0.5" fill="none"/></g>',
-    activity:
+    event:
       '<g transform="translate(9.5, 5.5)"><circle cx="2.5" cy="1.5" r="0.8" fill="#374151"/><path d="M2.5 2.5L2 4.5M2.5 2.5L3 4.5M2 4.5L1 6.5M3 4.5L4 6.5" stroke="#374151" stroke-width="0.5" stroke-linecap="round"/></g>',
     food: '<g transform="translate(10, 5.5)"><path d="M0.5 1v2c0 0.3 0.2 0.5 0.5 0.5s0.5-0.2 0.5-0.5V1M1.5 1v2c0 0.3 0.2 0.5 0.5 0.5s0.5-0.2 0.5-0.5V1M1 1v5.5M3.5 1.5v1c0 0.3 0.2 0.5 0.5 0.5h0.2M4 3.5v3" stroke="#374151" stroke-width="0.5" stroke-linecap="round"/></g>',
     drink:

@@ -12,7 +12,7 @@ This document is designed for investors, partners, tourism officials, or general
 
 **TesJor** is a digital travel companion designed to solve the biggest problem in Cambodian tourism: **"Where do I go after Angkor Wat?"**
 
-Instead of a boring directory of places, we turn travel into a **game**. We provide tourists with curated "checklists" of hidden villages, authentic foods, and local activities. Users explore the country, check off items on their digital passport, and earn badges for discovering the "real" Cambodia.
+Instead of a boring directory of places, we turn travel into a **game**. We provide tourists with curated "checklists" of hidden villages, authentic foods, and local events. Users explore the country, check off items on their digital passport, and earn badges for discovering the "real" Cambodia.
 
 It is accessible immediately via any web browser on a phone—no app download required.
 

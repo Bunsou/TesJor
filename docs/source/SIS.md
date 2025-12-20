@@ -7,7 +7,7 @@
 
 ## 1. Project Vision & Purpose
 
-TesJor is a gamified travel discovery web application designed to solve the problem of concentrated tourism in Cambodia. It serves as a digital companion that guides international tourists to "Hidden Gems"—villages, local foods, traditional drinks, cultural activities, and souvenirs—that are often missed by standard tour packages.
+TesJor is a gamified travel discovery web application designed to solve the problem of concentrated tourism in Cambodia. It serves as a digital companion that guides international tourists to "Hidden Gems"—villages, local foods, traditional drinks, cultural events, and souvenirs—that are often missed by standard tour packages.
 
 ### Key Objectives
 

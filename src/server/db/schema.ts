@@ -20,7 +20,7 @@ export const categoryEnum = pgEnum("category", [
   "food",
   "drink",
   "souvenir",
-  "activity",
+  "event",
 ]);
 export const priceLevelEnum = pgEnum("price_level", ["$", "$$", "$$$", "Free"]);
 

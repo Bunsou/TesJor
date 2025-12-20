@@ -30,7 +30,7 @@ export const PRIVACY_POLICY = {
     {
       title: "6. Cookies and Tracking",
       content:
-        "We use cookies and similar tracking technologies to track activity on our service and store certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier.",
+        "We use cookies and similar tracking technologies to track event on our service and store certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier.",
     },
     {
       title: "7. Your Data Rights",

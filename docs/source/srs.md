@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-**Objective:** To build a gamified travel web application that guides tourists in Cambodia beyond the standard landmarks (like Angkor Wat) into local villages, hidden culinary spots, and cultural activities. The app encourages exploration through a "Checklist/Passport" system.
+**Objective:** To build a gamified travel web application that guides tourists in Cambodia beyond the standard landmarks (like Angkor Wat) into local villages, hidden culinary spots, and cultural events. The app encourages exploration through a "Checklist/Passport" system.
 
 **The Problem:** Tourists often lack knowledge of where to go after visiting major temples. They rely heavily on standard tour packages and miss the authentic Cambodian experience (villages, local products, hidden foods), resulting in concentrated tourism and less economic benefit for rural communities.
 
@@ -49,7 +49,7 @@
   - _Villages_ (Community tourism, Homestays)
   - _Food & Drink_ (Specific dishes like Num Banh Chok, Palm Juice)
   - _Souvenirs_ (Local products, Krama, Pottery)
-  - _Activities_ (Ox-cart rides, Silk weaving classes)
+  - _Events_ (Ox-cart rides, Silk weaving classes)
   - _Festivals_ (Seasonal events)
 - **Search:** A search bar to find specific places or items by name.
 - **Detail View:** Clicking an item opens a detailed page/modal with:

@@ -12,8 +12,8 @@ const categories = [
     color: "text-secondary-600",
   },
   {
-    value: "activity",
-    label: "Activities",
+    value: "event",
+    label: "Events",
     icon: Activity,
     color: "text-secondary-600",
   },

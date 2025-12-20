@@ -6,7 +6,7 @@ export const categoryEnum = z.enum([
   "food",
   "drink",
   "souvenir",
-  "activity",
+  "event",
 ]);
 
 // Price level enum
