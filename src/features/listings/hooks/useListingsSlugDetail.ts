@@ -30,25 +30,28 @@ interface UseListingsSlugDetailReturn {
 }
 
 async function fetchItem(slug: string): Promise<ItemDetailResponse> {
-  const res = await fetch(`/api/listings/${slug}`);
-  if (!res.ok) throw new Error("Failed to fetch item");
-  const json = await res.json();
+  // First, fetch the item to get its ID
+  const itemRes = await fetch(`/api/listings/${slug}`);
+  if (!itemRes.ok) throw new Error("Failed to fetch item");
+  const json = await itemRes.json();
 
-  // Fetch user progress for this item using the item's ID from response
+  // Then fetch progress using the item ID in parallel (if we have the ID)
   let isBookmarked = false;
   let isVisited = false;
 
-  try {
-    const progressRes = await fetch(
-      `/api/user/progress?itemId=${json.data.id}`
-    );
-    if (progressRes.ok) {
-      const progressJson = await progressRes.json();
-      isBookmarked = progressJson.data?.isBookmarked || false;
-      isVisited = progressJson.data?.isVisited || false;
+  if (json.data?.id) {
+    try {
+      const progressRes = await fetch(
+        `/api/user/progress?itemId=${json.data.id}`
+      );
+      if (progressRes.ok) {
+        const progressJson = await progressRes.json();
+        isBookmarked = progressJson.data?.isBookmarked || false;
+        isVisited = progressJson.data?.isVisited || false;
+      }
+    } catch {
+      // User might not be logged in - that's okay
     }
-  } catch {
-    // User might not be logged in
   }
 
   return {

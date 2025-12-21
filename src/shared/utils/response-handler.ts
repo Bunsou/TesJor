@@ -1,19 +1,48 @@
 import { NextResponse } from "next/server";
 import { AppError } from "./error-handler";
 
-// Success Response
+interface ResponseOptions {
+  statusCode?: number;
+  cache?: {
+    maxAge?: number; // Cache duration in seconds
+    sMaxAge?: number; // CDN cache duration
+    staleWhileRevalidate?: number; // Serve stale while revalidating
+  };
+  headers?: Record<string, string>;
+}
+
+// Success Response with optional caching
 export function sendSuccessResponse<T>(
   data: T,
   message?: string,
-  statusCode = 200
+  options?: ResponseOptions
 ) {
+  const statusCode = options?.statusCode || 200;
+  const headers: Record<string, string> = { ...options?.headers };
+
+  // Add cache control headers if specified
+  if (options?.cache) {
+    const { maxAge = 0, sMaxAge, staleWhileRevalidate } = options.cache;
+    const cacheDirectives = [
+      maxAge > 0 ? `public, max-age=${maxAge}` : "no-store",
+      sMaxAge ? `s-maxage=${sMaxAge}` : null,
+      staleWhileRevalidate
+        ? `stale-while-revalidate=${staleWhileRevalidate}`
+        : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    headers["Cache-Control"] = cacheDirectives;
+  }
+
   return NextResponse.json(
     {
       success: true,
       data,
       ...(message && { message }),
     },
-    { status: statusCode }
+    { status: statusCode, headers }
   );
 }
 

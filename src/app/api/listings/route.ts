@@ -24,5 +24,12 @@ export const GET = asyncHandler(async (request: NextRequest) => {
 
   const result = await getListings(query);
 
-  return sendSuccessResponse(result);
+  // Add caching for better performance
+  return sendSuccessResponse(result, undefined, {
+    cache: {
+      maxAge: 30, // Cache for 30 seconds in browser
+      sMaxAge: 60, // Cache for 60 seconds in CDN
+      staleWhileRevalidate: 300, // Serve stale content for 5 minutes while revalidating
+    },
+  });
 });

@@ -19,6 +19,7 @@ import {
   Utensils,
   Wine,
 } from "lucide-react";
+import type { Listing } from "@/shared/types";
 
 const categories: CategoryOption[] = [
   { id: "all", label: "All", icon: null },
@@ -29,7 +30,20 @@ const categories: CategoryOption[] = [
   { id: "souvenir", label: "Souvenirs", icon: <ShoppingBag /> },
 ];
 
-export default function ExplorePageClient() {
+interface ExplorePageClientProps {
+  initialData?: {
+    items: Listing[];
+    featuredItem: Listing | null;
+    hasMore: boolean;
+    nextPage: number | null;
+  } | null;
+  initialError?: string | null;
+}
+
+export default function ExplorePageClient({
+  initialData,
+  initialError,
+}: ExplorePageClientProps) {
   const [category, setCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 500);
@@ -45,6 +59,8 @@ export default function ExplorePageClient() {
   } = useListings({
     category,
     searchQuery: debouncedSearch,
+    initialData,
+    initialError,
   });
 
   return (

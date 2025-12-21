@@ -26,6 +26,13 @@ export const GET = asyncHandler<{ slug: string }>(
       throw new AppError("NOT_FOUND", "Listing not found");
     }
 
-    return sendSuccessResponse(listing);
+    // Add caching for item details
+    return sendSuccessResponse(listing, undefined, {
+      cache: {
+        maxAge: 60, // Cache for 1 minute in browser
+        sMaxAge: 300, // Cache for 5 minutes in CDN
+        staleWhileRevalidate: 600, // Serve stale for 10 minutes while revalidating
+      },
+    });
   }
 );
