@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Listing } from "@/shared/types";
 
 interface UseListingsParams {
@@ -11,7 +11,7 @@ interface UseListingsReturn {
   featuredItem: Listing | null;
   isLoading: boolean;
   error: string | null;
-  nextCursor: string | null;
+  hasMore: boolean;
   isLoadingMore: boolean;
   loadMore: () => Promise<void>;
 }
@@ -19,21 +19,22 @@ interface UseListingsReturn {
 async function fetchListings({
   category,
   query,
-  cursor,
+  page,
+  limit = 10,
 }: {
   category: string;
   query: string;
-  cursor?: string;
+  page: number;
+  limit?: number;
 }) {
   const params = new URLSearchParams({
-    limit: "10",
+    page: String(page),
+    limit: String(limit),
     ...(category && category !== "all" && { category }),
     ...(query && { q: query }),
-    ...(cursor && { cursor }),
   });
 
-  const url = `/api/listings?${params}`;
-  const res = await fetch(url);
+  const res = await fetch(`/api/listings?${params}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch listings");
@@ -51,27 +52,31 @@ export function useListings({
   const [featuredItem, setFeaturedItem] = useState<Listing | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Fetch initial data
+  // Fetch initial data (page 1)
   useEffect(() => {
     let isMounted = true;
 
-    async function loadData() {
+    async function loadInitialData() {
       try {
         setIsLoading(true);
         setError(null);
+        setPage(1); // Reset to page 1
 
         const data = await fetchListings({
           category,
           query: searchQuery,
+          page: 1,
         });
 
         if (isMounted) {
           const validItems = data.items.filter(
             (item: Listing) => item && item.id
           );
+
           if (validItems.length > 0) {
             setFeaturedItem(validItems[0]);
             setItems(validItems.slice(1));
@@ -79,7 +84,11 @@ export function useListings({
             setFeaturedItem(null);
             setItems([]);
           }
-          setNextCursor(data.nextCursor);
+
+          setHasMore(data.hasMore);
+          if (data.nextPage) {
+            setPage(data.nextPage);
+          }
         }
       } catch (err) {
         if (isMounted) {
@@ -94,7 +103,7 @@ export function useListings({
       }
     }
 
-    loadData();
+    loadInitialData();
 
     return () => {
       isMounted = false;
@@ -102,8 +111,8 @@ export function useListings({
   }, [category, searchQuery]);
 
   // Load more function
-  const loadMore = async () => {
-    if (!nextCursor || isLoadingMore) return;
+  const loadMore = useCallback(async () => {
+    if (!hasMore || isLoadingMore) return;
 
     try {
       setIsLoadingMore(true);
@@ -111,27 +120,30 @@ export function useListings({
       const data = await fetchListings({
         category,
         query: searchQuery,
-        cursor: nextCursor,
+        page,
       });
 
-      setItems((prev) => [
-        ...prev,
-        ...data.items.filter((item: Listing) => item && item.id),
-      ]);
-      setNextCursor(data.nextCursor);
+      const validItems = data.items.filter((item: Listing) => item && item.id);
+
+      setItems((prev) => [...prev, ...validItems]);
+      setHasMore(data.hasMore);
+
+      if (data.nextPage) {
+        setPage(data.nextPage);
+      }
     } catch (err) {
       console.error("[Explore] Error loading more:", err);
     } finally {
       setIsLoadingMore(false);
     }
-  };
+  }, [category, searchQuery, page, hasMore, isLoadingMore]);
 
   return {
     items,
     featuredItem,
     isLoading,
     error,
-    nextCursor,
+    hasMore,
     isLoadingMore,
     loadMore,
   };

@@ -1,13 +1,12 @@
 import * as repository from "./listings.repository";
 import { AppError } from "@/shared/utils/error-handler";
-import { log } from "@/shared/utils";
 import type { NewListing } from "@/server/db/schema";
 
 interface GetListingsParams {
   category?: string;
   priceLevel?: string;
   q?: string;
-  cursor?: string;
+  page: number;
   limit: number;
 }
 
@@ -19,44 +18,32 @@ interface NearbyParams {
 }
 
 /**
- * Get listings with pagination and filters
+ * Get listings with offset-based pagination
  */
 export async function getListings(params: GetListingsParams) {
-  const { category, priceLevel, q, cursor, limit } = params;
+  const { category, priceLevel, q, page, limit } = params;
 
-  // Parse cursor if provided
-  let cursorDate: Date | null = null;
-  if (cursor) {
-    try {
-      const [timestamp] = cursor.split("_");
-      cursorDate = new Date(parseInt(timestamp));
-      log.info("Using cursor for pagination", { cursor, cursorDate });
-    } catch {
-      log.warn("Invalid cursor format", { cursor });
-    }
-  }
-
+  // Fetch one extra item to determine if there are more pages
   const items = await repository.findListings({
     category,
     priceLevel,
     q,
-    cursor: cursorDate,
-    limit: limit + 1, // Fetch one extra to check if there are more
+    page,
+    limit: limit + 1,
+    pageSize: limit, // Original page size for offset calculation
   });
 
-  const limitedItems = items.slice(0, limit);
+  // Check if there are more items beyond this page
   const hasMore = items.length > limit;
+  const itemsToReturn = items.slice(0, limit);
 
-  // Generate next cursor
-  let nextCursor: string | null = null;
-  if (hasMore && limitedItems.length > 0) {
-    const lastItem = limitedItems[limitedItems.length - 1];
-    nextCursor = `${lastItem.createdAt.getTime()}_${lastItem.id}`;
-  }
+  // Calculate next page number
+  const nextPage = hasMore ? page + 1 : null;
 
   return {
-    items: limitedItems,
-    nextCursor,
+    items: itemsToReturn,
+    page,
+    nextPage,
     hasMore,
   };
 }
@@ -119,14 +106,6 @@ export async function getNearbyListings(params: NearbyParams) {
     radius,
     category,
     limit: 100,
-  });
-
-  log.info("Nearby search completed", {
-    lat,
-    lng,
-    radius,
-    category,
-    resultCount: items.length,
   });
 
   return { items };

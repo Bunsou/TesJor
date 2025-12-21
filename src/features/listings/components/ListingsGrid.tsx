@@ -10,7 +10,7 @@ interface ListingsGridProps {
   items: Listing[];
   category: string;
   categoryLabel: string;
-  nextCursor: string | null;
+  hasMore: boolean;
   isLoadingMore: boolean;
   onLoadMore: () => void;
 }
@@ -20,7 +20,7 @@ export function ListingsGrid({
   items,
   category,
   categoryLabel,
-  nextCursor,
+  hasMore,
   isLoadingMore,
   onLoadMore,
 }: ListingsGridProps) {
@@ -64,7 +64,7 @@ export function ListingsGrid({
       )}
 
       {/* Load More Button */}
-      {nextCursor && (
+      {hasMore && (
         <div className="flex justify-center mt-8">
           <button
             onClick={onLoadMore}

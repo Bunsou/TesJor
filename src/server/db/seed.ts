@@ -60,7 +60,7 @@ const sampleListings: NewListing[] = [
     addressText: "O Dambang, Battambang Province, Cambodia",
     lat: 13.0811,
     lng: 103.1991,
-    mainImage: "/default-image/activity.png",
+    mainImage: "/default-image/event.png",
     priceLevel: "$",
     priceDetails: [{ label: "Round Trip", price: "5", currency: "USD" }],
     operatingHours: {
@@ -489,6 +489,11 @@ async function seed() {
   console.log("🌱 Starting database seed...");
 
   try {
+    // Clear existing listings first
+    console.log("🗑️  Clearing existing listings...");
+    await db.delete(listings);
+    console.log("✅ Cleared existing data");
+
     // Insert Listings
     console.log("📍 Seeding listings...");
     await db.insert(listings).values(sampleListings);

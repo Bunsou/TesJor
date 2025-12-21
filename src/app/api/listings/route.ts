@@ -3,7 +3,6 @@ import { asyncHandler } from "@/server/middleware";
 import { checkRateLimit } from "@/server/middleware";
 import { validateRequestQuery } from "@/shared/middleware";
 import { sendSuccessResponse } from "@/shared/utils";
-import { log } from "@/shared/utils";
 import { listingsQuerySchema } from "@/features/listings/schemas";
 import { getListings } from "@/server/services/listings";
 
@@ -17,13 +16,11 @@ export const GET = asyncHandler(async (request: NextRequest) => {
     category: searchParams.get("category") || undefined,
     province: searchParams.get("province") || undefined,
     q: searchParams.get("q") || undefined,
-    cursor: searchParams.get("cursor") || undefined,
-    limit: searchParams.get("limit") || undefined,
+    page: searchParams.get("page") || "1",
+    limit: searchParams.get("limit") || "10",
   };
 
   const query = validateRequestQuery(listingsQuerySchema, rawParams);
-
-  log.info("Fetching listings", { query });
 
   const result = await getListings(query);
 

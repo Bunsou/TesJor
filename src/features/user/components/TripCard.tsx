@@ -13,7 +13,7 @@ interface TripCardProps {
 function getCategoryStyle(category: string) {
   const styles: Record<string, string> = {
     place: "bg-green-600/90",
-    activity: "bg-blue-500/90",
+    event: "bg-blue-500/90",
     food: "bg-orange-500/90",
     drink: "bg-purple-500/90",
     souvenir: "bg-pink-500/90",

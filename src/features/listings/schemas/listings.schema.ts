@@ -40,13 +40,13 @@ export const contactInfoSchema = z.object({
   website: z.string().url().optional(),
 });
 
-// Listings Query Schema
+// Listings Query Schema (offset-based pagination)
 export const listingsQuerySchema = z.object({
   category: categoryEnum.optional(),
   priceLevel: priceLevelEnum.optional(),
   q: z.string().optional(), // search term
-  cursor: z.string().optional(), // for pagination
-  limit: z.coerce.number().min(1).max(50).default(20),
+  page: z.coerce.number().min(1).default(1), // page number for pagination
+  limit: z.coerce.number().min(1).max(50).default(10),
 });
 
 // Nearby Query Schema

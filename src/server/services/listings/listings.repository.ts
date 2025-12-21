@@ -6,14 +6,15 @@ import {
   type NewListing,
   Listing,
 } from "@/server/db/schema";
-import { eq, and, or, ilike, desc, lt, sql, inArray } from "drizzle-orm";
+import { eq, and, or, ilike, desc, sql, inArray } from "drizzle-orm";
 
 interface ListingsQueryOptions {
   category?: string;
   priceLevel?: string;
   q?: string;
-  cursor?: Date | null;
+  page: number;
   limit: number;
+  pageSize: number; // Original page size for offset calculation
 }
 
 interface NearbyListingsOptions {
@@ -28,7 +29,7 @@ interface NearbyListingsOptions {
  * Find listings with optional filters
  */
 export async function findListings(options: ListingsQueryOptions) {
-  const { category, priceLevel, q, cursor, limit } = options;
+  const { category, priceLevel, q, page, limit, pageSize } = options;
 
   const conditions = [];
 
@@ -39,11 +40,9 @@ export async function findListings(options: ListingsQueryOptions) {
 
   // Filter by price level
   if (priceLevel) {
-    if (!priceLevel === null) {
-      conditions.push(
-        eq(listings.priceLevel, priceLevel as "$" | "$$" | "$$$" | "Free")
-      );
-    }
+    conditions.push(
+      eq(listings.priceLevel, priceLevel as "$" | "$$" | "$$$" | "Free")
+    );
   }
 
   // Search by title or description
@@ -57,18 +56,17 @@ export async function findListings(options: ListingsQueryOptions) {
     );
   }
 
-  // Pagination cursor
-  if (cursor) {
-    conditions.push(lt(listings.createdAt, cursor));
-  }
+  // Calculate offset using original page size (not fetch limit)
+  const offset = (page - 1) * pageSize;
 
   const query = db.select().from(listings);
   const results = await (conditions.length > 0
     ? query.where(and(...conditions)!)
     : query
   )
-    .orderBy(desc(listings.createdAt))
-    .limit(limit);
+    .orderBy(desc(listings.createdAt), listings.id)
+    .limit(limit)
+    .offset(offset);
 
   return results;
 }

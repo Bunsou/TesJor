@@ -23,7 +23,7 @@ import {
 const categories: CategoryOption[] = [
   { id: "all", label: "All", icon: null },
   { id: "place", label: "Places", icon: <MapPinCheck /> },
-  { id: "activity", label: "Activities", icon: <CalendarHeart /> },
+  { id: "event", label: "Events", icon: <CalendarHeart /> },
   { id: "food", label: "Foods", icon: <Utensils /> },
   { id: "drink", label: "Drinks", icon: <Wine /> },
   { id: "souvenir", label: "Souvenirs", icon: <ShoppingBag /> },
@@ -39,7 +39,7 @@ export default function ExplorePageClient() {
     featuredItem,
     isLoading,
     error,
-    nextCursor,
+    hasMore,
     isLoadingMore,
     loadMore,
   } = useListings({
@@ -83,7 +83,7 @@ export default function ExplorePageClient() {
               categoryLabel={
                 categories.find((c) => c.id === category)?.label || ""
               }
-              nextCursor={nextCursor}
+              hasMore={hasMore}
               isLoadingMore={isLoadingMore}
               onLoadMore={loadMore}
             />
