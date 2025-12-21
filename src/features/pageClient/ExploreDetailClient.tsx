@@ -114,6 +114,7 @@ export default function ExploreDetailClient() {
                   lat={item.lat}
                   lng={item.lng}
                   addressText={item.addressText}
+                  province={item.province}
                 />
               </div>
             )}

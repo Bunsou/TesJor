@@ -5,9 +5,15 @@ interface MapPreviewProps {
   lat: string | number;
   lng: string | number;
   addressText?: string | null;
+  province?: string | null;
 }
 
-export function MapPreview({ lat, lng, addressText }: MapPreviewProps) {
+export function MapPreview({
+  lat,
+  lng,
+  addressText,
+  province,
+}: MapPreviewProps) {
   return (
     <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#2A201D] p-1 shadow-sm">
       <div className="w-full h-80 lg:h-75 rounded-lg bg-gray-200 dark:bg-gray-700 relative overflow-hidden">
@@ -35,7 +41,7 @@ export function MapPreview({ lat, lng, addressText }: MapPreviewProps) {
       <div className="p-3 flex justify-between items-center">
         <div>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {addressText ? "Location Address" : "No address available"}
+            {province || "Location"}
           </p>
           <p className="text-sm font-semibold mt-0.5 text-gray-900 dark:text-white">
             {addressText || "View on map"}

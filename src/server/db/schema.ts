@@ -23,6 +23,33 @@ export const categoryEnum = pgEnum("category", [
   "event",
 ]);
 export const priceLevelEnum = pgEnum("price_level", ["$", "$$", "$$$", "Free"]);
+export const provinceEnum = pgEnum("province", [
+  "Banteay Meanchey",
+  "Battambang",
+  "Kampong Cham",
+  "Kampong Chhnang",
+  "Kampong Speu",
+  "Kampong Thom",
+  "Kampot",
+  "Kandal",
+  "Kep",
+  "Koh Kong",
+  "Kratie",
+  "Mondulkiri",
+  "Oddar Meanchey",
+  "Pailin",
+  "Phnom Penh",
+  "Preah Sihanouk",
+  "Preah Vihear",
+  "Prey Veng",
+  "Pursat",
+  "Ratanakiri",
+  "Siem Reap",
+  "Stung Treng",
+  "Svay Rieng",
+  "Takeo",
+  "Tboung Khmum",
+]);
 
 // Users Table
 export const users = pgTable("users", {
@@ -94,6 +121,7 @@ export const listings = pgTable(
     title: text("title").notNull(),
     titleKh: text("title_kh"),
     description: text("description").notNull(),
+    province: provinceEnum("province").notNull(),
     addressText: text("address_text"),
     lat: doublePrecision("lat").notNull(),
     lng: doublePrecision("lng").notNull(),
