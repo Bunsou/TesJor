@@ -41,5 +41,11 @@ export default async function ProfilePage() {
     console.error("[ProfilePage] Error fetching stats:", err);
   }
 
-  return <ProfilePageClient initialStats={initialStats} initialError={error} />;
+  return (
+    <ProfilePageClient
+      initialSession={session}
+      initialStats={initialStats}
+      initialError={error}
+    />
+  );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "@/hooks/useSession";
 import { useProfile } from "@/features/user/hooks/useProfile";
 import {
   ProfileHeader,
@@ -17,6 +16,7 @@ import {
   SAMPLE_SAVED_ITEMS,
   SAMPLE_BADGES,
 } from "@/features/user/constants/profile-sample-data";
+import { Session } from "@/server/services/auth";
 
 interface UserStats {
   bookmarkedCount: number;
@@ -26,16 +26,17 @@ interface UserStats {
 }
 
 interface ProfilePageClientProps {
+  initialSession: Session;
   initialStats?: UserStats | null;
   initialError?: string | null;
 }
 
 export default function ProfilePageClient({
+  initialSession,
   initialStats,
   initialError,
 }: ProfilePageClientProps) {
-  const { session } = useSession();
-  const user = session?.user;
+  const user = initialSession?.user;
 
   // Use custom hook for profile data
   const { stats, loading, error, userLevel, levelProgress } = useProfile({
