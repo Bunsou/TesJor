@@ -34,14 +34,14 @@ export default function ProfilePageClient() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F9F7F5] dark:bg-[#201512]">
+      <div className="flex items-center justify-center min-h-screen bg-background dark:bg-[#201512]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F7F5] dark:bg-[#201512] pb-20 md:pb-8">
+    <div className="min-h-screen bg-background dark:bg-[#201512] pb-20 md:pb-8">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 flex flex-col gap-8">
         {/* Profile Header */}
         <ProfileHeader user={user} userLevel={userLevel} />

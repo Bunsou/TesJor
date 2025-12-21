@@ -15,7 +15,7 @@ export default function MyTripsClient() {
     useMyTrips();
 
   return (
-    <div className="flex-1 h-full overflow-y-auto bg-[#FDFCF6] dark:bg-[#201512]">
+    <div className="flex-1 h-full overflow-y-auto bg-background dark:bg-[#201512]">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">
         <TripsHeader savedCount={stats.saved} visitedCount={stats.visited} />
 
