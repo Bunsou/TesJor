@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getDefaultImage } from "@/lib/default-images";
 import {
-  useItemDetail,
+  useListingsSlugDetail,
   ImageCarousel,
   Breadcrumb,
   ItemHeader,
@@ -21,7 +21,7 @@ export default function ExploreDetailClient() {
   const slug = params.id as string;
 
   const { data, isLoading, error, handleBookmark, handleVisited, refreshData } =
-    useItemDetail(slug);
+    useListingsSlugDetail(slug);
   const [imageError, setImageError] = useState(false);
 
   const handleGetDirections = () => {
@@ -118,9 +118,9 @@ export default function ExploreDetailClient() {
               </div>
             )}
 
-            <div className="order-3">
+            {/* <div className="order-3">
               <HighlightsList />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Listing } from "@/server/db/schema";
 import { FaStar, FaRegStar, FaStarHalfStroke } from "react-icons/fa6";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/useSession";
 
@@ -11,9 +12,38 @@ interface ReviewsSectionProps {
     rating: number;
     content: string | null;
     userId: string;
+    userName: string | null;
+    userImage: string | null;
     createdAt: Date;
   }>;
   onReviewSubmitted?: () => void;
+}
+
+function getRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffInSeconds = Math.floor(
+    (now.getTime() - new Date(date).getTime()) / 1000
+  );
+
+  if (diffInSeconds < 60) return "just now";
+  if (diffInSeconds < 3600) {
+    const mins = Math.floor(diffInSeconds / 60);
+    return `${mins} ${mins === 1 ? "minute" : "minutes"} ago`;
+  }
+  if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+  }
+  if (diffInSeconds < 2592000) {
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} ${days === 1 ? "day" : "days"} ago`;
+  }
+  if (diffInSeconds < 31536000) {
+    const months = Math.floor(diffInSeconds / 2592000);
+    return `${months} ${months === 1 ? "month" : "months"} ago`;
+  }
+  const years = Math.floor(diffInSeconds / 31536000);
+  return `${years} ${years === 1 ? "year" : "years"} ago`;
 }
 
 export function ReviewsSection({
@@ -29,19 +59,6 @@ export function ReviewsSection({
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  // Check if user already reviewed
-  const userReview = session?.user?.id
-    ? reviews.find((review) => review.userId === session.user.id)
-    : undefined;
-
-  // Initialize form with existing review if present
-  useState(() => {
-    if (userReview && !showReviewForm) {
-      setUserRating(userReview.rating);
-      setReviewContent(userReview.content || "");
-    }
-  });
 
   // Calculate rating distribution
   const ratingCounts = [0, 0, 0, 0, 0]; // [5, 4, 3, 2, 1]
@@ -83,9 +100,10 @@ export function ReviewsSection({
         throw new Error(data.message || "Failed to submit review");
       }
 
-      setSuccess(userReview ? "Review updated!" : "Review submitted!");
+      setSuccess("Review submitted successfully!");
       setShowReviewForm(false);
       setReviewContent("");
+      setUserRating(0);
 
       // Callback to refresh data
       if (onReviewSubmitted) {
@@ -211,12 +229,12 @@ export function ReviewsSection({
               onClick={() => setShowReviewForm(true)}
               className="bg-[#E07A5F] hover:bg-[#E07A5F]/90 text-white"
             >
-              {userReview ? "Update Your Review" : "Write a Review"}
+              Write a Review
             </Button>
           ) : (
             <div className="bg-white dark:bg-[#2A201D] p-6 rounded-xl border border-gray-200 dark:border-gray-800">
               <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
-                {userReview ? "Update Your Review" : "Leave a Review"}
+                Leave a Review
               </h4>
 
               {/* Star Rating */}
@@ -252,17 +270,13 @@ export function ReviewsSection({
                   disabled={isSubmitting || userRating === 0}
                   className="bg-[#E07A5F] hover:bg-[#E07A5F]/90 text-white"
                 >
-                  {isSubmitting
-                    ? "Submitting..."
-                    : userReview
-                    ? "Update Review"
-                    : "Submit Review"}
+                  {isSubmitting ? "Submitting..." : "Submit Review"}
                 </Button>
                 <Button
                   onClick={() => {
                     setShowReviewForm(false);
-                    setUserRating(userReview?.rating || 0);
-                    setReviewContent(userReview?.content || "");
+                    setUserRating(0);
+                    setReviewContent("");
                     setError(null);
                   }}
                   variant="outline"
@@ -293,17 +307,36 @@ export function ReviewsSection({
               key={review.id}
               className="bg-white dark:bg-[#2A201D] p-4 rounded-lg border border-gray-200 dark:border-gray-800"
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex gap-1">{renderStars(review.rating)}</div>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {new Date(review.createdAt).toLocaleDateString()}
-                </span>
+              <div className="flex items-start gap-3 mb-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage
+                    src={review.userImage || undefined}
+                    alt={review.userName || "User"}
+                    referrerPolicy="no-referrer"
+                  />
+                  <AvatarFallback className="bg-[#E07A5F] text-white">
+                    {review.userName?.charAt(0).toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {review.userName || "Anonymous"}
+                    </span>
+                    <span className="flex gap-1">
+                      {renderStars(review.rating)}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                    {getRelativeTime(review.createdAt)}
+                  </div>
+                  {review.content && (
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                      {review.content}
+                    </p>
+                  )}
+                </div>
               </div>
-              {review.content && (
-                <p className="text-gray-700 dark:text-gray-300 text-sm">
-                  {review.content}
-                </p>
-              )}
             </div>
           ))}
         </div>

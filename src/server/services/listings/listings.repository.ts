@@ -3,6 +3,7 @@ import {
   listings,
   listingPhotos,
   reviews,
+  users,
   type NewListing,
   Listing,
 } from "@/server/db/schema";
@@ -159,12 +160,21 @@ export async function findListingPhotos(listingId: string) {
 }
 
 /**
- * Get listing reviews
+ * Get listing reviews with user data
  */
 export async function findListingReviews(listingId: string) {
   return db
-    .select()
+    .select({
+      id: reviews.id,
+      rating: reviews.rating,
+      content: reviews.content,
+      createdAt: reviews.createdAt,
+      userId: reviews.userId,
+      userName: users.name,
+      userImage: users.image,
+    })
     .from(reviews)
+    .leftJoin(users, eq(reviews.userId, users.id))
     .where(eq(reviews.listingId, listingId))
     .orderBy(desc(reviews.createdAt));
 }

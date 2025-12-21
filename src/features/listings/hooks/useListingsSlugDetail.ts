@@ -7,6 +7,8 @@ interface Review {
   rating: number;
   content: string | null;
   userId: string;
+  userName: string | null;
+  userImage: string | null;
   createdAt: Date;
 }
 
@@ -16,7 +18,7 @@ interface ItemDetailResponse {
   isVisited: boolean;
 }
 
-interface UseItemDetailReturn {
+interface UseListingsSlugDetailReturn {
   data: ItemDetailResponse | null;
   isLoading: boolean;
   error: string | null;
@@ -112,7 +114,9 @@ function triggerConfetti() {
   fire(0.1, { spread: 120, startVelocity: 45 });
 }
 
-export function useItemDetail(slug: string): UseItemDetailReturn {
+export function useListingsSlugDetail(
+  slug: string
+): UseListingsSlugDetailReturn {
   const [data, setData] = useState<ItemDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

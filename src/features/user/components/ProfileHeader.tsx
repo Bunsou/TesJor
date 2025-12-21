@@ -36,6 +36,7 @@ export function ProfileHeader({ user, userLevel }: ProfileHeaderProps) {
               <AvatarImage
                 src={user?.image || undefined}
                 alt={user?.name || "User"}
+                referrerPolicy="no-referrer"
               />
               <AvatarFallback className="text-3xl font-bold bg-primary/20 text-primary">
                 {user?.name?.[0]?.toUpperCase() || "U"}

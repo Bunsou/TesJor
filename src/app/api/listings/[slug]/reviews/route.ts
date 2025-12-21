@@ -11,7 +11,7 @@ import { AppError } from "@/shared/utils";
 import { z } from "zod";
 import { db } from "@/server/db";
 import { reviews, listings } from "@/server/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const slugParamSchema = z.object({
   slug: z.string().min(1),
@@ -54,50 +54,21 @@ export const POST = asyncHandler<{ slug: string }>(
       throw new AppError("NOT_FOUND", "Listing not found");
     }
 
-    // Check if user already reviewed this listing
-    const existingReview = await db
-      .select()
-      .from(reviews)
-      .where(
-        and(
-          eq(reviews.listingId, listing.id),
-          eq(reviews.userId, session.user.id)
-        )
-      )
-      .limit(1);
+    // Create new review (allow multiple reviews per user)
+    const [newReview] = await db
+      .insert(reviews)
+      .values({
+        listingId: listing.id,
+        userId: session.user.id,
+        rating: reviewData.rating,
+        content: reviewData.content,
+      })
+      .returning();
 
-    if (existingReview.length > 0) {
-      // Update existing review
-      const [updatedReview] = await db
-        .update(reviews)
-        .set({
-          rating: reviewData.rating,
-          content: reviewData.content,
-        })
-        .where(eq(reviews.id, existingReview[0].id))
-        .returning();
+    // Recalculate average rating
+    await updateListingAvgRating(listing.id);
 
-      // Recalculate average rating
-      await updateListingAvgRating(listing.id);
-
-      return sendSuccessResponse(updatedReview, "Review updated successfully");
-    } else {
-      // Create new review
-      const [newReview] = await db
-        .insert(reviews)
-        .values({
-          listingId: listing.id,
-          userId: session.user.id,
-          rating: reviewData.rating,
-          content: reviewData.content,
-        })
-        .returning();
-
-      // Recalculate average rating
-      await updateListingAvgRating(listing.id);
-
-      return sendSuccessResponse(newReview, "Review created successfully");
-    }
+    return sendSuccessResponse(newReview, "Review created successfully");
   }
 );
 

@@ -18,4 +18,4 @@ export { HighlightsList } from "./components/HighlightsList";
 
 // Hooks
 export { useListings } from "./hooks/useListings";
-export { useItemDetail } from "./hooks/useItemDetail";
+export { useListingsSlugDetail } from "./hooks/useListingsSlugDetail";

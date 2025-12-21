@@ -74,6 +74,8 @@ export async function getListingBySlug(slug: string) {
     repository.findListingReviews(listing.id),
   ]);
 
+  console.log("Reviews 11: ", reviews);
+
   return {
     ...listing,
     photos,
