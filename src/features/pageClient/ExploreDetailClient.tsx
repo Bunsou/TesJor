@@ -20,8 +20,16 @@ export default function ExploreDetailClient() {
   const router = useRouter();
   const slug = params.id as string;
 
-  const { data, isLoading, error, handleBookmark, handleVisited, refreshData } =
-    useListingsSlugDetail(slug);
+  const {
+    data,
+    isLoading,
+    error,
+    isBookmarkLoading,
+    isVisitedLoading,
+    handleBookmark,
+    handleVisited,
+    refreshData,
+  } = useListingsSlugDetail(slug);
   const [imageError, setImageError] = useState(false);
 
   const handleGetDirections = () => {
@@ -102,6 +110,8 @@ export default function ExploreDetailClient() {
                 item={item}
                 isBookmarked={isBookmarked}
                 isVisited={isVisited}
+                isBookmarkLoading={isBookmarkLoading}
+                isVisitedLoading={isVisitedLoading}
                 onGetDirections={handleGetDirections}
                 onToggleVisited={handleVisited}
                 onToggleBookmark={handleBookmark}

@@ -22,6 +22,8 @@ interface UseListingsSlugDetailReturn {
   data: ItemDetailResponse | null;
   isLoading: boolean;
   error: string | null;
+  isBookmarkLoading: boolean;
+  isVisitedLoading: boolean;
   handleBookmark: (action: "add" | "remove") => Promise<void>;
   handleVisited: (action: "add" | "remove") => Promise<void>;
   refreshData: () => Promise<void>;
@@ -120,6 +122,8 @@ export function useListingsSlugDetail(
   const [data, setData] = useState<ItemDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
+  const [isVisitedLoading, setIsVisitedLoading] = useState(false);
 
   const loadItem = useCallback(async () => {
     try {
@@ -165,35 +169,71 @@ export function useListingsSlugDetail(
   }, [slug]);
 
   const handleBookmark = async (action: "add" | "remove") => {
-    if (!data) return;
+    if (!data || isBookmarkLoading) return;
+
+    // Store previous state for rollback
+    const previousState = data.isBookmarked;
+
     try {
+      // Optimistic update - update UI immediately
+      setIsBookmarkLoading(true);
+      setData({
+        ...data,
+        isBookmarked: action === "add",
+      });
+
+      // Make API call in background
       await toggleBookmark({
         itemId: data.item.id,
         category: data.item.category,
         action,
       });
-      const itemData = await fetchItem(slug);
-      setData(itemData);
     } catch (err) {
       console.error("Failed to toggle bookmark:", err);
+      // Rollback on error
+      setData({
+        ...data,
+        isBookmarked: previousState,
+      });
+    } finally {
+      setIsBookmarkLoading(false);
     }
   };
 
   const handleVisited = async (action: "add" | "remove") => {
-    if (!data) return;
+    if (!data || isVisitedLoading) return;
+
+    // Store previous state for rollback
+    const previousState = data.isVisited;
+
     try {
-      const result = await toggleVisited({
+      // Optimistic update - update UI immediately
+      setIsVisitedLoading(true);
+      setData({
+        ...data,
+        isVisited: action === "add",
+      });
+
+      // Trigger confetti immediately on add for better UX
+      if (action === "add") {
+        triggerConfetti();
+      }
+
+      // Make API call in background
+      await toggleVisited({
         itemId: data.item.id,
         category: data.item.category,
         action,
       });
-      const itemData = await fetchItem(slug);
-      setData(itemData);
-      if (result.visited) {
-        triggerConfetti();
-      }
     } catch (err) {
       console.error("Failed to toggle visited:", err);
+      // Rollback on error
+      setData({
+        ...data,
+        isVisited: previousState,
+      });
+    } finally {
+      setIsVisitedLoading(false);
     }
   };
 
@@ -201,6 +241,8 @@ export function useListingsSlugDetail(
     data,
     isLoading,
     error,
+    isBookmarkLoading,
+    isVisitedLoading,
     handleBookmark,
     handleVisited,
     refreshData,

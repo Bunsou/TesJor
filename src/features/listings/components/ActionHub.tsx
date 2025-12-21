@@ -1,12 +1,14 @@
 "use client";
 
 import { Listing } from "@/server/db/schema";
-import { BookCheck, Heart, MapPinned, Zap } from "lucide-react";
+import { BookCheck, Heart, MapPinned, Zap, Loader2 } from "lucide-react";
 
 interface ActionHubProps {
   item: Listing;
   isBookmarked: boolean;
   isVisited: boolean;
+  isBookmarkLoading?: boolean;
+  isVisitedLoading?: boolean;
   onGetDirections: () => void;
   onToggleVisited: (action: "add" | "remove") => void;
   onToggleBookmark: (action: "add" | "remove") => void;
@@ -16,6 +18,8 @@ export function ActionHub({
   item,
   isBookmarked,
   isVisited,
+  isBookmarkLoading = false,
+  isVisitedLoading = false,
   onGetDirections,
   onToggleVisited,
   onToggleBookmark,
@@ -45,35 +49,45 @@ export function ActionHub({
         </button>
         <button
           onClick={() => onToggleVisited(isVisited ? "remove" : "add")}
+          disabled={isVisitedLoading}
           className={`w-full px-4 py-3 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
             isVisited
               ? "border-[#2D6A4F] bg-[#2D6A4F] text-white"
               : "border-[#E07A5F]/20 hover:border-[#E07A5F] text-[#E07A5F] hover:bg-[#E07A5F]/5"
-          }`}
+          } ${isVisitedLoading ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <span
             className={`material-symbols-outlined ${
               isVisited ? "icon-filled" : ""
             }`}
           >
-            <BookCheck size={20} />
+            {isVisitedLoading ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <BookCheck size={20} />
+            )}
           </span>
           {isVisited ? "Visited" : "Mark Visited"}
         </button>
         <button
           onClick={() => onToggleBookmark(isBookmarked ? "remove" : "add")}
+          disabled={isBookmarkLoading}
           className={`w-full px-4 py-3 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
             isBookmarked
               ? "border-[#E07A5F] bg-[#E07A5F] text-white"
               : "border-[#E07A5F]/20 hover:border-[#E07A5F] text-[#E07A5F] hover:bg-[#E07A5F]/5"
-          }`}
+          } ${isBookmarkLoading ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <span
             className={`material-symbols-outlined ${
               isBookmarked ? "icon-filled" : ""
             }`}
           >
-            <Heart size={20} fill={isBookmarked ? "currentColor" : "none"} />
+            {isBookmarkLoading ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <Heart size={20} fill={isBookmarked ? "currentColor" : "none"} />
+            )}
           </span>
           {isBookmarked ? "Saved" : "Bookmark"}
         </button>
