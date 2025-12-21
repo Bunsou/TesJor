@@ -68,7 +68,7 @@ async function toggleBookmark({
   const res = await fetch("/api/user/bookmark", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ itemId, category, action }),
+    body: JSON.stringify({ listingId: itemId, action }),
   });
   if (!res.ok) throw new Error("Failed to toggle bookmark");
   return res.json();
@@ -86,7 +86,7 @@ async function toggleVisited({
   const res = await fetch("/api/user/visited", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ itemId, category, action }),
+    body: JSON.stringify({ listingId: itemId, action }),
   });
   if (!res.ok) throw new Error("Failed to toggle visited");
   return res.json();
