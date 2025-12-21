@@ -30,7 +30,7 @@ export function PlaceCard({
       : item.mainImage;
 
   return (
-    <Link href={`/item/${item.id}`}>
+    <Link href={`/item/${item.slug}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
         {/* Image */}
         <div className="relative h-48 bg-muted">

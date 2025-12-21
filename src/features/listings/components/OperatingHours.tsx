@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown, Clock4 } from "lucide-react";
 import { useState } from "react";
 
 export function OperatingHours() {
@@ -13,7 +14,9 @@ export function OperatingHours() {
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
-            <span className="material-symbols-outlined">schedule</span>
+            <span className="material-symbols-outlined">
+              <Clock4 />
+            </span>
           </div>
           <div className="text-left">
             <p className="font-semibold text-gray-900 dark:text-white">
@@ -29,7 +32,7 @@ export function OperatingHours() {
             showHours ? "rotate-180" : ""
           }`}
         >
-          expand_more
+          <ChevronDown size={20} />
         </span>
       </button>
       {showHours && (

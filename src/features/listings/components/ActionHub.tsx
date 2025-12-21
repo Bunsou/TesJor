@@ -1,6 +1,7 @@
 "use client";
 
 import { Listing } from "@/server/db/schema";
+import { BookCheck, Heart, MapPinned, Zap } from "lucide-react";
 
 interface ActionHubProps {
   item: Listing;
@@ -26,7 +27,9 @@ export function ActionHub({
           Action Hub
         </h4>
         <div className="flex items-center gap-1.5 text-xs font-semibold bg-orange-50 dark:bg-orange-900/20 text-[#E07A5F] px-2 py-1 rounded-md">
-          <span className="material-symbols-outlined text-sm">bolt</span>
+          <span className="material-symbols-outlined text-sm">
+            <Zap size={20} />
+          </span>
           +100 XP
         </div>
       </div>
@@ -35,7 +38,9 @@ export function ActionHub({
           onClick={onGetDirections}
           className="col-span-1 md:col-span-2 w-full px-5 py-4 rounded-xl bg-[#E07A5F] hover:bg-[#c66a50] text-white font-bold text-sm transition-all shadow-lg shadow-[#E07A5F]/30 hover:shadow-[#E07A5F]/40 flex items-center justify-center gap-2 transform active:scale-[0.98]"
         >
-          <span className="material-symbols-outlined">directions</span>
+          <span className="material-symbols-outlined">
+            <MapPinned size={20} />
+          </span>
           Get Directions
         </button>
         <button
@@ -51,7 +56,7 @@ export function ActionHub({
               isVisited ? "icon-filled" : ""
             }`}
           >
-            beenhere
+            <BookCheck size={20} />
           </span>
           {isVisited ? "Visited" : "Mark Visited"}
         </button>
@@ -68,7 +73,7 @@ export function ActionHub({
               isBookmarked ? "icon-filled" : ""
             }`}
           >
-            bookmark
+            <Heart size={20} fill={isBookmarked ? "currentColor" : "none"} />
           </span>
           {isBookmarked ? "Saved" : "Bookmark"}
         </button>

@@ -1,3 +1,5 @@
+import { Check } from "lucide-react";
+
 const DEFAULT_HIGHLIGHTS = [
   "Authentic Local Experience",
   "Photo Opportunities",
@@ -24,7 +26,9 @@ export function HighlightsList({
             className="flex items-start gap-3 text-sm group cursor-default"
           >
             <span className="w-6 h-6 rounded-full bg-[#E07A5F]/10 text-[#E07A5F] flex items-center justify-center shrink-0 group-hover:bg-[#E07A5F] group-hover:text-white transition-colors">
-              <span className="material-symbols-outlined text-sm">check</span>
+              <span className="material-symbols-outlined text-sm">
+                <Check size={16} />
+              </span>
             </span>
             <span className="py-0.5 text-gray-900 dark:text-white">
               {highlight}

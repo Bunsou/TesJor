@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface BreadcrumbProps {
@@ -11,11 +12,15 @@ export function Breadcrumb({ category, title }: BreadcrumbProps) {
       <Link href="/explore" className="hover:text-[#E07A5F] cursor-pointer">
         Explore
       </Link>
-      <span className="material-symbols-outlined text-xs">chevron_right</span>
+      <span className="material-symbols-outlined text-xs">
+        <ChevronRight size={16} />
+      </span>
       <span className="hover:text-[#E07A5F] cursor-pointer capitalize">
         {category}
       </span>
-      <span className="material-symbols-outlined text-xs">chevron_right</span>
+      <span className="material-symbols-outlined text-xs">
+        <ChevronRight size={16} />
+      </span>
       <span className="font-medium text-gray-900 dark:text-white">{title}</span>
     </div>
   );

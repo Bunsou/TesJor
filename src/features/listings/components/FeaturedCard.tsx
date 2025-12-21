@@ -1,10 +1,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { BookCheck, Heart } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import type { Listing } from "@/shared/types";
 import { getDefaultImage } from "@/lib/default-images";
-import { ActionButton } from "@/components/shared/ActionButton";
 
 interface FeaturedCardProps {
   item: Listing;
@@ -14,13 +13,7 @@ interface FeaturedCardProps {
   onVisit?: () => void;
 }
 
-export function FeaturedCard({
-  item,
-  isBookmarked = false,
-  isVisited = false,
-  onBookmark,
-  onVisit,
-}: FeaturedCardProps) {
+export function FeaturedCard({ item }: FeaturedCardProps) {
   const [imageError, setImageError] = useState(false);
   const imageSrc =
     imageError || !item.mainImage
@@ -28,7 +21,7 @@ export function FeaturedCard({
       : item.mainImage;
 
   return (
-    <Link href={`/explore/${item.id}`}>
+    <Link href={`/explore/${item.slug}`}>
       <div className="w-full rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-[#2C211F] group cursor-pointer">
         <div className="relative h-64 sm:h-80 w-full overflow-hidden">
           <Image
@@ -47,33 +40,6 @@ export function FeaturedCard({
             </span>
           </div>
 
-          {/* Action buttons */}
-          <div className="absolute top-4 right-4 flex gap-2 z-10">
-            <ActionButton
-              icon={<BookCheck className="h-5 w-5" />}
-              active={isVisited}
-              onClick={(e) => {
-                e.preventDefault();
-                onVisit?.();
-              }}
-              title="Mark as Visited"
-              variant="overlay"
-              activeColor="bg-[#2D6A4F] text-white"
-              className="bg-white/20 backdrop-blur-md text-white hover:bg-[#2D6A4F] hover:text-white border border-white/30"
-            />
-            <ActionButton
-              icon={<Heart className="h-5 w-5" />}
-              active={isBookmarked}
-              onClick={(e) => {
-                e.preventDefault();
-                onBookmark?.();
-              }}
-              title="Save to Favorites"
-              variant="overlay"
-              className="bg-white/20 backdrop-blur-md text-white hover:bg-white hover:text-red-500 border border-white/30"
-            />
-          </div>
-
           {/* Content overlay */}
           <div className="absolute bottom-0 left-0 p-6 w-full">
             <h3 className="font-bold text-3xl text-white mb-2">{item.title}</h3>
@@ -81,7 +47,7 @@ export function FeaturedCard({
               {item.addressText && (
                 <div className="flex items-center gap-1">
                   <span className="material-symbols-outlined text-[#E07A5F] text-sm">
-                    location_on
+                    <MapPin />
                   </span>
                   <span className="text-sm font-medium">
                     {item.addressText}
@@ -91,7 +57,7 @@ export function FeaturedCard({
               {item.avgRating && (
                 <div className="flex items-center gap-1">
                   <span className="material-symbols-outlined text-yellow-400 text-sm icon-filled">
-                    star
+                    <Star />
                   </span>
                   <span className="text-sm font-medium">
                     {item.avgRating} ({item.views} views)

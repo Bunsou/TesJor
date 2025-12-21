@@ -1,3 +1,4 @@
+import { Map, Navigation } from "lucide-react";
 import Link from "next/link";
 
 interface MapPreviewProps {
@@ -24,20 +25,24 @@ export function MapPreview({ lat, lng, addressText }: MapPreviewProps) {
           className="absolute inset-0 flex items-center justify-center bg-black/5 hover:bg-black/10 transition-colors cursor-pointer group"
         >
           <span className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2">
-            <span className="material-symbols-outlined text-lg">map</span>
+            <span className="material-symbols-outlined text-lg">
+              <Map size={20} />
+            </span>
             Explore Map
           </span>
         </Link>
       </div>
       <div className="p-3 flex justify-between items-center">
         <div>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Location</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {addressText ? "Location Address" : "No address available"}
+          </p>
           <p className="text-sm font-semibold mt-0.5 text-gray-900 dark:text-white">
             {addressText || "View on map"}
           </p>
         </div>
         <span className="material-symbols-outlined text-[#E07A5F]">
-          near_me
+          <Navigation size={20} />
         </span>
       </div>
     </div>

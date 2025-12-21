@@ -16,17 +16,19 @@ interface UseItemDetailReturn {
   handleVisited: (action: "add" | "remove") => Promise<void>;
 }
 
-async function fetchItem(id: string): Promise<ItemDetailResponse> {
-  const res = await fetch(`/api/listings/${id}`);
+async function fetchItem(slug: string): Promise<ItemDetailResponse> {
+  const res = await fetch(`/api/listings/${slug}`);
   if (!res.ok) throw new Error("Failed to fetch item");
   const json = await res.json();
 
-  // Fetch user progress for this item
+  // Fetch user progress for this item using the item's ID from response
   let isBookmarked = false;
   let isVisited = false;
 
   try {
-    const progressRes = await fetch(`/api/user/progress?itemId=${id}`);
+    const progressRes = await fetch(
+      `/api/user/progress?itemId=${json.data.id}`
+    );
     if (progressRes.ok) {
       const progressJson = await progressRes.json();
       isBookmarked = progressJson.data?.isBookmarked || false;
@@ -101,7 +103,7 @@ function triggerConfetti() {
   fire(0.1, { spread: 120, startVelocity: 45 });
 }
 
-export function useItemDetail(id: string): UseItemDetailReturn {
+export function useItemDetail(slug: string): UseItemDetailReturn {
   const [data, setData] = useState<ItemDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,7 +115,7 @@ export function useItemDetail(id: string): UseItemDetailReturn {
       try {
         setIsLoading(true);
         setError(null);
-        const itemData = await fetchItem(id);
+        const itemData = await fetchItem(slug);
         if (isMounted) {
           setData(itemData);
         }
@@ -133,17 +135,17 @@ export function useItemDetail(id: string): UseItemDetailReturn {
     return () => {
       isMounted = false;
     };
-  }, [id]);
+  }, [slug]);
 
   const handleBookmark = async (action: "add" | "remove") => {
     if (!data) return;
     try {
       await toggleBookmark({
-        itemId: id,
+        itemId: data.item.id,
         category: data.item.category,
         action,
       });
-      const itemData = await fetchItem(id);
+      const itemData = await fetchItem(slug);
       setData(itemData);
     } catch (err) {
       console.error("Failed to toggle bookmark:", err);
@@ -154,11 +156,11 @@ export function useItemDetail(id: string): UseItemDetailReturn {
     if (!data) return;
     try {
       const result = await toggleVisited({
-        itemId: id,
+        itemId: data.item.id,
         category: data.item.category,
         action,
       });
-      const itemData = await fetchItem(id);
+      const itemData = await fetchItem(slug);
       setData(itemData);
       if (result.visited) {
         triggerConfetti();

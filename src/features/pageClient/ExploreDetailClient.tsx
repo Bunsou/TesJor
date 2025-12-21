@@ -18,10 +18,10 @@ import {
 export default function ExploreDetailClient() {
   const params = useParams();
   const router = useRouter();
-  const id = params.id as string;
+  const slug = params.id as string;
 
   const { data, isLoading, error, handleBookmark, handleVisited } =
-    useItemDetail(id);
+    useItemDetail(slug);
   const [imageError, setImageError] = useState(false);
 
   const handleGetDirections = () => {

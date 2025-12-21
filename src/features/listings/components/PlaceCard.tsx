@@ -31,7 +31,7 @@ export function PlaceCard({
       : item.mainImage;
 
   return (
-    <Link href={`/explore/${item.id}`}>
+    <Link href={`/explore/${item.slug}`}>
       <div className="flex flex-col bg-white dark:bg-[#2C211F] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-md transition-shadow group">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
