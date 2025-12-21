@@ -18,6 +18,11 @@ interface ItemDetailResponse {
   isVisited: boolean;
 }
 
+interface UseListingsSlugDetailParams {
+  initialData?: ItemDetailResponse | null;
+  initialError?: string | null;
+}
+
 interface UseListingsSlugDetailReturn {
   data: ItemDetailResponse | null;
   isLoading: boolean;
@@ -120,11 +125,14 @@ function triggerConfetti() {
 }
 
 export function useListingsSlugDetail(
-  slug: string
+  slug: string,
+  { initialData, initialError }: UseListingsSlugDetailParams = {}
 ): UseListingsSlugDetailReturn {
-  const [data, setData] = useState<ItemDetailResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<ItemDetailResponse | null>(
+    initialData || null
+  );
+  const [isLoading, setIsLoading] = useState(!initialData);
+  const [error, setError] = useState<string | null>(initialError || null);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const [isVisitedLoading, setIsVisitedLoading] = useState(false);
 
@@ -146,6 +154,12 @@ export function useListingsSlugDetail(
     let isMounted = true;
 
     async function initialLoad() {
+      // Skip initial load if we have initialData
+      if (initialData) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError(null);
@@ -169,7 +183,7 @@ export function useListingsSlugDetail(
     return () => {
       isMounted = false;
     };
-  }, [slug]);
+  }, [slug, initialData]);
 
   const handleBookmark = async (action: "add" | "remove") => {
     if (!data || isBookmarkLoading) return;

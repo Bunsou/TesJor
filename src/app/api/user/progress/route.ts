@@ -1,7 +1,11 @@
 import { NextRequest } from "next/server";
 import { db } from "@/server/db";
 import { userProgress, listings } from "@/server/db/schema";
-import { errorResponse, successResponse } from "@/shared/utils";
+import {
+  errorResponse,
+  successResponse,
+  sendSuccessResponse,
+} from "@/shared/utils";
 import {
   ratelimit,
   getIdentifier,
@@ -94,10 +98,21 @@ export async function GET(request: NextRequest) {
       count: items.length,
     });
 
-    return successResponse({
-      items,
-      count: items.length,
-    });
+    // Add caching for progress data
+    return sendSuccessResponse(
+      {
+        items,
+        count: items.length,
+      },
+      undefined,
+      {
+        cache: {
+          maxAge: 30, // Cache for 30 seconds in browser
+          sMaxAge: 60, // Cache for 60 seconds in CDN
+          staleWhileRevalidate: 180, // Serve stale for 3 minutes while revalidating
+        },
+      }
+    );
   } catch (error) {
     log.error("Failed to fetch user progress", { error });
     return errorResponse("Failed to fetch user progress", 500);

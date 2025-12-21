@@ -9,6 +9,11 @@ interface UserStats {
   reviewCount?: number;
 }
 
+interface UseProfileParams {
+  initialStats?: UserStats | null;
+  initialError?: string | null;
+}
+
 async function fetchUserStats() {
   const res = await fetch("/api/user/stats");
   if (!res.ok) {
@@ -18,16 +23,27 @@ async function fetchUserStats() {
   return json.data;
 }
 
-export function useProfile() {
-  const [stats, setStats] = useState<UserStats>({
-    bookmarkedCount: 0,
-    visitedCount: 0,
-    points: 0,
-    reviewCount: 0,
-  });
-  const [loading, setLoading] = useState(true);
+export function useProfile({
+  initialStats,
+  initialError,
+}: UseProfileParams = {}) {
+  const [stats, setStats] = useState<UserStats>(
+    initialStats || {
+      bookmarkedCount: 0,
+      visitedCount: 0,
+      points: 0,
+      reviewCount: 0,
+    }
+  );
+  const [loading, setLoading] = useState(!initialStats);
+  const [error, setError] = useState<string | null>(initialError || null);
 
   useEffect(() => {
+    // Skip fetch if we have initial stats
+    if (initialStats) {
+      return;
+    }
+
     let isMounted = true;
 
     async function loadData() {
@@ -42,8 +58,13 @@ export function useProfile() {
             reviewCount: data.reviewCount || 0,
           });
         }
-      } catch (error) {
-        console.error("Failed to fetch user stats:", error);
+      } catch (err) {
+        if (isMounted) {
+          console.error("Failed to fetch user stats:", err);
+          setError(
+            err instanceof Error ? err.message : "Failed to fetch stats"
+          );
+        }
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -55,7 +76,7 @@ export function useProfile() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialStats]);
 
   // Calculate user level from points
   const getUserLevel = (points: number) => {
@@ -91,6 +112,7 @@ export function useProfile() {
   return {
     stats,
     loading,
+    error,
     userLevel,
     levelProgress,
   };

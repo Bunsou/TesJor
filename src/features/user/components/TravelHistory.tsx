@@ -58,7 +58,7 @@ export function TravelHistory({ items }: TravelHistoryProps) {
       <div className="relative">
         <div className="space-y-4">
           {items.map((item, index) => (
-            <div key={item.id} className="relative pl-10 pb-6">
+            <div key={item.id} className="relative pl-12 pb-6">
               {index < items.length - 1 && (
                 <div className="absolute left-[19px] top-10 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
               )}

@@ -3,6 +3,18 @@
 import { useState, useEffect } from "react";
 import type { ListingWithProgress } from "@/shared/types";
 
+interface UseMyTripsParams {
+  initialData?: {
+    bookmarkedItems: ListingWithProgress[];
+    visitedItems: ListingWithProgress[];
+    stats: {
+      saved: number;
+      visited: number;
+    };
+  } | null;
+  initialError?: string | null;
+}
+
 async function fetchSavedItems(type: "bookmarked" | "visited") {
   const url = `/api/user/progress?type=${type}`;
   const res = await fetch(url);
@@ -15,17 +27,29 @@ async function fetchSavedItems(type: "bookmarked" | "visited") {
   return json.data;
 }
 
-export function useMyTrips() {
+export function useMyTrips({
+  initialData,
+  initialError,
+}: UseMyTripsParams = {}) {
   const [activeTab, setActiveTab] = useState<"bookmarked" | "visited">(
     "bookmarked"
   );
-  const [items, setItems] = useState<ListingWithProgress[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState({ saved: 0, visited: 0 });
+  const [items, setItems] = useState<ListingWithProgress[]>(
+    initialData?.bookmarkedItems || []
+  );
+  const [isLoading, setIsLoading] = useState(!initialData);
+  const [error, setError] = useState<string | null>(initialError || null);
+  const [stats, setStats] = useState(
+    initialData?.stats || { saved: 0, visited: 0 }
+  );
 
-  // Fetch saved items when tab changes
+  // Fetch saved items when tab changes (skip if we have initial data for the current tab)
   useEffect(() => {
+    // If we have initial data and haven't switched tabs yet, skip the fetch
+    if (initialData && activeTab === "bookmarked" && items.length > 0) {
+      return;
+    }
+
     let isMounted = true;
 
     async function loadData() {
@@ -66,26 +90,18 @@ export function useMyTrips() {
     return () => {
       isMounted = false;
     };
-  }, [activeTab]);
+  }, [activeTab, initialData, items.length]);
 
-  // Fetch both counts on initial load
+  // Handle tab switching with initial data
   useEffect(() => {
-    async function loadStats() {
-      try {
-        const [bookmarkedData, visitedData] = await Promise.all([
-          fetchSavedItems("bookmarked"),
-          fetchSavedItems("visited"),
-        ]);
-        setStats({
-          saved: bookmarkedData?.items?.length || 0,
-          visited: visitedData?.items?.length || 0,
-        });
-      } catch {
-        // Silently fail stats
+    if (initialData) {
+      if (activeTab === "bookmarked") {
+        setItems(initialData.bookmarkedItems);
+      } else {
+        setItems(initialData.visitedItems);
       }
     }
-    loadStats();
-  }, []);
+  }, [activeTab, initialData]);
 
   return {
     activeTab,

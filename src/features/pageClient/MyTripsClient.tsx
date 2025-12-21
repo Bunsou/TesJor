@@ -9,10 +9,26 @@ import {
   TripsEmptyState,
   TripsErrorState,
 } from "@/features/user";
+import type { ListingWithProgress } from "@/shared/types";
 
-export default function MyTripsClient() {
+interface MyTripsClientProps {
+  initialData?: {
+    bookmarkedItems: ListingWithProgress[];
+    visitedItems: ListingWithProgress[];
+    stats: {
+      saved: number;
+      visited: number;
+    };
+  } | null;
+  initialError?: string | null;
+}
+
+export default function MyTripsClient({
+  initialData,
+  initialError,
+}: MyTripsClientProps) {
   const { activeTab, setActiveTab, items, isLoading, error, stats } =
-    useMyTrips();
+    useMyTrips({ initialData, initialError });
 
   return (
     <div className="flex-1 h-full overflow-y-auto bg-background dark:bg-[#201512]">

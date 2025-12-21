@@ -22,5 +22,11 @@ export const GET = asyncHandler(async (request: NextRequest) => {
 
   const items = await getAllListings(categories);
 
-  return sendSuccessResponse({ items });
+  return sendSuccessResponse({ items }, "Listings retrieved successfully", {
+    cache: {
+      maxAge: 60, // Browser cache: 1 minute
+      sMaxAge: 300, // CDN cache: 5 minutes
+      staleWhileRevalidate: 600, // Serve stale for 10 minutes while revalidating
+    },
+  });
 });

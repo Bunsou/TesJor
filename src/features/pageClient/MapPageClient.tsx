@@ -14,7 +14,15 @@ import {
   MapInfoBadge,
 } from "@/features/map";
 
-export default function MapPageClient() {
+interface MapPageClientProps {
+  initialItems?: Listing[];
+  initialError?: string | null;
+}
+
+export default function MapPageClient({
+  initialItems,
+  initialError,
+}: MapPageClientProps) {
   const mapRef = useRef<MapRef>(null);
   const [showRadiusDropdown, setShowRadiusDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
@@ -32,7 +40,7 @@ export default function MapPageClient() {
     filteredItems,
     markers,
     isLoading,
-  } = useMapData();
+  } = useMapData({ initialItems, initialError });
 
   const handleMarkerClick = (id: string) => {
     if (id === "user-location") return;

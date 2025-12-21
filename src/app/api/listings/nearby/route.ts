@@ -30,5 +30,11 @@ export const GET = asyncHandler(async (request: NextRequest) => {
     category: query.category,
   });
 
-  return sendSuccessResponse(result);
+  return sendSuccessResponse(result, "Nearby listings retrieved successfully", {
+    cache: {
+      maxAge: 30, // Browser cache: 30 seconds
+      sMaxAge: 60, // CDN cache: 1 minute
+      staleWhileRevalidate: 300, // Serve stale for 5 minutes while revalidating
+    },
+  });
 });

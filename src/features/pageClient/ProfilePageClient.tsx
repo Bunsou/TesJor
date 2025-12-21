@@ -18,12 +18,30 @@ import {
   SAMPLE_BADGES,
 } from "@/features/user/constants/profile-sample-data";
 
-export default function ProfilePageClient() {
+interface UserStats {
+  bookmarkedCount: number;
+  visitedCount: number;
+  points: number;
+  reviewCount?: number;
+}
+
+interface ProfilePageClientProps {
+  initialStats?: UserStats | null;
+  initialError?: string | null;
+}
+
+export default function ProfilePageClient({
+  initialStats,
+  initialError,
+}: ProfilePageClientProps) {
   const { session } = useSession();
   const user = session?.user;
 
   // Use custom hook for profile data
-  const { stats, loading, userLevel, levelProgress } = useProfile();
+  const { stats, loading, error, userLevel, levelProgress } = useProfile({
+    initialStats,
+    initialError,
+  });
 
   // Sample data - in production, these would come from API
   const [travelHistory] = useState(SAMPLE_TRAVEL_HISTORY);

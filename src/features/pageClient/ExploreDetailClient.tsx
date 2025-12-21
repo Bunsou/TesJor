@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getDefaultImage } from "@/lib/default-images";
+import { Listing } from "@/server/db/schema";
 import {
   useListingsSlugDetail,
   ImageCarousel,
@@ -15,10 +16,34 @@ import {
   HighlightsList,
 } from "@/features/listings";
 
-export default function ExploreDetailClient() {
-  const params = useParams();
+interface Review {
+  id: string;
+  rating: number;
+  content: string | null;
+  userId: string;
+  userName: string | null;
+  userImage: string | null;
+  createdAt: Date;
+}
+
+interface ItemDetailResponse {
+  item: Listing & { reviews?: Review[] };
+  isBookmarked: boolean;
+  isVisited: boolean;
+}
+
+interface ExploreDetailClientProps {
+  slug: string;
+  initialData?: ItemDetailResponse | null;
+  initialError?: string | null;
+}
+
+export default function ExploreDetailClient({
+  slug,
+  initialData,
+  initialError,
+}: ExploreDetailClientProps) {
   const router = useRouter();
-  const slug = params.id as string;
 
   const {
     data,
@@ -29,7 +54,7 @@ export default function ExploreDetailClient() {
     handleBookmark,
     handleVisited,
     refreshData,
-  } = useListingsSlugDetail(slug);
+  } = useListingsSlugDetail(slug, { initialData, initialError });
   const [imageError, setImageError] = useState(false);
 
   const handleGetDirections = () => {

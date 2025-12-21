@@ -3,6 +3,11 @@
 import { useState, useEffect } from "react";
 import type { Listing } from "@/shared/types";
 
+interface UseMapDataParams {
+  initialItems?: Listing[];
+  initialError?: string | null;
+}
+
 async function fetchNearbyItems({
   lat,
   lng,
@@ -50,7 +55,10 @@ async function fetchAllItems({ categories }: { categories: string[] }) {
   return { items: data.items || [] };
 }
 
-export function useMapData() {
+export function useMapData({
+  initialItems,
+  initialError,
+}: UseMapDataParams = {}) {
   // State
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -63,8 +71,9 @@ export function useMapData() {
   const [radius, setRadius] = useState(10);
   const [useRadiusFilter, setUseRadiusFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [items, setItems] = useState<Listing[]>([]);
+  const [items, setItems] = useState<Listing[]>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasInitialLoad, setHasInitialLoad] = useState(!!initialItems);
 
   // Get user location
   useEffect(() => {
@@ -88,6 +97,12 @@ export function useMapData() {
     let isMounted = true;
 
     async function loadData() {
+      // Skip initial load if we have initialItems and no filters applied
+      if (hasInitialLoad && !useRadiusFilter && selectedCategory === "all") {
+        setHasInitialLoad(false); // Only skip once
+        return;
+      }
+
       try {
         setIsLoading(true);
         const categories = selectedCategory === "all" ? [] : [selectedCategory];
@@ -120,7 +135,7 @@ export function useMapData() {
     return () => {
       isMounted = false;
     };
-  }, [userLocation, radius, selectedCategory, useRadiusFilter]);
+  }, [userLocation, radius, selectedCategory, useRadiusFilter, hasInitialLoad]);
 
   // Filter items by search
   const filteredItems = items.filter(

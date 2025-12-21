@@ -16,5 +16,11 @@ export const GET = asyncHandler(async (request: NextRequest) => {
 
   const stats = await getUserStats(userId);
 
-  return sendSuccessResponse(stats);
+  return sendSuccessResponse(stats, "User stats retrieved successfully", {
+    cache: {
+      maxAge: 60, // Browser cache: 1 minute
+      sMaxAge: 120, // CDN cache: 2 minutes
+      staleWhileRevalidate: 300, // Serve stale for 5 minutes while revalidating
+    },
+  });
 });
