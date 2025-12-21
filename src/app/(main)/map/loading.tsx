@@ -1,75 +1,47 @@
-"use client";
-
-import { Skeleton } from "@/components/ui/skeleton";
-
 export default function MapLoading() {
   return (
-    <div className="relative w-full h-[calc(100vh-4rem)] md:h-screen bg-gray-200 dark:bg-gray-800 overflow-hidden">
-      {/* Map Skeleton - Main Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-300 via-gray-200 to-gray-300 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700 animate-pulse" />
-
-      {/* Search Bar Skeleton */}
-      <div className="absolute top-4 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-20">
-        <Skeleton className="h-14 w-full md:w-[600px] rounded-lg" />
+    <div className="relative w-full h-full">
+      {/* Map Background */}
+      <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800">
+        {/* Simple marker indicators */}
+        <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-[#E07A5F]/30 rounded-full" />
+        <div className="absolute top-1/3 right-1/3 w-6 h-6 bg-[#E07A5F]/20 rounded-full" />
+        <div className="absolute bottom-1/3 left-1/2 w-10 h-10 bg-[#E07A5F]/40 rounded-full" />
+        <div className="absolute top-2/3 right-1/4 w-7 h-7 bg-[#E07A5F]/25 rounded-full" />
+        <div className="absolute bottom-1/4 left-1/3 w-9 h-9 bg-[#E07A5F]/35 rounded-full" />
       </div>
 
-      {/* Category Pills Skeleton */}
-      <div className="absolute top-20 left-4 right-4 z-20">
-        <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
+      {/* Search Bar */}
+      <div className="absolute top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-96 z-10">
+        <div className="bg-white dark:bg-gray-700 h-12 rounded-full shadow-lg" />
+      </div>
+
+      {/* Category Pills */}
+      <div className="absolute top-20 left-4 right-4 z-10">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Skeleton
+            <div
               key={i}
-              className="h-10 w-24 rounded-full flex-shrink-0"
+              className="h-9 w-24 bg-white dark:bg-gray-700 rounded-full shadow-md flex-shrink-0"
             />
           ))}
         </div>
       </div>
 
-      {/* Map Controls Skeleton (Recenter button) */}
-      <div className="absolute bottom-24 right-4 z-20">
-        <Skeleton className="h-12 w-12 rounded-lg" />
+      {/* Map Controls */}
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-2">
+        <div className="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg shadow-lg" />
+        <div className="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg shadow-lg" />
       </div>
 
-      {/* Info Badge Skeleton */}
-      <div className="absolute top-36 left-4 z-20">
-        <Skeleton className="h-8 w-32 rounded-full" />
-      </div>
-
-      {/* Marker Skeletons - Scattered across map */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="relative w-full h-full max-w-4xl">
-          {/* Simulate scattered markers */}
-          <Skeleton className="absolute top-1/4 left-1/3 h-8 w-8 rounded-full" />
-          <Skeleton className="absolute top-1/3 left-1/2 h-8 w-8 rounded-full" />
-          <Skeleton className="absolute top-2/3 left-1/4 h-8 w-8 rounded-full" />
-          <Skeleton className="absolute top-1/2 left-2/3 h-8 w-8 rounded-full" />
-          <Skeleton className="absolute top-3/4 left-1/2 h-8 w-8 rounded-full" />
-          <Skeleton className="absolute top-1/4 left-3/4 h-8 w-8 rounded-full" />
+      {/* Loading Indicator */}
+      <div className="absolute inset-0 flex items-center justify-center z-20">
+        <div className="bg-white dark:bg-gray-700 rounded-xl px-6 py-4 shadow-lg">
+          <p className="text-gray-700 dark:text-gray-300 font-medium">
+            Loading map...
+          </p>
         </div>
       </div>
-
-      {/* Loading overlay text */}
-      <div className="absolute inset-0 flex items-center justify-center z-30">
-        <div className="text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <Skeleton className="h-6 w-48 mb-2 mx-auto" />
-          <Skeleton className="h-4 w-32 mx-auto" />
-        </div>
-      </div>
-
-      {/* Copyright text skeleton */}
-      <div className="absolute bottom-2 right-2 z-10">
-        <Skeleton className="h-4 w-40" />
-      </div>
-
-      <style jsx>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }
