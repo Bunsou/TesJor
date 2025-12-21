@@ -1,77 +1,77 @@
 "use client";
 
-import { MapPin, Activity, UtensilsCrossed, Coffee, Gift } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
-const categories = [
-  {
-    value: "place",
-    label: "Places",
-    icon: MapPin,
-    color: "text-secondary-600",
-  },
-  {
-    value: "event",
-    label: "Events",
-    icon: Activity,
-    color: "text-secondary-600",
-  },
-  {
-    value: "food",
-    label: "Foods",
-    icon: UtensilsCrossed,
-    color: "text-secondary-600",
-  },
-  {
-    value: "drink",
-    label: "Drinks",
-    icon: Coffee,
-    color: "text-secondary-600",
-  },
-  {
-    value: "souvenir",
-    label: "Souvenirs",
-    icon: Gift,
-    color: "text-primary-700",
-  },
-];
-
-interface CategoryFilterProps {
-  selected?: string | null;
-  onSelect: (category: string | null) => void;
+export interface CategoryOption {
+  id: string;
+  label: string;
+  icon?: ReactNode | string;
 }
 
-export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
-  return (
-    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-      <Button
-        variant={selected === null ? "default" : "outline"}
-        size="sm"
-        onClick={() => onSelect(null)}
-        className="whitespace-nowrap"
-      >
-        All
-      </Button>
-      {categories.map((cat) => {
-        const Icon = cat.icon;
-        const isSelected = selected === cat.value;
+interface CategoryFilterProps {
+  categories: CategoryOption[];
+  selected: string;
+  onSelect: (category: string) => void;
+  variant?: "pills" | "buttons";
+  className?: string;
+}
 
-        return (
-          <Button
-            key={cat.value}
-            variant={isSelected ? "default" : "outline"}
-            size="sm"
-            onClick={() => onSelect(cat.value)}
-            className="whitespace-nowrap"
+export function CategoryFilter({
+  categories,
+  selected,
+  onSelect,
+  variant = "pills",
+  className = "",
+}: CategoryFilterProps) {
+  if (variant === "buttons") {
+    return (
+      <div className={`flex gap-2 flex-wrap ${className}`}>
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => onSelect(cat.id)}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              selected === cat.id
+                ? "bg-primary text-white shadow-md"
+                : "bg-white dark:bg-[#2A201D] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-primary/50"
+            }`}
           >
-            <Icon className={cn("h-4 w-4 mr-1.5", !isSelected && cat.color)} />
+            {typeof cat.icon === "string" ? (
+              <span className="material-symbols-outlined mr-2">{cat.icon}</span>
+            ) : (
+              cat.icon && <span className="mr-2">{cat.icon}</span>
+            )}
             {cat.label}
-          </Button>
-        );
-      })}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`flex gap-3 overflow-x-auto pb-2 scrollbar-hide ${className}`}
+    >
+      {categories.map((cat) => (
+        <button
+          key={cat.id}
+          onClick={() => onSelect(cat.id)}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${
+            selected === cat.id
+              ? "bg-primary text-white shadow-lg shadow-primary/20"
+              : "bg-white dark:bg-[#2A201D] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-primary/50"
+          }`}
+        >
+          {typeof cat.icon === "string" ? (
+            <span className="material-symbols-outlined text-lg">
+              {cat.icon}
+            </span>
+          ) : (
+            cat.icon
+          )}
+          {cat.label}
+        </button>
+      ))}
     </div>
   );
 }
-
-export { categories };
