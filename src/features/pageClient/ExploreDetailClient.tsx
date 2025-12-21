@@ -20,7 +20,7 @@ export default function ExploreDetailClient() {
   const router = useRouter();
   const slug = params.id as string;
 
-  const { data, isLoading, error, handleBookmark, handleVisited } =
+  const { data, isLoading, error, handleBookmark, handleVisited, refreshData } =
     useItemDetail(slug);
   const [imageError, setImageError] = useState(false);
 
@@ -89,7 +89,11 @@ export default function ExploreDetailClient() {
 
             <OperatingHours />
 
-            <ReviewsSection item={item} />
+            <ReviewsSection
+              item={item}
+              reviews={item.reviews}
+              onReviewSubmitted={refreshData}
+            />
           </div>
 
           <div className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-8 h-fit">

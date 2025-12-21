@@ -1,9 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import confetti from "canvas-confetti";
 import { Listing } from "@/server/db/schema";
 
+interface Review {
+  id: string;
+  rating: number;
+  content: string | null;
+  userId: string;
+  createdAt: Date;
+}
+
 interface ItemDetailResponse {
-  item: Listing;
+  item: Listing & { reviews?: Review[] };
   isBookmarked: boolean;
   isVisited: boolean;
 }
@@ -14,6 +22,7 @@ interface UseItemDetailReturn {
   error: string | null;
   handleBookmark: (action: "add" | "remove") => Promise<void>;
   handleVisited: (action: "add" | "remove") => Promise<void>;
+  refreshData: () => Promise<void>;
 }
 
 async function fetchItem(slug: string): Promise<ItemDetailResponse> {
@@ -108,10 +117,24 @@ export function useItemDetail(slug: string): UseItemDetailReturn {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const loadItem = useCallback(async () => {
+    try {
+      setError(null);
+      const itemData = await fetchItem(slug);
+      setData(itemData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load item");
+    }
+  }, [slug]);
+
+  const refreshData = useCallback(async () => {
+    await loadItem();
+  }, [loadItem]);
+
   useEffect(() => {
     let isMounted = true;
 
-    async function loadItem() {
+    async function initialLoad() {
       try {
         setIsLoading(true);
         setError(null);
@@ -130,7 +153,7 @@ export function useItemDetail(slug: string): UseItemDetailReturn {
       }
     }
 
-    loadItem();
+    initialLoad();
 
     return () => {
       isMounted = false;
@@ -176,5 +199,6 @@ export function useItemDetail(slug: string): UseItemDetailReturn {
     error,
     handleBookmark,
     handleVisited,
+    refreshData,
   };
 }
