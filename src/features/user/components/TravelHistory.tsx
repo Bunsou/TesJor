@@ -6,6 +6,7 @@ import {
   MessageSquareHeart,
   Star,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface TravelHistoryItem {
   id: string;
@@ -119,7 +120,10 @@ export function TravelHistory({ items }: TravelHistoryProps) {
         </div>
       </div>
 
-      <button className="w-full mt-4 py-3 rounded-xl bg-white dark:bg-[#2A201D] border border-gray-200 dark:border-gray-800 text-[#1a110f] dark:text-[#f2eae8] font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shadow-sm">
+      <button
+        onClick={() => toast("Hello")}
+        className="w-full mt-4 py-3 rounded-xl bg-white dark:bg-[#2A201D] border border-gray-200 dark:border-gray-800 text-[#1a110f] dark:text-[#f2eae8] font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shadow-sm"
+      >
         View Full History
       </button>
     </div>
