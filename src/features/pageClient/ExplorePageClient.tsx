@@ -33,7 +33,7 @@ const categories: CategoryOption[] = [
 interface ExplorePageClientProps {
   initialData?: {
     items: Listing[];
-    featuredItem: Listing | null;
+    trendingItems: Listing[];
     hasMore: boolean;
     nextPage: number | null;
   } | null;
@@ -50,7 +50,7 @@ export default function ExplorePageClient({
 
   const {
     items,
-    featuredItem,
+    trendingItems,
     isLoading,
     error,
     hasMore,
@@ -93,7 +93,7 @@ export default function ExplorePageClient({
           {/* Content */}
           {!isLoading && !error && (
             <ListingsGrid
-              featuredItem={featuredItem}
+              trendingItems={trendingItems}
               items={items}
               category={category}
               categoryLabel={

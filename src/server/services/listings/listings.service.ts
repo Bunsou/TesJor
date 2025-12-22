@@ -119,3 +119,11 @@ export async function getNearbyListings(params: NearbyParams) {
 export async function createListing(data: NewListing) {
   return repository.createListing(data);
 }
+
+/**
+ * Get trending listings
+ */
+export async function getTrendingListings(category?: string) {
+  const items = await repository.findTrendingListings(category, { limit: 10 });
+  return { items };
+}

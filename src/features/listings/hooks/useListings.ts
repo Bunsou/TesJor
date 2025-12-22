@@ -6,7 +6,7 @@ interface UseListingsParams {
   searchQuery: string;
   initialData?: {
     items: Listing[];
-    featuredItem: Listing | null;
+    trendingItems: Listing[];
     hasMore: boolean;
     nextPage: number | null;
   } | null;
@@ -15,7 +15,7 @@ interface UseListingsParams {
 
 interface UseListingsReturn {
   items: Listing[];
-  featuredItem: Listing | null;
+  trendingItems: Listing[];
   isLoading: boolean;
   error: string | null;
   hasMore: boolean;
@@ -51,6 +51,22 @@ async function fetchListings({
   return json.data;
 }
 
+async function fetchTrendingListings(category?: string) {
+  const params = new URLSearchParams();
+  if (category && category !== "all") {
+    params.set("category", category);
+  }
+
+  const res = await fetch(`/api/listings/trending?${params}`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch trending listings");
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
 export function useListings({
   category,
   searchQuery,
@@ -58,8 +74,8 @@ export function useListings({
   initialError,
 }: UseListingsParams): UseListingsReturn {
   const [items, setItems] = useState<Listing[]>(initialData?.items || []);
-  const [featuredItem, setFeaturedItem] = useState<Listing | null>(
-    initialData?.featuredItem || null
+  const [trendingItems, setTrendingItems] = useState<Listing[]>(
+    initialData?.trendingItems || []
   );
   const [isLoading, setIsLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(initialError || null);
@@ -82,28 +98,30 @@ export function useListings({
         setError(null);
         setPage(1); // Reset to page 1
 
-        const data = await fetchListings({
-          category,
-          query: searchQuery,
-          page: 1,
-        });
+        // Fetch both listings and trending in parallel
+        const [listingsData, trendingData] = await Promise.all([
+          fetchListings({
+            category,
+            query: searchQuery,
+            page: 1,
+          }),
+          fetchTrendingListings(category !== "all" ? category : undefined),
+        ]);
 
         if (isMounted) {
-          const validItems = data.items.filter(
+          const validItems = listingsData.items.filter(
+            (item: Listing) => item && item.id
+          );
+          const validTrendingItems = trendingData.items.filter(
             (item: Listing) => item && item.id
           );
 
-          if (validItems.length > 0) {
-            setFeaturedItem(validItems[0]);
-            setItems(validItems.slice(1));
-          } else {
-            setFeaturedItem(null);
-            setItems([]);
-          }
+          setItems(validItems);
+          setTrendingItems(validTrendingItems);
+          setHasMore(listingsData.hasMore);
 
-          setHasMore(data.hasMore);
-          if (data.nextPage) {
-            setPage(data.nextPage);
+          if (listingsData.nextPage) {
+            setPage(listingsData.nextPage);
           }
         }
       } catch (err) {
@@ -156,7 +174,7 @@ export function useListings({
 
   return {
     items,
-    featuredItem,
+    trendingItems,
     isLoading,
     error,
     hasMore,

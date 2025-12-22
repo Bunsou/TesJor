@@ -1,10 +1,10 @@
 import ExplorePageClient from "../../../features/pageClient/ExplorePageClient";
-import { getListings } from "@/server/services/listings";
+import { getListings, getTrendingListings } from "@/server/services/listings";
 import type { Listing } from "@/shared/types";
 
 interface InitialData {
   items: Listing[];
-  featuredItem: Listing | null;
+  trendingItems: Listing[];
   hasMore: boolean;
   nextPage: number | null;
 }
@@ -15,19 +15,26 @@ export default async function ExplorePage() {
   let error: string | null = null;
 
   try {
-    const result = await getListings({
-      category: undefined,
-      page: 1,
-      limit: 10,
-    });
+    // Fetch both regular listings and trending listings in parallel
+    const [listingsResult, trendingResult] = await Promise.all([
+      getListings({
+        category: undefined,
+        page: 1,
+        limit: 10,
+      }),
+      getTrendingListings(),
+    ]);
 
-    const validItems = result.items.filter((item) => item && item.id);
+    const validItems = listingsResult.items.filter((item) => item && item.id);
+    const validTrendingItems = trendingResult.items.filter(
+      (item) => item && item.id
+    );
 
     initialData = {
-      items: validItems.slice(1), // First item is featured
-      featuredItem: validItems.length > 0 ? validItems[0] : null,
-      hasMore: result.hasMore,
-      nextPage: result.nextPage,
+      items: validItems,
+      trendingItems: validTrendingItems,
+      hasMore: listingsResult.hasMore,
+      nextPage: listingsResult.nextPage,
     };
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to load initial data";

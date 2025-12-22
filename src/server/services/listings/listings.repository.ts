@@ -226,3 +226,27 @@ export async function incrementViews(id: string) {
     .set({ views: sql`${listings.views} + 1` })
     .where(eq(listings.id, id));
 }
+
+/**
+ * Find trending listings (based on their views)
+ */
+export async function findTrendingListings(
+  category?: string,
+  options?: { limit: number }
+) {
+  const conditions = [];
+  if (category) {
+    conditions.push(eq(listings.category, category as Listing["category"]));
+  }
+
+  const query = db.select().from(listings);
+
+  const finalQuery =
+    conditions.length > 0 ? query.where(and(...conditions)!) : query;
+
+  const results = await finalQuery
+    .orderBy(desc(listings.views), desc(listings.createdAt))
+    .limit(options?.limit || 10);
+
+  return results;
+}

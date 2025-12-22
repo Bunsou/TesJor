@@ -3,6 +3,7 @@ export * from "./schemas";
 // Components
 export { PlaceCard } from "./components/PlaceCard";
 export { FeaturedCard } from "./components/FeaturedCard";
+export { TrendingSlider } from "./components/TrendingSlider";
 export { SearchBar } from "./components/SearchBar";
 export { ListingsGrid } from "./components/ListingsGrid";
 export { LoadingState } from "./components/LoadingState";

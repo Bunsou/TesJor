@@ -3,12 +3,12 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import type { Listing } from "@/shared/types";
-import { FeaturedCard } from "./FeaturedCard";
+import { TrendingSlider } from "./TrendingSlider";
 import { PlaceCard } from "./PlaceCard";
 import { EmptyState } from "./EmptyState";
 
 interface ListingsGridProps {
-  featuredItem: Listing | null;
+  trendingItems: Listing[];
   items: Listing[];
   category: string;
   categoryLabel: string;
@@ -18,7 +18,7 @@ interface ListingsGridProps {
 }
 
 export function ListingsGrid({
-  featuredItem,
+  trendingItems,
   items,
   category,
   categoryLabel,
@@ -26,8 +26,8 @@ export function ListingsGrid({
   isLoadingMore,
   onLoadMore,
 }: ListingsGridProps) {
-  const totalCount = items.length + (featuredItem ? 1 : 0);
-  const hasNoResults = !featuredItem && items.length === 0;
+  const totalCount = items.length;
+  const hasNoResults = items.length === 0;
 
   // Intersection observer for infinite scroll
   const { ref, inView } = useInView({
@@ -44,24 +44,18 @@ export function ListingsGrid({
 
   return (
     <section>
+      {/* Trending Slider */}
+      {trendingItems.length > 0 && <TrendingSlider items={trendingItems} />}
+
       {/* Section Header */}
       <div className="flex items-center justify-between mb-5">
         <h2 className="font-bold text-2xl text-gray-900 dark:text-white">
-          {category === "all"
-            ? "Featured Destinations"
-            : `Popular ${categoryLabel}`}
+          {category === "all" ? "All Destinations" : `All ${categoryLabel}`}
         </h2>
         <span className="text-sm text-gray-500 dark:text-gray-400">
           {totalCount} results
         </span>
       </div>
-
-      {/* Featured Card */}
-      {featuredItem && (
-        <div className="mb-8">
-          <FeaturedCard item={featuredItem} />
-        </div>
-      )}
 
       {/* Grid of Cards or Empty State */}
       {hasNoResults ? (
