@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const user = session.user as { role?: string };
+    console.log("User111", user);
     if (user.role !== "admin") {
       log.warn("Non-admin user attempted admin access", {
         pathname,

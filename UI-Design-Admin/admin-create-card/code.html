@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TesJor Admin - Create New Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e17c60",
+                        "primary-hover": "#d1684e",
+                        "background-light": "#F9F7F5",
+                        "background-dark": "#201512",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2A201D",
+                        "text-primary-light": "#1a110f",
+                        "text-secondary-light": "#926154",
+                        "text-primary-dark": "#f2eae8",
+                        "text-secondary-dark": "#d6c1bd",
+                        "accent-green": "#5D9B79",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "khmer": ["'Noto Serif Khmer'", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }input[type="text"], input[type="email"], input[type="number"], textarea, select {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark font-display antialiased h-screen overflow-hidden flex transition-colors duration-200">
+<aside class="w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex flex-col justify-between shrink-0 transition-colors duration-200 z-20 hidden md:flex">
+<div class="p-6">
+<div class="flex flex-col mb-10">
+<h1 class="text-2xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">TesJor <span class="text-xs font-normal text-primary align-top">Admin</span></h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Content Management</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary font-medium transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_location_alt</span>
+<span>Create Card</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">format_list_bulleted</span>
+<span>All Places</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">reviews</span>
+<span>Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Users</span>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 bg-center bg-cover" data-alt="Admin Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxMEAiPMgC3LCpW1b6S26VkP2L8AIZtccDBjuFRT1jxjBPw92Fnkfxl3KC3iEb7DAhx4E4JcaQZZInqcekQ83r469NHwAVRgFu5dU8RX1C4wJE9xJwzwFR-WBZWTint-Zephw098KZGEOtIYdG40crQRhixokrVsK-HojyXaudX6q5c4xftlGXLGzTJw1silynBlh6YF8VJo1sllKRElImiXnfVHBARCQZdJRxXejPWggk5RzE4qiFA_Ty3LWFdN_XaI7U0O9HMo4');"></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">Sokha Chen</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Administrator</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 h-full overflow-y-auto relative bg-background-light dark:bg-background-dark scroll-smooth">
+<div class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-4 border-b border-gray-200/50 dark:border-gray-800/50 flex justify-between items-center">
+<div class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+<span class="hover:text-primary cursor-pointer">Admin</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="hover:text-primary cursor-pointer">Places</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Create New</span>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-lg text-sm font-semibold text-text-secondary-light hover:text-text-primary-light hover:bg-gray-100 transition-colors">Cancel</button>
+<button class="px-5 py-2 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-hover shadow-lg shadow-primary/30 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">save</span>
+                    Publish Card
+                </button>
+</div>
+</div>
+<div class="max-w-5xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-8 pb-20">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">New Content Card</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark">Add a new hidden gem, local food spot, or cultural activity.</p>
+</div>
+<form class="flex flex-col gap-6">
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">feed</span>
+                        Basic Information
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-1">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Title (English)</label>
+<input class="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white transition-colors" placeholder="e.g. Bamboo Train Experience" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Title (Khmer)</label>
+<input class="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary font-khmer dark:bg-background-dark dark:text-white transition-colors" placeholder="e.g. ឡូរីបាត់ដំបង" type="text"/>
+</div>
+<div class="col-span-1 md:col-span-2">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Description</label>
+<textarea class="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white transition-colors" placeholder="Describe the experience, history, and what makes it special..." rows="4"></textarea>
+<p class="text-xs text-right mt-1 text-text-secondary-light">0/500 characters</p>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-wrap md:flex-nowrap gap-4">
+<div class="w-full md:w-1/2">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Category</label>
+<select class="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white">
+<option>Cultural Activity</option>
+<option>Hidden Village</option>
+<option>Local Food</option>
+<option>Nature Spot</option>
+</select>
+</div>
+<div class="w-full md:w-1/2">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Province</label>
+<select class="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white">
+<option>Siem Reap</option>
+<option>Battambang</option>
+<option>Kampot</option>
+<option>Mondulkiri</option>
+</select>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
+<div class="flex-grow">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Tags</label>
+<div class="flex items-center gap-2 p-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
+<span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-lg text-xs font-medium">
+                                        outdoors
+                                        <button class="hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-sm">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-lg text-xs font-medium">
+                                        family-friendly
+                                        <button class="hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-sm">close</span></button>
+</span>
+<input class="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm placeholder-gray-400 dark:text-white" placeholder="Type tag and press enter..." type="text"/>
+</div>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">Separate tags with Enter or Comma.</p>
+</div>
+<div class="w-full md:w-48">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">XP Points</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-lg">hotel_class</span>
+<input class="pl-10 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white transition-colors" placeholder="0" type="number"/>
+</div>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">Reward for visiting.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">location_on</span>
+                        Location &amp; Map
+                    </h3>
+<div class="flex flex-col gap-4">
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Full Address</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-lg">search</span>
+<input class="pl-10 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white transition-colors" placeholder="Search for a location..." type="text"/>
+</div>
+</div>
+<div class="w-full h-64 bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-700 relative overflow-hidden group cursor-crosshair bg-[url('https://api.mapbox.com/styles/v1/mapbox/light-v10/static/103.860,13.361,12,0/800x400?access_token=pk.xxx')] bg-cover bg-center">
+<div class="absolute inset-0 bg-gray-200 dark:bg-gray-800 opacity-50"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<p class="text-text-secondary-light font-medium bg-white/80 dark:bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">Click to drop pin</p>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full text-primary drop-shadow-lg">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute bottom-3 right-3 flex gap-2">
+<div class="bg-white dark:bg-surface-dark px-3 py-1.5 rounded-lg shadow-md text-xs font-mono border border-gray-200 dark:border-gray-700">
+                                     Lat: 13.3617
+                                 </div>
+<div class="bg-white dark:bg-surface-dark px-3 py-1.5 rounded-lg shadow-md text-xs font-mono border border-gray-200 dark:border-gray-700">
+                                     Lng: 103.8605
+                                 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">image</span>
+                        Visual Assets
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<div class="md:col-span-5 flex flex-col gap-2">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Main Cover Image</label>
+<div class="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-center p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">add_photo_alternate</span>
+</div>
+<p class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Click to upload</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">PNG, JPG up to 5MB</p>
+</div>
+</div>
+<div class="md:col-span-7 flex flex-col gap-2">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Gallery Images</label>
+<div class="grid grid-cols-3 gap-3">
+<div class="aspect-square rounded-lg bg-gray-200 dark:bg-gray-700 relative overflow-hidden group">
+<img alt="preview" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRG0MoF_Oz92xOFO0cTeglMsfZT_MUrR6TvnRqeJ8Vp2ti3CXekWCqVPVOePgloPrdcCbXE5e4-nPu5Tmc-2TjQoJQnsHhuC2QLmlQkGsXOJ8SwoFLssEFD-Jwv-BwYoHQ7Ng2tYWPr88ZOKAjjzUGO4brcx1ivDNPuHxaIO3vyPbRWd0hxOXWHMu00KfKMssUjoUf_TnH7F2azfolHTJgIuc_NjVDp3Y1mJy6BUYNF8JAQqGNQa0-3DbRLYED_yeEgziW9cYaFh4"/>
+<button class="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-xs">close</span>
+</button>
+</div>
+<div class="aspect-square rounded-lg bg-gray-200 dark:bg-gray-700 relative overflow-hidden group">
+<img alt="preview" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZmxUP-Jl3ki4bmM22aMvIrDFcQ7gKM4g-HgN_ciLuWN7tr2aUHL0Q4tgnIcxfx6s3kL4OUSstZe21F635M_rgsGtwZk2BHNsTwK7YfvzkOjmnHh3JEi_9-WIvsRa4-Z91hxPr6YLdoeOCsCqLLFznlSjI_Iv0oqSW-mBavMaIECPjai9-rUZShQXg0OB7cJDkP0j_4cAWFI0P57Xhc6k8Gx2OwGe2CY5BOIoDDtIgIobShDZ9Dwfhs_aNOUgWN2ZWmRPrv3T_6Yc"/>
+<button class="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-xs">close</span>
+</button>
+</div>
+<div class="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer text-text-secondary-light hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">add</span>
+<span class="text-xs font-medium mt-1">Add</span>
+</div>
+</div>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-2">Recommended: 3-5 images showing different angles.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col h-full">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">payments</span>
+                            Pricing
+                        </h3>
+<div class="flex flex-col gap-6">
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-3">Price Level</label>
+<div class="flex w-full rounded-xl bg-gray-100 dark:bg-gray-800 p-1">
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg text-text-secondary-light hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" type="button">Free</button>
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg bg-surface-light dark:bg-surface-dark shadow-sm text-primary ring-1 ring-black/5 dark:ring-white/10" type="button">$</button>
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg text-text-secondary-light hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" type="button">$$</button>
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg text-text-secondary-light hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" type="button">$$$</button>
+</div>
+</div>
+<div class="flex-1">
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">Price Breakdown</label>
+<div class="flex flex-col gap-3">
+<div class="flex gap-2">
+<input class="flex-grow rounded-lg border-gray-300 dark:border-gray-700 text-sm dark:bg-background-dark dark:text-white" placeholder="Label (e.g. Adult)" type="text" value="Entry Fee"/>
+<div class="w-24 relative">
+<span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">$</span>
+<input class="w-full pl-5 rounded-lg border-gray-300 dark:border-gray-700 text-sm dark:bg-background-dark dark:text-white" type="number" value="5.00"/>
+</div>
+<button class="p-2 text-gray-400 hover:text-red-500 transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+<div class="flex gap-2">
+<input class="flex-grow rounded-lg border-gray-300 dark:border-gray-700 text-sm dark:bg-background-dark dark:text-white" placeholder="Label" type="text"/>
+<div class="w-24 relative">
+<span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">$</span>
+<input class="w-full pl-5 rounded-lg border-gray-300 dark:border-gray-700 text-sm dark:bg-background-dark dark:text-white" placeholder="0.00" type="number"/>
+</div>
+<button class="p-2 text-gray-400 hover:text-red-500 transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+<button class="text-sm text-primary font-medium flex items-center gap-1 mt-1 hover:underline self-start" type="button">
+<span class="material-symbols-outlined text-sm">add_circle</span> Add Option
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+                            Operating Hours
+                        </h3>
+<div class="flex flex-col gap-5">
+<div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+<div class="flex justify-between items-center mb-3">
+<div class="flex gap-1.5 flex-wrap">
+<button class="w-7 h-7 rounded-full bg-primary text-white text-xs font-medium border border-primary transition-all" type="button">M</button>
+<button class="w-7 h-7 rounded-full bg-primary text-white text-xs font-medium border border-primary transition-all" type="button">T</button>
+<button class="w-7 h-7 rounded-full bg-primary text-white text-xs font-medium border border-primary transition-all" type="button">W</button>
+<button class="w-7 h-7 rounded-full bg-primary text-white text-xs font-medium border border-primary transition-all" type="button">T</button>
+<button class="w-7 h-7 rounded-full bg-primary text-white text-xs font-medium border border-primary transition-all" type="button">F</button>
+</div>
+<button class="text-xs text-red-500 font-medium hover:text-red-700 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">delete</span> Remove
+                                    </button>
+</div>
+<div class="grid grid-cols-2 gap-4 items-center">
+<div>
+<label class="block text-xs font-medium text-text-secondary-light uppercase tracking-wide mb-1">Open</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 dark:bg-background-dark dark:text-white" type="time" value="09:00"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-text-secondary-light uppercase tracking-wide mb-1">Close</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 dark:bg-background-dark dark:text-white" type="time" value="17:00"/>
+</div>
+</div>
+</div>
+<div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 relative">
+<div class="flex justify-between items-center mb-3">
+<div class="flex gap-1.5 flex-wrap">
+<button class="w-7 h-7 rounded-full bg-white dark:bg-surface-dark text-text-secondary-light border border-gray-300 dark:border-gray-600 text-xs font-medium hover:border-primary hover:text-primary transition-all" type="button">S</button>
+<button class="w-7 h-7 rounded-full bg-white dark:bg-surface-dark text-text-secondary-light border border-gray-300 dark:border-gray-600 text-xs font-medium hover:border-primary hover:text-primary transition-all" type="button">S</button>
+</div>
+<button class="text-xs text-red-500 font-medium hover:text-red-700 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">delete</span> Remove
+                                    </button>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2">
+<input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" id="closed-weekends" type="checkbox"/>
+<label class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark" for="closed-weekends">Closed</label>
+</div>
+<div class="flex-1 grid grid-cols-2 gap-4 opacity-50 pointer-events-none">
+<div>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 dark:bg-background-dark dark:text-white bg-gray-100" disabled="" type="time"/>
+</div>
+<div>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 dark:bg-background-dark dark:text-white bg-gray-100" disabled="" type="time"/>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl flex items-center justify-center text-text-secondary-light hover:text-primary hover:border-primary hover:bg-primary/5 transition-all" type="button">
+<span class="material-symbols-outlined text-sm mr-2">add_circle</span>
+                                Add Day Group
+                            </button>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">contact_phone</span>
+                        Contact Information
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Phone Number</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-sm">call</span>
+<input class="pl-9 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white" placeholder="+855 12 345 678" type="tel"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Website</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-sm">language</span>
+<input class="pl-9 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white" placeholder="https://" type="url"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">Facebook Page</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-sm">thumb_up</span>
+<input class="pl-9 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary dark:bg-background-dark dark:text-white" placeholder="fb.com/page-name" type="url"/>
+</div>
+</div>
+</div>
+</div>
+</form>
+</div>
+</main>
+</body></html>

@@ -35,6 +35,7 @@ export async function requireAdmin(req: NextRequest) {
     .where(eq(users.id, session.user.id))
     .limit(1);
 
+  console.log("User111:", user);
   if (!user || user.role !== "admin") {
     throw new AppError("ADMIN_REQUIRED", "Admin access required");
   }

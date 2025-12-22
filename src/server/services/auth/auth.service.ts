@@ -33,9 +33,18 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // Update session every 24 hours
   },
+
+  // Add user fields to session
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "user",
+      },
+    },
+  },
 });
 
 // Export types for use in application
-export type Session = typeof auth.$Infer.Session & {
-  user: typeof auth.$Infer.Session.user & { role?: string };
-};
+export type Session = typeof auth.$Infer.Session;

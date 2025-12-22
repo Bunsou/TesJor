@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TesJor Admin - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e17c60",
+                        "primary-hover": "#d1684e",
+                        "background-light": "#F9F7F5",
+                        "background-dark": "#201512",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2A201D",
+                        "text-primary-light": "#1a110f",
+                        "text-secondary-light": "#926154",
+                        "text-primary-dark": "#f2eae8",
+                        "text-secondary-dark": "#d6c1bd",
+                        "accent-green": "#5D9B79",
+                        "accent-blue": "#609BE1",
+                        "accent-yellow": "#E1B860",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "khmer": ["'Noto Serif Khmer'", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }input[type="text"], input[type="email"], input[type="number"], textarea, select {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark font-display antialiased h-screen overflow-hidden flex transition-colors duration-200">
+<aside class="w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex flex-col justify-between shrink-0 transition-colors duration-200 z-20 hidden md:flex">
+<div class="p-6">
+<div class="flex flex-col mb-10">
+<h1 class="text-2xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">TesJor <span class="text-xs font-normal text-primary align-top">Admin</span></h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Content Management</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary font-medium transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">add_location_alt</span>
+<span>Create Card</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">format_list_bulleted</span>
+<span>All Places</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">reviews</span>
+<span>Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Users</span>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 bg-center bg-cover" data-alt="Admin Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxMEAiPMgC3LCpW1b6S26VkP2L8AIZtccDBjuFRT1jxjBPw92Fnkfxl3KC3iEb7DAhx4E4JcaQZZInqcekQ83r469NHwAVRgFu5dU8RX1C4wJE9xJwzwFR-WBZWTint-Zephw098KZGEOtIYdG40crQRhixokrVsK-HojyXaudX6q5c4xftlGXLGzTJw1silynBlh6YF8VJo1sllKRElImiXnfVHBARCQZdJRxXejPWggk5RzE4qiFA_Ty3LWFdN_XaI7U0O9HMo4');"></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">Sokha Chen</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Administrator</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 h-full overflow-y-auto relative bg-background-light dark:bg-background-dark scroll-smooth">
+<div class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-4 border-b border-gray-200/50 dark:border-gray-800/50 flex justify-between items-center">
+<div class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+<span class="hover:text-primary cursor-pointer">Admin</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Dashboard</span>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-lg text-sm font-semibold text-text-secondary-light hover:text-text-primary-light hover:bg-gray-100 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+                Last 30 Days
+            </button>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-8 pb-20">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">Platform Overview</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark">Welcome back, Sokha. Here's what's happening with TesJor today.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col justify-between h-40 group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">All cards</p>
+<h3 class="text-3xl font-bold mt-1 text-text-primary-light dark:text-text-primary-dark">2,845</h3>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col justify-between h-40 group hover:border-accent-yellow/50 transition-colors">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Users</p>
+<h3 class="text-3xl font-bold mt-1 text-text-primary-light dark:text-text-primary-dark">15.2k</h3>
+</div>
+<div class="w-10 h-10 rounded-full bg-accent-yellow/10 flex items-center justify-center text-accent-yellow group-hover:bg-accent-yellow group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">group</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col justify-between h-40 group hover:border-accent-blue/50 transition-colors">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Bookmarks</p>
+<h3 class="text-3xl font-bold mt-1 text-text-primary-light dark:text-text-primary-dark">4,120</h3>
+</div>
+<div class="w-10 h-10 rounded-full bg-accent-blue/10 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col justify-between h-40 group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Visited</p>
+<h3 class="text-3xl font-bold mt-1 text-text-primary-light dark:text-text-primary-dark">84.5k</h3>
+</div>
+<div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<div>
+<h3 class="text-lg font-bold text-text-primary-light dark:text-text-primary-dark">Quick Actions</h3>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Common tasks you perform frequently.</p>
+</div>
+<div class="flex gap-3 flex-wrap justify-center md:justify-end">
+<button class="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl font-medium text-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add_location_alt</span>
+                        Add New Place
+                    </button>
+<button class="px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-text-primary-light dark:text-text-primary-dark rounded-xl font-medium text-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">campaign</span>
+                        Create Event
+                    </button>
+<button class="px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-text-primary-light dark:text-text-primary-dark rounded-xl font-medium text-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">manage_accounts</span>
+                        Manage Users
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

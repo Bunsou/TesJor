@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TesJor Admin - All Places</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e17c60",
+                        "primary-hover": "#d1684e",
+                        "background-light": "#F9F7F5",
+                        "background-dark": "#201512",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2A201D",
+                        "text-primary-light": "#1a110f",
+                        "text-secondary-light": "#926154",
+                        "text-primary-dark": "#f2eae8",
+                        "text-secondary-dark": "#d6c1bd",
+                        "accent-green": "#5D9B79",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "khmer": ["'Noto Serif Khmer'", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        input[type="text"], input[type="email"], input[type="number"], textarea, select {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark font-display antialiased h-screen overflow-hidden flex transition-colors duration-200">
+<aside class="w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex flex-col justify-between shrink-0 transition-colors duration-200 z-20 hidden md:flex">
+<div class="p-6">
+<div class="flex flex-col mb-10">
+<h1 class="text-2xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">TesJor <span class="text-xs font-normal text-primary align-top">Admin</span></h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Content Management</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">add_location_alt</span>
+<span>Create Card</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary font-medium transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">format_list_bulleted</span>
+<span>All Places</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">reviews</span>
+<span>Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Users</span>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 bg-center bg-cover" data-alt="Admin Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxMEAiPMgC3LCpW1b6S26VkP2L8AIZtccDBjuFRT1jxjBPw92Fnkfxl3KC3iEb7DAhx4E4JcaQZZInqcekQ83r469NHwAVRgFu5dU8RX1C4wJE9xJwzwFR-WBZWTint-Zephw098KZGEOtIYdG40crQRhixokrVsK-HojyXaudX6q5c4xftlGXLGzTJw1silynBlh6YF8VJo1sllKRElImiXnfVHBARCQZdJRxXejPWggk5RzE4qiFA_Ty3LWFdN_XaI7U0O9HMo4');"></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">Sokha Chen</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Administrator</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 h-full overflow-y-auto relative bg-background-light dark:bg-background-dark scroll-smooth">
+<div class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-4 border-b border-gray-200/50 dark:border-gray-800/50 flex justify-between items-center">
+<div class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+<span class="hover:text-primary cursor-pointer">Admin</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="hover:text-primary cursor-pointer">Places</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">All Places</span>
+</div>
+<div class="flex gap-3">
+<button class="px-5 py-2 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-hover shadow-lg shadow-primary/30 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Create New
+                </button>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-6 pb-20">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">Content Management</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">Manage and organize all discovered places and hidden gems.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-xs font-medium px-3 py-1 bg-surface-light dark:bg-surface-dark rounded-full border border-gray-200 dark:border-gray-800 text-text-secondary-light">
+<span class="text-primary font-bold">42</span> Total Places
+                    </div>
+<div class="text-xs font-medium px-3 py-1 bg-surface-light dark:bg-surface-dark rounded-full border border-gray-200 dark:border-gray-800 text-text-secondary-light">
+<span class="text-accent-green font-bold">38</span> Published
+                    </div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col xl:flex-row gap-4 justify-between items-center">
+<div class="relative w-full xl:w-96">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined">search</span>
+<input class="pl-10 w-full rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background-dark focus:border-primary focus:ring-primary dark:text-white transition-colors text-sm py-2.5" placeholder="Search by name, tags, or ID..." type="text"/>
+</div>
+<div class="flex flex-wrap gap-3 w-full xl:w-auto items-center">
+<div class="flex items-center gap-2">
+<span class="text-xs font-semibold text-text-secondary-light uppercase tracking-wide px-2">Filters:</span>
+</div>
+<select class="rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background-dark text-sm focus:border-primary focus:ring-primary py-2.5 pl-3 pr-8 dark:text-white">
+<option>All Categories</option>
+<option>Cultural Activity</option>
+<option>Hidden Village</option>
+<option>Local Food</option>
+<option>Nature Spot</option>
+</select>
+<select class="rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background-dark text-sm focus:border-primary focus:ring-primary py-2.5 pl-3 pr-8 dark:text-white">
+<option>All Provinces</option>
+<option>Siem Reap</option>
+<option>Battambang</option>
+<option>Kampot</option>
+<option>Mondulkiri</option>
+</select>
+<div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-2 hidden md:block"></div>
+<select class="rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background-dark text-sm focus:border-primary focus:ring-primary py-2.5 pl-3 pr-8 dark:text-white">
+<option>Newest First</option>
+<option>Oldest First</option>
+<option>Alphabetical</option>
+</select>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead>
+<tr class="border-b border-gray-200 dark:border-gray-800 text-xs uppercase text-text-secondary-light dark:text-text-secondary-dark font-semibold bg-gray-50/50 dark:bg-white/5">
+<th class="p-5 font-semibold">Place Details</th>
+<th class="p-5 font-semibold">Category</th>
+<th class="p-5 font-semibold">Location</th>
+<th class="p-5 font-semibold">Stats</th>
+<th class="p-5 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
+<tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="p-5">
+<div class="flex items-center gap-4">
+<div class="w-16 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0 relative">
+<img alt="Thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRG0MoF_Oz92xOFO0cTeglMsfZT_MUrR6TvnRqeJ8Vp2ti3CXekWCqVPVOePgloPrdcCbXE5e4-nPu5Tmc-2TjQoJQnsHhuC2QLmlQkGsXOJ8SwoFLssEFD-Jwv-BwYoHQ7Ng2tYWPr88ZOKAjjzUGO4brcx1ivDNPuHxaIO3vyPbRWd0hxOXWHMu00KfKMssUjoUf_TnH7F2azfolHTJgIuc_NjVDp3Y1mJy6BUYNF8JAQqGNQa0-3DbRLYED_yeEgziW9cYaFh4"/>
+</div>
+<div>
+<p class="font-bold text-text-primary-light dark:text-text-primary-dark">Bamboo Train Experience</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-khmer mt-0.5">ឡូរីបាត់ដំបង</p>
+</div>
+</div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400 border border-orange-100 dark:border-orange-500/20">
+                                        Cultural Activity
+                                    </span>
+</td>
+<td class="p-5">
+<div class="flex items-center gap-1.5 text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Battambang</span>
+</div>
+</td>
+<td class="p-5">
+<div class="flex flex-col gap-1 text-xs text-text-secondary-light">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span> 1.2k views</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">favorite</span> 48 likes</span>
+</div>
+</td>
+<td class="p-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors tooltip-trigger" title="View Live">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-text-secondary-light hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="p-5">
+<div class="flex items-center gap-4">
+<div class="w-16 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0 relative">
+<img alt="Thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZmxUP-Jl3ki4bmM22aMvIrDFcQ7gKM4g-HgN_ciLuWN7tr2aUHL0Q4tgnIcxfx6s3kL4OUSstZe21F635M_rgsGtwZk2BHNsTwK7YfvzkOjmnHh3JEi_9-WIvsRa4-Z91hxPr6YLdoeOCsCqLLFznlSjI_Iv0oqSW-mBavMaIECPjai9-rUZShQXg0OB7cJDkP0j_4cAWFI0P57Xhc6k8Gx2OwGe2CY5BOIoDDtIgIobShDZ9Dwfhs_aNOUgWN2ZWmRPrv3T_6Yc"/>
+</div>
+<div>
+<p class="font-bold text-text-primary-light dark:text-text-primary-dark">Nom Banh Chok Sras Srong</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-khmer mt-0.5">នំបញ្ចុកស្រះស្រង់</p>
+</div>
+</div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-100 dark:border-blue-500/20">
+                                        Local Food
+                                    </span>
+</td>
+<td class="p-5">
+<div class="flex items-center gap-1.5 text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Siem Reap</span>
+</div>
+</td>
+<td class="p-5">
+<div class="flex flex-col gap-1 text-xs text-text-secondary-light">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span> 850 views</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">favorite</span> 124 likes</span>
+</div>
+</td>
+<td class="p-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors tooltip-trigger" title="Preview">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-text-secondary-light hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="p-5">
+<div class="flex items-center gap-4">
+<div class="w-16 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0 flex items-center justify-center text-gray-400">
+<span class="material-symbols-outlined">image_not_supported</span>
+</div>
+<div>
+<p class="font-bold text-text-primary-light dark:text-text-primary-dark">Phnom Bok Sunset</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-khmer mt-0.5">ភ្នំបូក</p>
+</div>
+</div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 border border-green-100 dark:border-green-500/20">
+                                        Nature Spot
+                                    </span>
+</td>
+<td class="p-5">
+<div class="flex items-center gap-1.5 text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Siem Reap</span>
+</div>
+</td>
+<td class="p-5">
+<div class="flex flex-col gap-1 text-xs text-text-secondary-light">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span> 45 views</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">favorite</span> 2 likes</span>
+</div>
+</td>
+<td class="p-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors tooltip-trigger" title="View Live">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-text-secondary-light hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="p-5">
+<div class="flex items-center gap-4">
+<div class="w-16 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0 flex items-center justify-center text-gray-400">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div>
+<p class="font-bold text-text-primary-light dark:text-text-primary-dark">Kampot Pepper Farm Tour</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-khmer mt-0.5">ចម្ការម្រេចកំពត</p>
+</div>
+</div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20">
+                                        Hidden Village
+                                    </span>
+</td>
+<td class="p-5">
+<div class="flex items-center gap-1.5 text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Kampot</span>
+</div>
+</td>
+<td class="p-5">
+<div class="flex flex-col gap-1 text-xs text-text-secondary-light">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span> 3.4k views</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">favorite</span> 215 likes</span>
+</div>
+</td>
+<td class="p-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors tooltip-trigger" title="View Live">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-text-secondary-light hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="p-5">
+<div class="flex items-center gap-4">
+<div class="w-16 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0 flex items-center justify-center text-gray-400">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div>
+<p class="font-bold text-text-primary-light dark:text-text-primary-dark">Elephant Valley</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-khmer mt-0.5">ជ្រលងដំរី</p>
+</div>
+</div>
+</td>
+<td class="p-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 border border-green-100 dark:border-green-500/20">
+                                        Nature Spot
+                                    </span>
+</td>
+<td class="p-5">
+<div class="flex items-center gap-1.5 text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Mondulkiri</span>
+</div>
+</td>
+<td class="p-5">
+<div class="flex flex-col gap-1 text-xs text-text-secondary-light">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span> 0 views</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">favorite</span> 0 likes</span>
+</div>
+</td>
+<td class="p-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors tooltip-trigger" title="Preview">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-text-secondary-light hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-text-secondary-light hover:text-red-500 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+<span class="text-sm text-text-secondary-light dark:text-text-secondary-dark order-2 sm:order-1">Showing 1 to 5 of 42 entries</span>
+<div class="flex gap-2 order-1 sm:order-2">
+<button class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-text-secondary-light hover:text-text-primary-light hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled="">Previous</button>
+<div class="hidden sm:flex items-center gap-1">
+<button class="w-9 h-9 rounded-lg bg-primary text-white text-sm font-medium">1</button>
+<button class="w-9 h-9 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 text-text-secondary-light text-sm font-medium transition-colors">2</button>
+<button class="w-9 h-9 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 text-text-secondary-light text-sm font-medium transition-colors">3</button>
+<span class="w-9 h-9 flex items-center justify-center text-text-secondary-light">...</span>
+<button class="w-9 h-9 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 text-text-secondary-light text-sm font-medium transition-colors">8</button>
+</div>
+<button class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-text-secondary-light hover:text-text-primary-light hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
