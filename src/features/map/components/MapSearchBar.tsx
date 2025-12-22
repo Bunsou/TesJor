@@ -9,55 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, MapPin, Tag, Navigation } from "lucide-react";
-
-const provinces = [
-  "All of Cambodia",
-  "Banteay Meanchey",
-  "Battambang",
-  "Kampong Cham",
-  "Kampong Chhnang",
-  "Kampong Speu",
-  "Kampong Thom",
-  "Kampot",
-  "Kandal",
-  "Kep",
-  "Koh Kong",
-  "Kratie",
-  "Mondulkiri",
-  "Oddar Meanchey",
-  "Pailin",
-  "Phnom Penh",
-  "Preah Sihanouk",
-  "Preah Vihear",
-  "Prey Veng",
-  "Pursat",
-  "Ratanakiri",
-  "Siem Reap",
-  "Stung Treng",
-  "Svay Rieng",
-  "Takeo",
-  "Tboung Khmum",
-];
-
-const tags = [
-  "All Types",
-  "temple",
-  "beach",
-  "mountain",
-  "waterfall",
-  "historical",
-  "nature",
-  "adventure",
-  "family-friendly",
-  "romantic",
-  "photography",
-  "unesco",
-  "ancient",
-  "scenic",
-  "cultural",
-  "wildlife",
-  "place",
-];
+import { provinces, tags } from "@/constants/constants";
 
 const distances = [
   { label: "Any Distance", value: null },

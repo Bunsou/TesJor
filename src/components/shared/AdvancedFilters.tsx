@@ -9,66 +9,7 @@ import {
 } from "@/components/ui/select";
 import { MapPin, Tag, Star, DollarSign } from "lucide-react";
 
-const provinces = [
-  "All of Cambodia",
-  "Banteay Meanchey",
-  "Battambang",
-  "Kampong Cham",
-  "Kampong Chhnang",
-  "Kampong Speu",
-  "Kampong Thom",
-  "Kampot",
-  "Kandal",
-  "Kep",
-  "Koh Kong",
-  "Kratie",
-  "Mondulkiri",
-  "Oddar Meanchey",
-  "Pailin",
-  "Phnom Penh",
-  "Preah Sihanouk",
-  "Preah Vihear",
-  "Prey Veng",
-  "Pursat",
-  "Ratanakiri",
-  "Siem Reap",
-  "Stung Treng",
-  "Svay Rieng",
-  "Takeo",
-  "Tboung Khmum",
-];
-
-const tags = [
-  "All Types",
-  "temple",
-  "beach",
-  "mountain",
-  "waterfall",
-  "historical",
-  "nature",
-  "adventure",
-  "family-friendly",
-  "romantic",
-  "photography",
-  "unesco",
-  "ancient",
-  "scenic",
-  "cultural",
-  "wildlife",
-  "place",
-  "history",
-  "religious",
-  "street food",
-  "fine dining",
-  "local cuisine",
-  "international",
-  "coffee shop",
-  "bar",
-  "night market",
-  "shopping mall",
-  "art gallery",
-  "museum",
-];
+import { provinces, tags } from "@/constants/constants";
 
 const ratings = [
   { label: "Any Rating", value: "default" },
@@ -105,7 +46,10 @@ export default function AdvancedFilters({
 }: AdvancedFiltersProps) {
   const getTagDisplayLabel = (value: string) => {
     if (value === "all") return "All Types";
-    return value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return value
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   const handleProvinceChange = (value: string) => {
@@ -144,17 +88,19 @@ export default function AdvancedFilters({
         <SelectTrigger className="w-full bg-white border-gray-200 h-11">
           <div className="flex items-center gap-2">
             <Tag className="w-4 h-4 text-gray-500" />
-            <span className="truncate text-sm">
-              {getTagDisplayLabel(tag)}
-            </span>
+            <span className="truncate text-sm">{getTagDisplayLabel(tag)}</span>
           </div>
         </SelectTrigger>
         <SelectContent className="max-h-70 overflow-y-auto">
           {tags.map((t) => {
             const value = t === "All Types" ? "all" : t;
-            const label = t === "All Types" 
-              ? t 
-              : t.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            const label =
+              t === "All Types"
+                ? t
+                : t
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ");
             return (
               <SelectItem key={t} value={value}>
                 {label}

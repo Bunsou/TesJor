@@ -14,7 +14,17 @@ import {
   Plus,
   Star,
   Search,
+  Tag,
+  Layers,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { provinces, categories, tags } from "@/constants/constants";
 
 interface PriceOption {
   label: string;
@@ -213,38 +223,51 @@ export default function CreateCardPage() {
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Category
                   </label>
-                  <select
+                  <Select
                     value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, category: value })
                     }
-                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   >
-                    <option value="">Select category</option>
-                    <option value="place">Place</option>
-                    <option value="food">Food</option>
-                    <option value="drink">Drink</option>
-                    <option value="souvenir">Souvenir</option>
-                    <option value="event">Event</option>
-                  </select>
+                    <SelectTrigger className="w-full bg-white dark:bg-[#201512] border-gray-300 dark:border-gray-700 h-11 md:h-12 focus:border-[#E07A5F] focus:ring-[#E07A5F]">
+                      <div className="flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <SelectValue placeholder="Select category" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="w-full md:w-1/2">
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Province
                   </label>
-                  <select
+                  <Select
                     value={formData.province}
-                    onChange={(e) =>
-                      setFormData({ ...formData, province: e.target.value })
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, province: value })
                     }
-                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   >
-                    <option value="">Select province</option>
-                    <option value="Siem Reap">Siem Reap</option>
-                    <option value="Phnom Penh">Phnom Penh</option>
-                    <option value="Battambang">Battambang</option>
-                    <option value="Kampot">Kampot</option>
-                  </select>
+                    <SelectTrigger className="w-full bg-white dark:bg-[#201512] border-gray-300 dark:border-gray-700 h-11 md:h-12 focus:border-[#E07A5F] focus:ring-[#E07A5F]">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <SelectValue placeholder="Select province" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-70 overflow-y-auto">
+                      {provinces.map((p) => (
+                        <SelectItem key={p} value={p}>
+                          {p}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
@@ -252,38 +275,55 @@ export default function CreateCardPage() {
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Tags
                   </label>
-                  <div className="flex items-center gap-2 p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#201512] focus-within:border-[#E07A5F] focus-within:ring-1 focus-within:ring-[#E07A5F] transition-colors">
-                    {formData.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1 bg-[#E07A5F]/10 text-[#E07A5F] px-2 py-1 rounded-lg text-xs font-medium"
-                      >
-                        {tag}
-                        <button
-                          type="button"
-                          onClick={() => handleTagRemove(tag)}
-                          className="hover:text-red-500 transition-colors"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
-                    <input
-                      type="text"
+                  <div className="flex flex-col gap-2">
+                    <Select
                       value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          handleTagAdd();
+                      onValueChange={(value) => {
+                        if (!formData.tags.includes(value)) {
+                          setFormData({
+                            ...formData,
+                            tags: [...formData.tags, value],
+                          });
+                          setNewTag("");
                         }
                       }}
-                      className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm placeholder-gray-400 dark:text-white"
-                      placeholder="Type tag and press enter..."
-                    />
+                    >
+                      <SelectTrigger className="w-full bg-white dark:bg-[#201512] border-gray-300 dark:border-gray-700 h-11 md:h-12 focus:border-[#E07A5F] focus:ring-[#E07A5F]">
+                        <div className="flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          <SelectValue placeholder="Add tags..." />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60 overflow-y-auto">
+                        {tags
+                          .filter((tag) => !formData.tags.includes(tag))
+                          .map((tag) => (
+                            <SelectItem key={tag} value={tag}>
+                              {tag}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1 bg-[#E07A5F]/10 text-[#E07A5F] px-3 py-1.5 rounded-lg text-sm font-medium"
+                        >
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => handleTagRemove(tag)}
+                            className="hover:text-red-500 transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    Enter one tag at a time.
+                    Select from dropdown to add tags.
                   </p>
                 </div>
                 <div className="w-full md:w-48">
