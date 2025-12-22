@@ -34,7 +34,7 @@ export function ActionButton({
     "rounded-full transition-all flex items-center justify-center";
   const inactiveStyles =
     variant === "overlay"
-      ? "bg-white/80 dark:bg-black/50 text-gray-700 dark:text-white hover:bg-white hover:text-red-500"
+      ? "bg-white/80 dark:bg-black/50"
       : "bg-white dark:bg-[#2A201D] text-gray-700 dark:text-gray-300 hover:text-red-500 border border-gray-200 dark:border-gray-700";
 
   return (

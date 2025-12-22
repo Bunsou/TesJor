@@ -96,3 +96,8 @@ export type ListingWithDetails = Listing & {
   isVisited?: boolean;
   distance?: number; // For nearby items (in km)
 };
+
+export type ListingWithBookmarkAndVisit = Listing & {
+  isBookmarked: boolean;
+  isVisited: boolean;
+};

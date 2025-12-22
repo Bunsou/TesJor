@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 import type { ListingWithDistance } from "@/shared/types";
 import { TrendingSlider } from "./TrendingSlider";
 import { PlaceCard } from "./PlaceCard";
 import { EmptyState } from "./EmptyState";
+import { ListingWithBookmarkAndVisit } from "@/shared/types/content.types";
 
 interface ListingsGridProps {
   trendingItems: ListingWithDistance[];
@@ -28,6 +30,152 @@ export function ListingsGrid({
 }: ListingsGridProps) {
   const totalCount = items.length;
   const hasNoResults = items.length === 0;
+
+  // State for user progress (bookmarks and visits)
+  const [userProgress, setUserProgress] = useState<
+    Record<string, { isBookmarked: boolean; isVisited: boolean }>
+  >({});
+  const [isLoadingProgress, setIsLoadingProgress] = useState(true);
+
+  // Fetch user progress for all items
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      try {
+        setIsLoadingProgress(true);
+        const response = await fetch("/api/user/progress");
+
+        if (!response.ok) {
+          // User not logged in or other error - just continue without progress
+          setIsLoadingProgress(false);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.data.items) {
+          const progressMap: Record<
+            string,
+            { isBookmarked: boolean; isVisited: boolean }
+          > = {};
+
+          data.data.items.forEach((item: ListingWithBookmarkAndVisit) => {
+            progressMap[item.id] = {
+              isBookmarked: item.isBookmarked,
+              isVisited: item.isVisited,
+            };
+          });
+
+          setUserProgress(progressMap);
+        }
+      } catch (error) {
+        console.error("Error fetching user progress:", error);
+      } finally {
+        setIsLoadingProgress(false);
+      }
+    };
+
+    fetchUserProgress();
+  }, []);
+
+  // Handle bookmark toggle
+  const handleBookmark = async (itemId: string) => {
+    const currentState = userProgress[itemId]?.isBookmarked || false;
+    const action = currentState ? "remove" : "add";
+
+    // Optimistic update
+    setUserProgress((prev) => ({
+      ...prev,
+      [itemId]: {
+        ...prev[itemId],
+        isBookmarked: !currentState,
+      },
+    }));
+
+    try {
+      const response = await fetch("/api/user/bookmark", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          listingId: itemId,
+          action,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update bookmark");
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(
+          action === "add" ? "Added to favorites" : "Removed from favorites"
+        );
+      }
+    } catch (error) {
+      // Revert optimistic update on error
+      setUserProgress((prev) => ({
+        ...prev,
+        [itemId]: {
+          ...prev[itemId],
+          isBookmarked: currentState,
+        },
+      }));
+      toast.error("Failed to update bookmark. Please try again.");
+    }
+  };
+
+  // Handle visited toggle
+  const handleVisit = async (itemId: string) => {
+    const currentState = userProgress[itemId]?.isVisited || false;
+    const action = currentState ? "remove" : "add";
+
+    // Optimistic update
+    setUserProgress((prev) => ({
+      ...prev,
+      [itemId]: {
+        ...prev[itemId],
+        isVisited: !currentState,
+      },
+    }));
+
+    try {
+      const response = await fetch("/api/user/visited", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          listingId: itemId,
+          action,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update visited status");
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(
+          action === "add" ? "Marked as visited" : "Unmarked as visited"
+        );
+      }
+    } catch (error) {
+      // Revert optimistic update on error
+      setUserProgress((prev) => ({
+        ...prev,
+        [itemId]: {
+          ...prev[itemId],
+          isVisited: currentState,
+        },
+      }));
+      toast.error("Failed to update visited status. Please try again.");
+    }
+  };
 
   // Intersection observer for infinite scroll
   const { ref, inView } = useInView({
@@ -68,6 +216,10 @@ export function ListingsGrid({
                 key={item.id}
                 item={item}
                 showDistance={item.distance !== undefined}
+                isBookmarked={userProgress[item.id]?.isBookmarked || false}
+                isVisited={userProgress[item.id]?.isVisited || false}
+                onBookmark={() => handleBookmark(item.id)}
+                onVisit={() => handleVisit(item.id)}
               />
             ))}
           </div>

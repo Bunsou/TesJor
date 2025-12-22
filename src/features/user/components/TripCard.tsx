@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { BookCheck, Check, Heart, History, MapPin } from "lucide-react";
+import { BookCheck, Heart, History, MapPin } from "lucide-react";
 import type { ListingWithProgress } from "@/shared/types";
 import { getDefaultImage } from "@/lib/default-images";
 
@@ -54,7 +54,7 @@ export function TripCard({ item, showVisitedState = false }: TripCardProps) {
               onError={() => setImageError(true)}
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60" />
 
           {/* Bookmark/Visited Button */}
           <div className="absolute top-3 right-3 z-10">
@@ -65,7 +65,7 @@ export function TripCard({ item, showVisitedState = false }: TripCardProps) {
                 </span>
               </button>
             ) : (
-              <button className="w-8 h-8 rounded-full bg-orange-100/80 dark:bg-orange-900/30 backdrop-blur-md flex items-center justify-center text-primary hover:text-white transition-colors">
+              <button className="w-8 h-8 rounded-full bg-orange-100/80 dark:bg-orange-900/30 backdrop-blur-md flex items-center justify-center text-primary transition-colors">
                 <Heart
                   fill="currentColor"
                   strokeWidth={0}
@@ -88,7 +88,7 @@ export function TripCard({ item, showVisitedState = false }: TripCardProps) {
 
           {/* Visited Info */}
           {showVisitedState && item.isVisited && (
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-3 bg-linear-to-t from-black/80 to-transparent">
               <p className="text-white text-xs font-medium flex items-center gap-1">
                 <span className="material-symbols-outlined text-sm">
                   <History size={16} />

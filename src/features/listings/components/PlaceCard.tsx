@@ -54,10 +54,16 @@ export function PlaceCard({
               }}
               title={isVisited ? "Visited" : "Mark as Visited"}
               variant="overlay"
-              activeColor="bg-[#2D6A4F] text-white"
+              activeColor="bg-green-700/90 text-white"
+              className="hover:text-green-600 hover:bg-green-100/90"
             />
             <ActionButton
-              icon={<Heart className="h-5 w-5" />}
+              icon={
+                <Heart
+                  className="h-5 w-5"
+                  fill={isBookmarked ? "oklch(0.6925 0.1321 36.39)" : "none"}
+                />
+              }
               active={isBookmarked}
               onClick={(e) => {
                 e.preventDefault();
@@ -65,6 +71,8 @@ export function PlaceCard({
               }}
               title={isBookmarked ? "Saved" : "Save to Favorites"}
               variant="overlay"
+              activeColor="bg-orange-100/90 text-primary"
+              className="hover:text-primary hover:bg-orange-100/90"
             />
           </div>
         </div>
