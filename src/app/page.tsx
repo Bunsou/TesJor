@@ -10,7 +10,11 @@ export default async function Home() {
 
   // Redirect based on authentication status
   if (session) {
-    redirect("/explore");
+    if (session.user.role === "admin") {
+      redirect("/admin/");
+    } else {
+      redirect("/explore");
+    }
   } else {
     redirect("/sign-in");
   }

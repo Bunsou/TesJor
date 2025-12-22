@@ -13,7 +13,7 @@ export default function SignInPage() {
     try {
       await signIn.social({
         provider: "google",
-        callbackURL: "/explore",
+        callbackURL: "/",
       });
     } catch (error) {
       console.error("Sign in failed:", error);
