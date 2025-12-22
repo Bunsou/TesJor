@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -20,6 +20,21 @@ interface TrendingSliderProps {
 export function TrendingSlider({ items }: TrendingSliderProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    if (isPaused || !items || items.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setImageIndex((index) => {
+        if (index === items.length - 1) return 0;
+        return index + 1;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, items]);
 
   if (!items || items.length === 0) {
     return null;
@@ -48,6 +63,8 @@ export function TrendingSlider({ items }: TrendingSliderProps) {
       aria-label="Trending Destinations Slider"
       className="w-full rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-[#2C211F] relative mb-8"
       style={{ aspectRatio: "16 / 6" }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
       <a href="#after-slider-controls" className="skip-link">
         Skip Trending Slider Controls
