@@ -113,60 +113,123 @@ function createInfoWindowContent(
 ): string {
   if (markerData.isUserLocation) {
     return `
-      <div style="padding: 12px; min-width: 200px;">
-        <h3 style="font-weight: 600; font-size: 16px; margin-bottom: 4px; color: #1f2937;">
-          You are here
-        </h3>
-        <p style="font-size: 14px; color: #6b7280;">
-          Your current location
-        </p>
+      <div style="position: relative; width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: white; border-radius: 16px; overflow: hidden;">
+        <button onclick="this.closest('.gm-style-iw').parentElement.querySelector('.gm-ui-hover-effect').click()" 
+                style="position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #374151; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; transition: all 0.2s;">
+          ×
+        </button>
+        <div style="padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <div style="width: 12px; height: 12px; background: #3B82F6; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px #3B82F6;"></div>
+            <h3 style="font-weight: 600; font-size: 16px; margin: 0; color: #111827;">
+              You are here
+            </h3>
+          </div>
+          <p style="font-size: 14px; color: #6b7280; margin: 8px 0 0 20px;">
+            Your current location
+          </p>
+        </div>
       </div>
     `;
   }
 
-  const stars = markerData.rating
-    ? Array.from({ length: 5 })
-        .map((_, i) => (i < Math.floor(markerData.rating!) ? "★" : "☆"))
-        .join("")
+  // Truncate description to 100 characters
+  const truncatedDescription = markerData.description
+    ? markerData.description.length > 100
+      ? markerData.description.substring(0, 100) + "..."
+      : markerData.description
     : "";
 
+  // Get category display name and color
+  const categoryColors: Record<
+    string,
+    { bg: string; text: string; name: string }
+  > = {
+    place: { bg: "#FEF3C7", text: "#92400E", name: "Place" },
+    food: { bg: "#FEE2E2", text: "#991B1B", name: "Food" },
+    drink: { bg: "#E0E7FF", text: "#3730A3", name: "Drink" },
+    event: { bg: "#D1FAE5", text: "#065F46", name: "Event" },
+    souvenir: { bg: "#FCE7F3", text: "#831843", name: "Souvenir" },
+  };
+  const categoryInfo =
+    categoryColors[markerData.category] || categoryColors.place;
+
   return `
-    <div style="padding: 12px; min-width: 250px; max-width: 300px;">
+    <div style="position: relative; width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
       ${
         markerData.imageUrl
-          ? `<img src="${markerData.imageUrl}" 
-               style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;"
-               onerror="this.src='/default-image/placeholder.png'" />`
-          : ""
+          ? `
+        <div style="position: relative; width: 100%; height: 140px; overflow: hidden;">
+          <img src="${markerData.imageUrl}" 
+               style="width: 100%; height: 100%; object-fit: cover; display: block;"
+               onerror="this.src='/default-image/placeholder.png'" />
+          <div style="position: absolute; top: 12px; left: 12px; background: ${categoryInfo.bg}; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: ${categoryInfo.text};">
+            ${categoryInfo.name}
+          </div>
+          <button onclick="this.closest('.gm-style-iw').parentElement.querySelector('.gm-ui-hover-effect').click()" 
+                  style="position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 300; color: #374151; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; transition: all 0.2s;">
+            ×
+          </button>
+        </div>
+      `
+          : `
+        <button onclick="this.closest('.gm-style-iw').parentElement.querySelector('.gm-ui-hover-effect').click()" 
+                style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 300; color: #374151; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; transition: all 0.2s;">
+          ×
+        </button>
+      `
       }
-      <h3 style="font-weight: 600; font-size: 18px; margin-bottom: 8px; color: #1f2937;">
-        ${markerData.title}
-      </h3>
-      ${
-        stars
-          ? `<div style="color: #F59E0B; font-size: 14px; margin-bottom: 8px;">${stars} ${markerData.rating?.toFixed(
-              1
-            )}</div>`
-          : ""
-      }
-      ${
-        markerData.description
-          ? `<p style="font-size: 14px; color: #6b7280; margin-bottom: 8px; line-height: 1.5;">${markerData.description}</p>`
-          : ""
-      }
-      ${
-        markerData.priceRange
-          ? `<div style="display: flex; align-items: center; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
-               <span style="font-size: 14px; color: #6b7280;">Price:</span>
-               <span style="font-weight: 600; color: #10B981;">${markerData.priceRange}</span>
-             </div>`
-          : ""
-      }
-      <div style="margin-top: 12px;">
-        <a href="/explore/${markerData.slug}" 
-           style="display: inline-block; padding: 8px 16px; background: #3B82F6; color: white; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500;">
-          View Details →
-        </a>
+      
+      <div style="padding: 8px;">
+        <h3 style="font-weight: 700; font-size: 20px; margin: 0 0 4px 0; color: #111827; line-height: 1.3;">
+          ${markerData.title}
+        </h3>
+
+        <p style="font-size: 14px; color: #6b7280; margin: 0 0 12px 0;">
+          ${
+            markerData.rating
+              ? `⭐ ${markerData.rating.toFixed(1)}`
+              : "No ratings yet"
+          }
+        </p>
+        
+        <p>cardDescription</p>
+        <p style="font-size: 14px; color: #6b7280; margin: 0 0 12px 0;">
+          ${
+            markerData.description
+              ? markerData.description
+              : "No description available."
+          }
+        </p>
+          }
+
+        
+        ${
+          truncatedDescription
+            ? `
+          <p style="font-size: 14px; color: #6b7280; margin: 8px 0 16px 0; line-height: 1.6;">
+            ${truncatedDescription}
+          </p>
+        `
+            : ""
+        }
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px;">
+          ${
+            markerData.priceRange
+              ? `
+            <div style="font-size: 20px; font-weight: 700; color: oklch(0.6925 0.1321 36.39)">
+              ${markerData.priceRange}
+            </div>
+          `
+              : "<div></div>"
+          }
+          
+          <a href="/explore/${markerData.slug || markerData.id}" 
+             style="display: inline-block; padding: 12px 24px; background: oklch(0.6925 0.1321 36.39); color: white; border-radius: 28px; text-decoration: none; font-size: 14px; font-weight: 600; white-space: nowrap; transition: all 0.2s;">
+            View Details
+          </a>
+        </div>
       </div>
     </div>
   `;
@@ -229,8 +292,28 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
             mapId: "DEMO_MAP_ID", // Required for Advanced Markers
           });
 
-          // Create info window
-          infoWindowRef.current = new google.maps.InfoWindow();
+          // Create info window with disableAutoPan to prevent jumping
+          infoWindowRef.current = new google.maps.InfoWindow({
+            disableAutoPan: false,
+          });
+
+          // Hide the default close button with CSS (more specific selectors)
+          const style = document.createElement("style");
+          style.textContent = `
+            .gm-ui-hover-effect {
+              display: none !important;
+            }
+            .gm-style-iw-chr {
+              display: none !important;
+            }
+            .gm-style-iw-t button[aria-label="Close"] {
+              display: none !important;
+            }
+            .gm-style-iw-t::after {
+              display: none !important;
+            }
+          `;
+          document.head.appendChild(style);
 
           setIsLoading(false);
         } catch (err) {
