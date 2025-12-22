@@ -210,16 +210,24 @@ export function useMapData({
   // Create markers
   const markers = filteredItems
     .filter((item) => item.lat && item.lng)
-    .map((item) => ({
-      id: item.id,
-      slug: item.slug,
-      position: { lat: Number(item.lat), lng: Number(item.lng) },
-      title: item.title,
-      category: item.category,
-      imageUrl: item.mainImage ?? undefined,
-      description: item.description,
-      priceRange: item.priceLevel ?? undefined,
-    }));
+    .map((item) => {
+      console.log("[useMapData] Creating marker for:", item.title, {
+        description: item.description,
+        avgRating: item.avgRating,
+        category: item.category,
+      });
+      return {
+        id: item.id,
+        slug: item.slug,
+        position: { lat: Number(item.lat), lng: Number(item.lng) },
+        title: item.title,
+        category: item.category,
+        imageUrl: item.mainImage ?? undefined,
+        description: item.description,
+        priceRange: item.priceLevel ?? undefined,
+        rating: item.avgRating ? Number(item.avgRating) : undefined,
+      };
+    });
 
   console.log("[useMapData] Items count:", items.length);
   console.log("[useMapData] Filtered items count:", filteredItems.length);

@@ -111,6 +111,13 @@ function createUserLocationMarker(): HTMLElement {
 function createInfoWindowContent(
   markerData: NonNullable<GoogleMapContainerProps["markers"]>[number]
 ): string {
+  console.log("[createInfoWindowContent] markerData:", {
+    title: markerData.title,
+    description: markerData.description,
+    rating: markerData.rating,
+    category: markerData.category,
+  });
+
   if (markerData.isUserLocation) {
     return `
       <div style="position: relative; width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: white; border-radius: 16px; overflow: hidden;">
@@ -133,12 +140,24 @@ function createInfoWindowContent(
     `;
   }
 
-  // Truncate description to 100 characters
-  const truncatedDescription = markerData.description
-    ? markerData.description.length > 100
-      ? markerData.description.substring(0, 100) + "..."
-      : markerData.description
-    : "";
+  // Truncate description to 20 words or 100 characters, whichever is shorter
+  let truncatedDescription = "";
+  if (markerData.description) {
+    const words = markerData.description.split(" ");
+    const first20Words = words.slice(0, 20).join(" ");
+    const first100Chars = markerData.description.substring(0, 100);
+
+    // Use whichever is shorter
+    const truncated =
+      first20Words.length < first100Chars.length ? first20Words : first100Chars;
+
+    // Add ellipsis if truncated
+    if (words.length > 20 || markerData.description.length > 100) {
+      truncatedDescription = truncated + "...";
+    } else {
+      truncatedDescription = markerData.description;
+    }
+  }
 
   // Get category display name and color
   const categoryColors: Record<
@@ -155,7 +174,7 @@ function createInfoWindowContent(
     categoryColors[markerData.category] || categoryColors.place;
 
   return `
-    <div style="position: relative; width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <div style="position: relative; width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: white; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
       ${
         markerData.imageUrl
           ? `
@@ -163,11 +182,11 @@ function createInfoWindowContent(
           <img src="${markerData.imageUrl}" 
                style="width: 100%; height: 100%; object-fit: cover; display: block;"
                onerror="this.src='/default-image/placeholder.png'" />
-          <div style="position: absolute; top: 12px; left: 12px; background: ${categoryInfo.bg}; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: ${categoryInfo.text};">
+          <div style="position: absolute; top: 12px; left: 8px; background: ${categoryInfo.bg}; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: ${categoryInfo.text};">
             ${categoryInfo.name}
           </div>
           <button onclick="this.closest('.gm-style-iw').parentElement.querySelector('.gm-ui-hover-effect').click()" 
-                  style="position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 300; color: #374151; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; transition: all 0.2s;">
+                  style="position: absolute; top: 12px; right: 8px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 300; color: #374151; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; transition: all 0.2s;">
             ×
           </button>
         </div>
@@ -180,29 +199,20 @@ function createInfoWindowContent(
       `
       }
       
-      <div style="padding: 8px;">
+      <div style="padding: 20px;">
         <h3 style="font-weight: 700; font-size: 20px; margin: 0 0 4px 0; color: #111827; line-height: 1.3;">
           ${markerData.title}
         </h3>
 
-        <p style="font-size: 14px; color: #6b7280; margin: 0 0 12px 0;">
+        <p style="font-size: 14px; color: #6b7280; margin: 0 0 12px 0; display: flex; align-items: center; gap: 4px;">
           ${
             markerData.rating
-              ? `⭐ ${markerData.rating.toFixed(1)}`
+              ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="oklch(0.6925 0.1321 36.39)" stroke="oklch(0.6925 0.1321 36.39)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span style="font-weight: 600; color: #111827;">${markerData.rating.toFixed(
+                  1
+                )}</span>`
               : "No ratings yet"
           }
         </p>
-        
-        <p>cardDescription</p>
-        <p style="font-size: 14px; color: #6b7280; margin: 0 0 12px 0;">
-          ${
-            markerData.description
-              ? markerData.description
-              : "No description available."
-          }
-        </p>
-          }
-
         
         ${
           truncatedDescription
