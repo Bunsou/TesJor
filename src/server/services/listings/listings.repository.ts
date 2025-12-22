@@ -250,6 +250,8 @@ export async function findAllListingsWithCoords(categories?: string[]) {
       priceLevel: listings.priceLevel,
       description: listings.description,
       avgRating: listings.avgRating,
+      province: listings.province,
+      tags: listings.tags,
     })
     .from(listings);
   if (categories && categories.length > 0) {

@@ -8,7 +8,6 @@ import {
   GoogleMapContainer,
   MapRef,
   MapSearchBar,
-  MapAdvancedFilters,
   MapControls,
   PlacePreviewCard,
   MapLoadingOverlay,
@@ -26,7 +25,6 @@ export default function MapPageClient({
 }: MapPageClientProps) {
   const mapRef = useRef<MapRef>(null);
   const searchParams = useSearchParams();
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
 
   const {
@@ -43,6 +41,16 @@ export default function MapPageClient({
     markers,
     isLoading,
   } = useMapData({ initialItems, initialError });
+
+  // Debug logging
+  useEffect(() => {
+    console.log("[MapPageClient] Filter state:", {
+      selectedProvince,
+      selectedTags,
+      maxDistance,
+      filteredCount: filteredItems.length,
+    });
+  }, [selectedProvince, selectedTags, maxDistance, filteredItems.length]);
 
   // Get target location from URL params
   const targetLocation = useMemo(() => {
@@ -71,11 +79,6 @@ export default function MapPageClient({
       return () => clearTimeout(timer);
     }
   }, [targetLocation]);
-
-  const hasActiveFilters =
-    selectedProvince !== "all" ||
-    selectedTags.length > 0 ||
-    maxDistance !== null;
 
   const handleMarkerClick = (id: string) => {
     if (id === "user-location") return;
@@ -106,18 +109,11 @@ export default function MapPageClient({
       <MapSearchBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onFiltersClick={() => setShowFilters(true)}
-        hasActiveFilters={hasActiveFilters}
-      />
-
-      <MapAdvancedFilters
-        isOpen={showFilters}
-        onClose={() => setShowFilters(false)}
-        selectedProvince={selectedProvince}
+        province={selectedProvince}
         onProvinceChange={setSelectedProvince}
         selectedTags={selectedTags}
         onTagsChange={setSelectedTags}
-        maxDistance={maxDistance}
+        distance={maxDistance}
         onDistanceChange={setMaxDistance}
       />
 
@@ -133,7 +129,11 @@ export default function MapPageClient({
       <MapLoadingOverlay isLoading={isLoading} />
 
       <MapInfoBadge
-        useRadiusFilter={hasActiveFilters}
+        useRadiusFilter={
+          selectedProvince !== "all" ||
+          selectedTags.length > 0 ||
+          maxDistance !== null
+        }
         itemCount={filteredItems.length}
         radius={maxDistance || 0}
       />

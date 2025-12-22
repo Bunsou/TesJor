@@ -172,8 +172,12 @@ export function useMapData({
     selectedProvince,
   ]);
 
+  console.log("Selected Province 11 ", selectedProvince);
+  console.log("Items11", items);
+
   // Filter items by search, province, tags, and distance
   const filteredItems = items.filter((item) => {
+    console.log("item2222", item);
     // Search filter
     const matchesSearch =
       !searchQuery ||
@@ -183,6 +187,9 @@ export function useMapData({
     // Province filter
     const matchesProvince =
       selectedProvince === "all" || item.province === selectedProvince;
+
+    console.log("item.province", item.province);
+    console.log("matchesProvince 11", matchesProvince);
 
     // Tags filter
     const matchesTags =
@@ -201,7 +208,23 @@ export function useMapData({
       matchesDistance = distance <= maxDistance;
     }
 
-    return matchesSearch && matchesProvince && matchesTags && matchesDistance;
+    const passes =
+      matchesSearch && matchesProvince && matchesTags && matchesDistance;
+
+    // Log first item that fails for debugging
+    if (!passes && item === items[0]) {
+      console.log("[useMapData] First item filtering:", {
+        title: item.title,
+        province: item.province,
+        selectedProvince,
+        matchesProvince,
+        tags: item.tags,
+        selectedTags,
+        matchesTags,
+      });
+    }
+
+    return passes;
   });
 
   // Create markers

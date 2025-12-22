@@ -41,6 +41,7 @@ const provinces = [
 const tags = [
   "All Types",
   "Historical",
+  "Temple",
   "Nature",
   "Cultural",
   "Adventure",
@@ -155,7 +156,10 @@ export default function AdvancedFilters({
         </SelectTrigger>
         <SelectContent>
           {prices.map((p) => (
-            <SelectItem key={p.value} value={p.value}>
+            <SelectItem
+              key={p.value.toLowerCase()}
+              value={p.value.toLowerCase()}
+            >
               {p.label}
             </SelectItem>
           ))}
