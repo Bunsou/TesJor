@@ -40,24 +40,34 @@ const provinces = [
 
 const tags = [
   "All Types",
-  "Historical",
-  "Temple",
-  "Nature",
-  "Cultural",
-  "Adventure",
-  "Religious",
-  "Beach",
-  "Mountain",
-  "Street Food",
-  "Fine Dining",
-  "Local Cuisine",
-  "International",
-  "Coffee Shop",
-  "Bar",
-  "Night Market",
-  "Shopping Mall",
-  "Art Gallery",
-  "Museum",
+  "temple",
+  "beach",
+  "mountain",
+  "waterfall",
+  "historical",
+  "nature",
+  "adventure",
+  "family-friendly",
+  "romantic",
+  "photography",
+  "unesco",
+  "ancient",
+  "scenic",
+  "cultural",
+  "wildlife",
+  "place",
+  "history",
+  "religious",
+  "street food",
+  "fine dining",
+  "local cuisine",
+  "international",
+  "coffee shop",
+  "bar",
+  "night market",
+  "shopping mall",
+  "art gallery",
+  "museum",
 ];
 
 const ratings = [
@@ -93,6 +103,11 @@ export default function AdvancedFilters({
   onRatingChange,
   onPriceChange,
 }: AdvancedFiltersProps) {
+  const getTagDisplayLabel = (value: string) => {
+    if (value === "all") return "All Types";
+    return value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-4 lg:px-0 mb-4">
       {/* Province Filter */}
@@ -103,7 +118,7 @@ export default function AdvancedFilters({
             <SelectValue placeholder="All of Cambodia" />
           </div>
         </SelectTrigger>
-        <SelectContent className="max-h-[280px] overflow-y-auto">
+        <SelectContent className="max-h-70 overflow-y-auto">
           {provinces.map((p) => (
             <SelectItem key={p} value={p === "All of Cambodia" ? "all" : p}>
               {p}
@@ -117,15 +132,23 @@ export default function AdvancedFilters({
         <SelectTrigger className="w-full bg-white border-gray-200 h-11">
           <div className="flex items-center gap-2">
             <Tag className="w-4 h-4 text-gray-500" />
-            <SelectValue placeholder="All Types" />
+            <span className="truncate text-sm">
+              {getTagDisplayLabel(tag)}
+            </span>
           </div>
         </SelectTrigger>
-        <SelectContent className="max-h-[280px] overflow-y-auto">
-          {tags.map((t) => (
-            <SelectItem key={t} value={t === "All Types" ? "all" : t}>
-              {t}
-            </SelectItem>
-          ))}
+        <SelectContent className="max-h-70 overflow-y-auto">
+          {tags.map((t) => {
+            const value = t === "All Types" ? "all" : t;
+            const label = t === "All Types" 
+              ? t 
+              : t.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            return (
+              <SelectItem key={t} value={value}>
+                {label}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
 

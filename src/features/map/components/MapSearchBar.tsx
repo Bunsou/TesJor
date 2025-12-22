@@ -133,7 +133,11 @@ export function MapSearchBar({
     if (selectedTags.length === 0) return "All Types";
     if (selectedTags.length === 1) {
       const tag = selectedTags[0];
-      return tag.charAt(0).toUpperCase() + tag.slice(1);
+      // Capitalize each word in the tag
+      return tag
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
     }
     return `${selectedTags.length} types selected`;
   };
@@ -214,6 +218,15 @@ export function MapSearchBar({
             >
               {tags.map((t) => {
                 const value = t === "All Types" ? "all" : t;
+                const label =
+                  t === "All Types"
+                    ? t
+                    : t
+                        .split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ");
                 const isSelected =
                   value === "all"
                     ? selectedTags.length === 0
@@ -230,7 +243,7 @@ export function MapSearchBar({
                         <span className="text-primary font-bold">✓</span>
                       )}
                     </span>
-                    <span>{t}</span>
+                    <span>{label}</span>
                   </button>
                 );
               })}
