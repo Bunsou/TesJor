@@ -19,7 +19,7 @@ import {
   Utensils,
   Wine,
 } from "lucide-react";
-import type { Listing } from "@/shared/types";
+import { Listing } from "@/server/db/schema";
 
 const categories: CategoryOption[] = [
   { id: "all", label: "All", icon: null },

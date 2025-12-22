@@ -12,6 +12,35 @@ export const categoryEnum = z.enum([
 // Price level enum
 export const priceLevelEnum = z.enum(["$", "$$", "$$$", "Free"]);
 
+// Province enum
+export const provinceEnum = z.enum([
+  "Banteay Meanchey",
+  "Battambang",
+  "Kampong Cham",
+  "Kampong Chhnang",
+  "Kampong Speu",
+  "Kampong Thom",
+  "Kampot",
+  "Kandal",
+  "Kep",
+  "Koh Kong",
+  "Kratie",
+  "Mondulkiri",
+  "Oddar Meanchey",
+  "Pailin",
+  "Phnom Penh",
+  "Preah Sihanouk",
+  "Preah Vihear",
+  "Prey Veng",
+  "Pursat",
+  "Ratanakiri",
+  "Siem Reap",
+  "Stung Treng",
+  "Svay Rieng",
+  "Takeo",
+  "Tboung Khmum",
+]);
+
 // JSONB Schema Definitions
 export const priceDetailSchema = z.object({
   label: z.string(),
@@ -70,6 +99,7 @@ export const createListingSchema = z.object({
   title: z.string().min(1).max(500),
   titleKh: z.string().max(500).optional(),
   description: z.string().min(10),
+  province: provinceEnum,
   addressText: z.string().max(500).optional(),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
@@ -84,6 +114,7 @@ export const createListingSchema = z.object({
 // Types
 export type Category = z.infer<typeof categoryEnum>;
 export type PriceLevel = z.infer<typeof priceLevelEnum>;
+export type Province = z.infer<typeof provinceEnum>;
 export type PriceDetail = z.infer<typeof priceDetailSchema>;
 export type TimeSlot = z.infer<typeof timeSlotSchema>;
 export type OperatingHours = z.infer<typeof operatingHoursSchema>;

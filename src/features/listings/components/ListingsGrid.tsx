@@ -2,14 +2,14 @@
 
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import type { Listing } from "@/shared/types";
+import type { ListingWithDistance } from "@/shared/types";
 import { TrendingSlider } from "./TrendingSlider";
 import { PlaceCard } from "./PlaceCard";
 import { EmptyState } from "./EmptyState";
 
 interface ListingsGridProps {
-  trendingItems: Listing[];
-  items: Listing[];
+  trendingItems: ListingWithDistance[];
+  items: ListingWithDistance[];
   category: string;
   categoryLabel: string;
   hasMore: boolean;

@@ -899,7 +899,6 @@ const sampleListings: NewListing[] = [
     title: "Cambodian Fruit Shake",
     titleKh: "ទឹកផ្លែឈើ",
     xpPoints: 15,
-    xpPoints: 15,
     description:
       "Blended fruit shakes with ice, milk, and sugar. Choose from mango, dragon fruit, avocado, or mixed fruits. Thick and creamy texture makes these incredibly satisfying on hot days.",
     province: "Phnom Penh",
@@ -958,7 +957,6 @@ const sampleListings: NewListing[] = [
     title: "Khmer Ceramics",
     titleKh: "គ្រឿងស្មូរខ្មែរ",
     xpPoints: 20,
-    xpPoints: 20,
     description:
       "Traditional pottery with ancient Khmer designs. From decorative vases to functional bowls. Many pieces feature celadon glaze reminiscent of ancient Angkorian ceramics. Each piece tells a story of Cambodia's ceramic heritage.",
     province: "Siem Reap",
@@ -978,7 +976,6 @@ const sampleListings: NewListing[] = [
     tags: ["bamboo", "eco-friendly", "handmade", "traditional"],
     title: "Bamboo Handicrafts",
     titleKh: "សិប្បកម្មឬស្សី",
-    xpPoints: 15,
     xpPoints: 15,
     description:
       "Woven bamboo products from baskets to decorative items. Sustainable and eco-friendly crafts made by skilled artisans. Includes sticky rice containers, lampshades, and traditional rice baskets. Lightweight and perfect for travel.",

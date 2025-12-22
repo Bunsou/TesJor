@@ -10,11 +10,11 @@ import {
   MapPin,
   Star,
 } from "lucide-react";
-import type { Listing } from "@/shared/types";
+import { ListingWithDistance } from "@/shared/types";
 import { getDefaultImage } from "@/lib/default-images";
 
 interface TrendingSliderProps {
-  items: Listing[];
+  items: ListingWithDistance[];
 }
 
 export function TrendingSlider({ items }: TrendingSliderProps) {

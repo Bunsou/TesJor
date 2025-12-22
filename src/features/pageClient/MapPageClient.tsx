@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import type { Listing } from "@/shared/types";
+import { Listing } from "@/server/db/schema";
 import {
   useMapData,
   GoogleMapContainer,

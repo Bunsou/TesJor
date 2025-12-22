@@ -2,7 +2,7 @@
 // API Types
 // ========================================
 
-import { Listing } from "./content.types";
+import { Listing } from "@/server/db/schema";
 
 // Success Response
 export interface ApiSuccessResponse<T> {

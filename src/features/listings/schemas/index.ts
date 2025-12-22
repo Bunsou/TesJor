@@ -1,6 +1,7 @@
 export {
   categoryEnum,
   priceLevelEnum,
+  provinceEnum,
   priceDetailSchema,
   operatingHoursSchema,
   contactInfoSchema,
@@ -10,6 +11,7 @@ export {
   createListingSchema,
   type Category,
   type PriceLevel,
+  type Province,
   type PriceDetail,
   type TimeSlot,
   type OperatingHours,

@@ -2,13 +2,13 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BookCheck, Heart } from "lucide-react";
-import type { Listing } from "@/shared/types";
+import type { ListingWithDistance } from "@/shared/types";
 import { getDefaultImage } from "@/lib/default-images";
 import { CategoryBadge } from "@/components/shared/CategoryBadge";
 import { ActionButton } from "@/components/shared/ActionButton";
 
 interface PlaceCardProps {
-  item: Listing;
+  item: ListingWithDistance;
   isBookmarked?: boolean;
   isVisited?: boolean;
   onBookmark?: () => void;

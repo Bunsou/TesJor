@@ -4,6 +4,11 @@
 
 import { Listing, ListingPhoto, Review } from "@/server/db/schema";
 
+// Type for listings with optional distance (for regular lists and nearby)
+export type ListingWithDistance = Listing & {
+  distance?: number; // Distance in kilometers (optional, for nearby/map features)
+};
+
 // export type Category = "place" | "food" | "drink" | "souvenir" | "event";
 // export type PriceLevel = "$" | "$$" | "$$$" | "Free";
 
@@ -81,6 +86,7 @@ export type ListingWithProgress = Listing & {
   isBookmarked?: boolean;
   isVisited?: boolean;
   visitedAt?: Date | null;
+  distance?: number; // For nearby items (in km)
 };
 
 export type ListingWithDetails = Listing & {
@@ -88,4 +94,5 @@ export type ListingWithDetails = Listing & {
   reviews?: Review[];
   isBookmarked?: boolean;
   isVisited?: boolean;
+  distance?: number; // For nearby items (in km)
 };

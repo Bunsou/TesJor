@@ -40,5 +40,7 @@ export const POST = asyncHandler(async (request: NextRequest) => {
     listingTitle: newListing.title,
   });
 
-  return sendSuccessResponse({ listing: newListing }, undefined, 201);
+  return sendSuccessResponse({ listing: newListing }, undefined, {
+    statusCode: 201,
+  });
 });

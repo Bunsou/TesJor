@@ -6,12 +6,12 @@ import Link from "next/link";
 import { Heart, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Listing } from "@/shared/types";
+import { ListingWithDistance } from "@/shared/types";
 import { truncate } from "@/lib/utils";
 import { getDefaultImage } from "@/lib/default-images";
 
 interface PlaceCardProps {
-  item: Listing;
+  item: ListingWithDistance;
   isBookmarked?: boolean;
   isVisited?: boolean;
   onBookmark?: () => void;

@@ -26,7 +26,4 @@ export { StatsCard } from "./components/StatsCard";
 export { TravelHistoryItem } from "./components/TravelHistoryItem";
 export { BadgeItem } from "./components/BadgeItem";
 export { SavedItemCard } from "./components/SavedItemCard";
-export {
-  LevelProgress as LevelProgressOld,
-  ProfileStatsGrid,
-} from "./components/ProfileStats";
+export { ProfileStatsGrid } from "./components/ProfileStats";

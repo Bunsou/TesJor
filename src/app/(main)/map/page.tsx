@@ -1,6 +1,6 @@
 import MapPageClient from "../../../features/pageClient/MapPageClient";
 import { getListings } from "@/server/services/listings";
-import type { Listing } from "@/shared/types";
+import { Listing } from "@/server/db/schema";
 
 export default async function MapPage() {
   // Fetch initial map data on server

@@ -1,15 +1,7 @@
 export type {
-  Category,
-  PriceLevel,
-  PriceDetail,
-  TimeSlot,
-  OperatingHours,
-  ContactInfo,
-  Listing,
-  ListingPhoto,
-  Review,
   ListingWithProgress,
   ListingWithDetails,
+  ListingWithDistance,
 } from "./content.types";
 
 export type { User, UserProgress, UserStats } from "./user.types";
@@ -22,3 +14,6 @@ export type {
   NearbyResponse,
   PaginationParams,
 } from "./api.types";
+
+// Re-export Category type from listings schema
+export type { Category } from "@/features/listings/schemas";

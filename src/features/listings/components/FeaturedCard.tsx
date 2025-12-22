@@ -2,7 +2,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Star } from "lucide-react";
-import type { Listing } from "@/shared/types";
+import { Listing } from "@/server/db/schema";
 import { getDefaultImage } from "@/lib/default-images";
 
 interface FeaturedCardProps {

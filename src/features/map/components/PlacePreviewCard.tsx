@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { getDefaultImage } from "@/lib/default-images";
-import type { Listing } from "@/shared/types";
+import { Listing } from "@/server/db/schema";
 
 const getCategoryStyle = (category: string) => {
   switch (category?.toLowerCase()) {

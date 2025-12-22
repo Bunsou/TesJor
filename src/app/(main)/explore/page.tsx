@@ -1,6 +1,6 @@
 import ExplorePageClient from "../../../features/pageClient/ExplorePageClient";
 import { getListings, getTrendingListings } from "@/server/services/listings";
-import type { Listing } from "@/shared/types";
+import { Listing } from "@/server/db/schema";
 
 interface InitialData {
   items: Listing[];
