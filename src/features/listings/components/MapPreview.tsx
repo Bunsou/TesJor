@@ -27,7 +27,7 @@ export function MapPreview({
           referrerPolicy="no-referrer-when-downgrade"
         />
         <Link
-          href="/map"
+          href={`/map?lat=${lat}&lng=${lng}`}
           className="absolute inset-0 flex items-center justify-center bg-black/5 hover:bg-black/10 transition-colors cursor-pointer group"
         >
           <span className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2">

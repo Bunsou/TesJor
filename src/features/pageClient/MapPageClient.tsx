@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Listing } from "@/server/db/schema";
 import {
   useMapData,
@@ -24,6 +25,7 @@ export default function MapPageClient({
   initialError,
 }: MapPageClientProps) {
   const mapRef = useRef<MapRef>(null);
+  const searchParams = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
 
@@ -41,6 +43,25 @@ export default function MapPageClient({
     markers,
     isLoading,
   } = useMapData({ initialItems, initialError });
+
+  // Check for lat/lng in URL params and center map on that location
+  useEffect(() => {
+    const lat = searchParams.get("lat");
+    const lng = searchParams.get("lng");
+
+    if (lat && lng && mapRef.current) {
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lng);
+
+      if (!isNaN(latitude) && !isNaN(longitude)) {
+        // Wait a bit for map to initialize
+        setTimeout(() => {
+          mapRef.current?.panTo({ lat: latitude, lng: longitude });
+          mapRef.current?.setZoom(15);
+        }, 500);
+      }
+    }
+  }, [searchParams]);
 
   const hasActiveFilters =
     selectedProvince !== "all" ||
