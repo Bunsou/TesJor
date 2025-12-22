@@ -3,6 +3,7 @@ export { useMapData } from "./hooks/useMapData";
 
 // Components
 export { MapSearchBar } from "./components/MapSearchBar";
+export { MapAdvancedFilters } from "./components/MapAdvancedFilters";
 export { MapCategoryPills } from "./components/MapCategoryPills";
 export { MapControls } from "./components/MapControls";
 export { PlacePreviewCard } from "./components/PlacePreviewCard";

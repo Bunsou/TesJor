@@ -195,7 +195,6 @@ export async function findAllListingsWithCoords(categories?: string[]) {
       priceLevel: listings.priceLevel,
     })
     .from(listings);
-
   if (categories && categories.length > 0) {
     // Cast string[] to the proper enum types
     return query.where(
@@ -205,6 +204,7 @@ export async function findAllListingsWithCoords(categories?: string[]) {
       )
     );
   }
+  console.log("query11: ", query);
 
   return query;
 }

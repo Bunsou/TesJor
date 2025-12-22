@@ -52,6 +52,7 @@ export async function getListings(params: GetListingsParams) {
  * Get all listings with optional category filter (for map)
  */
 export async function getAllListings(categories?: string[]) {
+  console.log("ddddd11");
   return repository.findAllListingsWithCoords(categories);
 }
 

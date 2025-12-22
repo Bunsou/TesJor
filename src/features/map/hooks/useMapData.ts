@@ -12,47 +12,50 @@ async function fetchNearbyItems({
   lat,
   lng,
   radius,
-  categories,
 }: {
   lat: number;
   lng: number;
   radius: number;
-  categories: string[];
 }) {
   const params = new URLSearchParams({
     lat: lat.toString(),
     lng: lng.toString(),
     radius: radius.toString(),
     limit: "100",
+    category: "place", // Only fetch places
   });
 
   const res = await fetch(`/api/listings/nearby?${params}`);
   if (!res.ok) throw new Error("Failed to fetch nearby items");
 
-  const data = await res.json();
-  if (categories.length > 0) {
-    return {
-      ...data.data,
-      items: data.data.items.filter((item: Listing) =>
-        categories.includes(item.category)
-      ),
-    };
-  }
-  return data.data;
+  const response = await res.json();
+  console.log("[fetchNearbyItems] Response:", response);
+  // Filter for places only
+  return {
+    items: (response.data?.items || []).filter(
+      (item: Listing) => item.category === "place"
+    ),
+  };
 }
 
-async function fetchAllItems({ categories }: { categories: string[] }) {
-  const params = new URLSearchParams();
-  if (categories.length > 0) {
-    params.set("categories", categories.join(","));
-  }
+async function fetchAllItems() {
+  const params = new URLSearchParams({
+    category: "place", // Only fetch places
+  });
 
-  const url = `/api/listings/all${params.toString() ? `?${params}` : ""}`;
+  const url = `/api/listings/all?${params}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch all items");
 
-  const data = await res.json();
-  return { items: data.items || [] };
+  console.log("[fetchAllItems] URL:", url);
+  const response = await res.json();
+  console.log("[fetchAllItems] Response:", response);
+  // Filter for places only
+  return {
+    items: (response.data?.items || []).filter(
+      (item: Listing) => item.category === "place"
+    ),
+  };
 }
 
 export function useMapData({
@@ -67,10 +70,13 @@ export function useMapData({
     lat: 13.3622,
     lng: 103.8597,
   });
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory] = useState("place"); // Only places
   const [radius, setRadius] = useState(10);
   const [useRadiusFilter, setUseRadiusFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState<string>("all");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [maxDistance, setMaxDistance] = useState<number | null>(null);
   const [items, setItems] = useState<Listing[]>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
   const [hasInitialLoad, setHasInitialLoad] = useState(!!initialItems);
@@ -98,25 +104,30 @@ export function useMapData({
 
     async function loadData() {
       // Skip initial load if we have initialItems and no filters applied
-      if (hasInitialLoad && !useRadiusFilter && selectedCategory === "all") {
+      if (
+        hasInitialLoad &&
+        !useRadiusFilter &&
+        selectedCategory === "place" &&
+        selectedProvince === "all"
+      ) {
         setHasInitialLoad(false); // Only skip once
         return;
       }
 
       try {
         setIsLoading(true);
-        const categories = selectedCategory === "all" ? [] : [selectedCategory];
 
         let data;
         if (useRadiusFilter && userLocation) {
+          console.log("fetchNearbyItems 11");
           data = await fetchNearbyItems({
             lat: userLocation.lat,
             lng: userLocation.lng,
             radius,
-            categories,
           });
         } else {
-          data = await fetchAllItems({ categories });
+          console.log("fetchAllItems 11");
+          data = await fetchAllItems();
         }
 
         if (isMounted) {
@@ -135,14 +146,46 @@ export function useMapData({
     return () => {
       isMounted = false;
     };
-  }, [userLocation, radius, selectedCategory, useRadiusFilter, hasInitialLoad]);
+  }, [
+    userLocation,
+    radius,
+    selectedCategory,
+    useRadiusFilter,
+    hasInitialLoad,
+    selectedProvince,
+  ]);
 
-  // Filter items by search
-  const filteredItems = items.filter(
-    (item) =>
+  // Filter items by search, province, tags, and distance
+  const filteredItems = items.filter((item) => {
+    // Search filter
+    const matchesSearch =
+      !searchQuery ||
       item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.titleKh?.includes(searchQuery)
-  );
+      item.titleKh?.includes(searchQuery);
+
+    // Province filter
+    const matchesProvince =
+      selectedProvince === "all" || item.province === selectedProvince;
+
+    // Tags filter
+    const matchesTags =
+      selectedTags.length === 0 ||
+      selectedTags.some((tag) => item.tags?.includes(tag));
+
+    // Distance filter (calculate distance if user location is available)
+    let matchesDistance = true;
+    if (maxDistance !== null && userLocation && item.lat && item.lng) {
+      const distance = calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        Number(item.lat),
+        Number(item.lng)
+      );
+      matchesDistance = distance <= maxDistance;
+    }
+
+    return matchesSearch && matchesProvince && matchesTags && matchesDistance;
+  });
 
   // Create markers
   const markers = filteredItems
@@ -156,6 +199,10 @@ export function useMapData({
       description: item.description,
       priceRange: item.priceLevel ?? undefined,
     }));
+
+  console.log("[useMapData] Items count:", items.length);
+  console.log("[useMapData] Filtered items count:", filteredItems.length);
+  console.log("[useMapData] Markers count:", markers.length);
 
   const allMarkers = userLocation
     ? [
@@ -173,16 +220,41 @@ export function useMapData({
   return {
     userLocation,
     selectedCategory,
-    setSelectedCategory,
     radius,
     setRadius,
     useRadiusFilter,
     setUseRadiusFilter,
     searchQuery,
     setSearchQuery,
+    selectedProvince,
+    setSelectedProvince,
+    selectedTags,
+    setSelectedTags,
+    maxDistance,
+    setMaxDistance,
     items,
     filteredItems,
     markers: allMarkers,
     isLoading,
   };
+}
+
+// Helper function to calculate distance between two points (Haversine formula)
+function calculateDistance(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number
+): number {
+  const R = 6371; // Earth's radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }

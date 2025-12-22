@@ -32,15 +32,6 @@ export interface MapRef {
   setZoom: (zoom: number) => void;
 }
 
-const CATEGORY_COLORS: Record<string, string> = {
-  place: "#EF4444", // red
-  event: "#10B981", // green
-  food: "#F59E0B", // amber
-  drink: "#8B5CF6", // purple
-  souvenir: "#EC4899", // pink
-  user: "#3B82F6", // blue for user location
-};
-
 function createLocationPinMarker(category: string): HTMLElement {
   const div = document.createElement("div");
   div.style.position = "relative";
@@ -57,62 +48,26 @@ function createLocationPinMarker(category: string): HTMLElement {
     div.style.transform = "scale(1)";
   };
 
-  // Create SVG pin
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 24 36");
-  svg.style.width = "100%";
-  svg.style.height = "100%";
-  svg.style.filter = "drop-shadow(0 2px 4px rgba(0,0,0,0.3))";
+  // Create image element
+  const img = document.createElement("img");
+  img.src = "/icons/location-pin.png";
+  img.alt = "Location Pin";
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "contain";
+  img.style.filter = "drop-shadow(0 2px 4px rgba(0,0,0,0.3))";
 
-  const color = CATEGORY_COLORS[category] || "#EF4444";
-
-  // Pin shape path
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path.setAttribute(
-    "d",
-    "M12 0C7.589 0 4 3.589 4 8c0 7 8 16 8 16s8-9 8-16c0-4.411-3.589-8-8-8z"
-  );
-  path.setAttribute("fill", color);
-  path.setAttribute("stroke", "#fff");
-  path.setAttribute("stroke-width", "1.5");
-
-  // Inner circle (slightly larger for better icon visibility)
-  const circle = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "circle"
-  );
-  circle.setAttribute("cx", "12");
-  circle.setAttribute("cy", "8");
-  circle.setAttribute("r", "4");
-  circle.setAttribute("fill", "#fff");
-
-  svg.appendChild(path);
-  svg.appendChild(circle);
-
-  // Add category-specific icon
-  const categoryIcons: Record<string, string> = {
-    place:
-      '<g transform="translate(9.5, 5.5)"><path d="M2.5 1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1ZM1 2.5h1M1 4h1M1 5.5h1M4.5 2.5h1M4.5 4h1M4.5 5.5h1" stroke="#374151" stroke-width="0.5" fill="none"/></g>',
-    event:
-      '<g transform="translate(9.5, 5.5)"><circle cx="2.5" cy="1.5" r="0.8" fill="#374151"/><path d="M2.5 2.5L2 4.5M2.5 2.5L3 4.5M2 4.5L1 6.5M3 4.5L4 6.5" stroke="#374151" stroke-width="0.5" stroke-linecap="round"/></g>',
-    food: '<g transform="translate(10, 5.5)"><path d="M0.5 1v2c0 0.3 0.2 0.5 0.5 0.5s0.5-0.2 0.5-0.5V1M1.5 1v2c0 0.3 0.2 0.5 0.5 0.5s0.5-0.2 0.5-0.5V1M1 1v5.5M3.5 1.5v1c0 0.3 0.2 0.5 0.5 0.5h0.2M4 3.5v3" stroke="#374151" stroke-width="0.5" stroke-linecap="round"/></g>',
-    drink:
-      '<g transform="translate(9.5, 5.5)"><path d="M0.5 2h4v2.5c0 0.8-0.7 1.5-1.5 1.5h-1C1.2 6 0.5 5.3 0.5 4.5V2ZM4.5 3h0.5c0.6 0 1 0.4 1 1s-0.4 1-1 1H4.5" stroke="#374151" stroke-width="0.5" fill="none"/><line x1="1.5" y1="0.5" x2="1.5" y2="2" stroke="#374151" stroke-width="0.4"/><line x1="2.5" y1="0.5" x2="2.5" y2="2" stroke="#374151" stroke-width="0.4"/><line x1="3.5" y1="0.5" x2="3.5" y2="2" stroke="#374151" stroke-width="0.4"/></g>',
-    souvenir:
-      '<g transform="translate(9.5, 5.5)"><path d="M1 1.5L0.5 2v4c0 0.3 0.2 0.5 0.5 0.5h4c0.3 0 0.5-0.2 0.5-0.5V2L5 1.5H1ZM0.5 2h5M3.5 3.5c0 0.8-0.7 1.5-1 1.5s-1-0.7-1-1.5" stroke="#374151" stroke-width="0.5" fill="none"/></g>',
+  // Add error handler
+  img.onerror = () => {
+    console.error("Failed to load location pin image:", img.src);
   };
 
-  const iconSvg = categoryIcons[category];
-  if (iconSvg) {
-    const iconGroup = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "g"
-    );
-    iconGroup.innerHTML = iconSvg;
-    svg.appendChild(iconGroup);
-  }
+  // Add load handler
+  img.onload = () => {
+    console.log("Location pin image loaded successfully");
+  };
 
-  div.appendChild(svg);
+  div.appendChild(img);
 
   return div;
 }
@@ -306,6 +261,8 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
     useEffect(() => {
       if (!mapInstanceRef.current) return;
 
+      console.log("[Map] Updating markers, count:", markers.length);
+
       // Clear existing markers
       markersRef.current.forEach((marker) => {
         if ("map" in marker) {
@@ -316,6 +273,12 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
 
       // Add new markers
       markers.forEach((markerData) => {
+        console.log(
+          "[Map] Creating marker for:",
+          markerData.title,
+          markerData.category
+        );
+
         // Create marker content based on type
         const content = markerData.isUserLocation
           ? createUserLocationMarker()
@@ -366,14 +329,9 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
                   scale: 10,
                 }
               : {
-                  // Pin/marker shape for location markers
-                  path: "M12 0C7.589 0 4 3.589 4 8c0 7 8 16 8 16s8-9 8-16c0-4.411-3.589-8-8-8z",
-                  fillColor: CATEGORY_COLORS[markerData.category] || "#EF4444",
-                  fillOpacity: 1,
-                  strokeColor: "#ffffff",
-                  strokeWeight: 1.5,
-                  scale: 1.5,
-                  anchor: new google.maps.Point(12, 24),
+                  url: "/icons/location-pin.png",
+                  scaledSize: new google.maps.Size(40, 50),
+                  anchor: new google.maps.Point(20, 50),
                 },
           });
 

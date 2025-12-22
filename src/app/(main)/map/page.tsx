@@ -8,8 +8,12 @@ export default async function MapPage() {
   let error: string | null = null;
 
   try {
-    // Fetch all items for initial map load (limit 100 for performance)
-    const result = await getListings({ page: 1, limit: 100 });
+    // Fetch only place items for initial map load (limit 100 for performance)
+    const result = await getListings({
+      page: 1,
+      limit: 100,
+      category: "place", // Only fetch places for map
+    });
     initialItems = result.items || [];
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to load map data";

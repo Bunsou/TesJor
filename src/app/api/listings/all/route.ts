@@ -8,12 +8,14 @@ export const GET = asyncHandler(async (request: NextRequest) => {
   // Require authentication
   await requireAuth(request);
 
+  console.log("Hello 11");
   // Get category filter from query params
   const { searchParams } = new URL(request.url);
-  const categoryParam = searchParams.get("categories");
+  const categoryParam = searchParams.get("category");
   const categories = categoryParam ? categoryParam.split(",") : [];
 
   // If no categories selected, return empty array
+  console.log("Categories 11:", categories);
   if (categories.length === 0) {
     return sendSuccessResponse({ items: [] });
   }
