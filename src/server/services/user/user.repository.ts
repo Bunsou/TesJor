@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
-import { userProgress, listings } from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { userProgress, listings, users } from "@/server/db/schema";
+import { eq, and, sql } from "drizzle-orm";
 
 /**
  * Find user progress entry by listing ID
@@ -146,6 +146,14 @@ export async function getUserStats(userId: string) {
     }, {} as Record<string, number>);
   };
 
+  const userXpPoints = await db
+    .select({ xpPoints: users.xpPoints })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  console.log("User XP Points: ", userXpPoints);
+
   const visitedByCategory = countByCategory(visited);
 
   return {
@@ -156,5 +164,62 @@ export async function getUserStats(userId: string) {
     drinksVisited: visitedByCategory["drink"] || 0,
     souvenirsVisited: visitedByCategory["souvenir"] || 0,
     eventsVisited: visitedByCategory["event"] || 0,
+    xpPoints: userXpPoints[0]?.xpPoints || 0,
   };
+}
+
+/**
+ * Award XP points to user based on listing's xpPoints
+ */
+export async function awardXpPoints(userId: string, listingId: string) {
+  // Get the listing to find its xpPoints value
+  const [listing] = await db
+    .select({ xpPoints: listings.xpPoints })
+    .from(listings)
+    .where(eq(listings.id, listingId))
+    .limit(1);
+
+  console.log("Points 11: ", listing.xpPoints);
+  if (!listing || !listing.xpPoints) {
+    return null;
+  }
+
+  // Update user's xpPoints by adding the listing's xpPoints
+  const [updated] = await db
+    .update(users)
+    .set({
+      xpPoints: sql`${users.xpPoints} + ${listing.xpPoints}`,
+    })
+    .where(eq(users.id, userId))
+    .returning();
+
+  console.log("Updated user XP points: ", updated.xpPoints);
+  return updated;
+}
+
+/**
+ * Deduct XP points from user based on listing's xpPoints
+ */
+export async function deductXpPoints(userId: string, listingId: string) {
+  // Get the listing to find its xpPoints value
+  const [listing] = await db
+    .select({ xpPoints: listings.xpPoints })
+    .from(listings)
+    .where(eq(listings.id, listingId))
+    .limit(1);
+
+  if (!listing || !listing.xpPoints) {
+    return null;
+  }
+
+  // Update user's xpPoints by subtracting the listing's xpPoints
+  const [updated] = await db
+    .update(users)
+    .set({
+      xpPoints: sql`GREATEST(0, ${users.xpPoints} - ${listing.xpPoints})`,
+    })
+    .where(eq(users.id, userId))
+    .returning();
+
+  return updated;
 }

@@ -34,7 +34,7 @@ export function ActionHub({
           <span className="material-symbols-outlined text-sm">
             <Zap size={20} />
           </span>
-          +100 XP
+          +{item.xpPoints} XP
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

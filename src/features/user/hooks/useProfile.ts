@@ -27,6 +27,7 @@ export function useProfile({
   initialStats,
   initialError,
 }: UseProfileParams = {}) {
+  console.log("useProfile 11");
   const [stats, setStats] = useState<UserStats>(
     initialStats || {
       bookmarkedCount: 0,
@@ -50,6 +51,7 @@ export function useProfile({
       try {
         setLoading(true);
         const data = await fetchUserStats();
+        console.log("data 11: ", data);
         if (isMounted && data) {
           setStats({
             bookmarkedCount: data.bookmarkedCount || 0,

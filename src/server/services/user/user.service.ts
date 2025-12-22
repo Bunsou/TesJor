@@ -63,6 +63,24 @@ export async function toggleVisited(params: VisitedParams) {
   // Check if progress entry exists
   const existing = await repository.findProgressEntry(userId, listingId);
 
+  // If marking as visited (not unvisiting), award XP points
+  if (isVisited) {
+    const wasAlreadyVisited = existing?.isVisited ?? false;
+
+    // Only award points if this is the first time visiting
+    if (!wasAlreadyVisited) {
+      await repository.awardXpPoints(userId, listingId);
+      log.info("Awarded XP points for visiting", { userId, listingId });
+    }
+  } else {
+    // If removing visited status, deduct XP points
+    const wasVisited = existing?.isVisited ?? false;
+    if (wasVisited) {
+      await repository.deductXpPoints(userId, listingId);
+      log.info("Deducted XP points for unvisiting", { userId, listingId });
+    }
+  }
+
   if (existing) {
     // Update existing entry
     const updated = await repository.updateVisitedStatus(

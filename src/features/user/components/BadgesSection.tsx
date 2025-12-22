@@ -45,27 +45,28 @@ export function BadgesSection({ badges, earnedCount }: BadgesSectionProps) {
       </div>
       <div className="grid grid-cols-3 gap-3">
         {badges.map((badge) => (
-          <div
-            key={badge.id}
-            className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-1 p-3 transition-all ${getBadgeColors(
-              badge.color,
-              badge.earned
-            )} ${badge.earned ? "hover:scale-105" : "opacity-50"}`}
-          >
-            {typeof badge.icon === "string" ? (
-              <Image
-                src={badge.icon}
-                alt={badge.name}
-                width={32}
-                height={32}
-                className="w-8 h-8 object-contain"
-              />
-            ) : (
-              <div className="w-8 h-8 flex items-center justify-center">
-                {badge.icon}
-              </div>
-            )}
-            <p className="text-[10px] font-semibold text-center leading-tight">
+          <div key={badge.id} className="flex flex-col items-center">
+            <div
+              className={`aspect-square rounded-full flex flex-col items-center justify-center gap-1 p-3 transition-all ${getBadgeColors(
+                badge.color,
+                badge.earned
+              )} ${badge.earned ? "hover:scale-105" : "opacity-50"}`}
+            >
+              {typeof badge.icon === "string" ? (
+                <Image
+                  src={badge.icon}
+                  alt={badge.name}
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain"
+                />
+              ) : (
+                <div className="w-8 h-8 flex items-center justify-center">
+                  {badge.icon}
+                </div>
+              )}
+            </div>
+            <p className="text-[10px] font-semibold text-center mt-1 text-foreground">
               {badge.name}
             </p>
           </div>

@@ -39,6 +39,7 @@ export default function ProfilePageClient({
   const user = initialSession?.user;
 
   // Use custom hook for profile data
+  console.log("A11");
   const { stats, loading, error, userLevel, levelProgress } = useProfile({
     initialStats,
     initialError,
@@ -74,9 +75,9 @@ export default function ProfilePageClient({
         />
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid">
           {/* Left Column - Travel History */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
+          <div className=" flex flex-col gap-6">
             {/* Level Progress */}
             <LevelProgress
               userLevel={userLevel}
@@ -90,16 +91,16 @@ export default function ProfilePageClient({
           </div>
 
           {/* Right Column - Saved & Badges */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            {/* Saved Items */}
-            <SavedItemsSection items={savedItems} />
+          {/* <div className="lg:col-span-4 flex flex-col gap-6"> */}
+          {/* Saved Items */}
+          {/* <SavedItemsSection items={savedItems} /> */}
 
-            {/* Badges */}
-            <BadgesSection badges={badges} earnedCount={earnedBadgesCount} />
+          {/* Badges */}
+          {/* <BadgesSection badges={badges} earnedCount={earnedBadgesCount} /> */}
 
-            {/* Premium CTA */}
-            <ProfileCTA />
-          </div>
+          {/* Premium CTA */}
+          {/* <ProfileCTA /> */}
+          {/* </div> */}
         </div>
       </div>
     </div>

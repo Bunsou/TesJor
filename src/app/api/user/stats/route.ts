@@ -15,6 +15,7 @@ export const GET = asyncHandler(async (request: NextRequest) => {
   log.info("Fetching user stats", { userId });
 
   const stats = await getUserStats(userId);
+  console.log("User Stats 11: ", stats);
 
   return sendSuccessResponse(stats, "User stats retrieved successfully", {
     cache: {

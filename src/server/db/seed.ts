@@ -23,6 +23,7 @@ const sampleListings: NewListing[] = [
     tags: ["farm", "agriculture", "tour", "kampot"],
     title: "Kampot Pepper Farm",
     titleKh: "កសិដ្ឋាន​ម្រេច​កំពត",
+    xpPoints: 50,
     description:
       "Experience the world-famous Kampot pepper plantation. Learn about traditional farming methods and taste the finest peppercorns grown on red soil. Take a guided tour through the farm and discover why Kampot pepper has geographical indication status.",
     province: "Kampong Cham",
@@ -56,6 +57,7 @@ const sampleListings: NewListing[] = [
     tags: ["transport", "adventure", "unique", "battambang"],
     title: "Battambang Bamboo Train",
     titleKh: "រថភ្លើងឬស្សីបាត់ដំបង",
+    xpPoints: 40,
     description:
       "Ride the unique bamboo train (Norry) through rice fields and villages. A thrilling journey on bamboo platforms powered by small motors. This iconic Cambodian experience is a must-do when visiting Battambang.",
     province: "Battambang",
@@ -82,6 +84,7 @@ const sampleListings: NewListing[] = [
     tags: ["temple", "ancient", "history", "unesco"],
     title: "Koh Ker Temple Complex",
     titleKh: "ប្រាសាទកោះកេរ",
+    xpPoints: 80,
     description:
       "Ancient Khmer temple complex far from tourist crowds. Climb the 7-tiered pyramid for stunning forest views. Built in the 10th century as the capital of the Khmer Empire, Koh Ker offers a mysterious and uncrowded alternative to Angkor Wat.",
     province: "Siem Reap",
@@ -112,6 +115,7 @@ const sampleListings: NewListing[] = [
     tags: ["village", "lake", "culture", "tonle-sap"],
     title: "Kampong Phluk Floating Village",
     titleKh: "ភូមិអណ្តែតកំពង់ផ្លុក",
+    xpPoints: 70,
     description:
       "Traditional stilt village on Tonle Sap Lake. Houses rise up to 10 meters during wet season. Authentic local life experience with boat tours through mangrove forests and the opportunity to see fishermen at work.",
     province: "Siem Reap",
@@ -139,6 +143,7 @@ const sampleListings: NewListing[] = [
     tags: ["mountain", "history", "colonial", "kampot"],
     title: "Bokor Hill Station",
     titleKh: "ស្ថានីយ៍ភ្នំបូកគោ",
+    xpPoints: 65,
     description:
       "Abandoned French colonial hill station shrouded in mist. Eerie atmosphere with old casino and church ruins. The misty mountain climate and ghostly buildings create a unique and mysterious experience.",
     province: "Kampong Cham",
@@ -156,6 +161,7 @@ const sampleListings: NewListing[] = [
     tags: ["temple", "unesco", "angkor", "heritage"],
     title: "Angkor Wat",
     titleKh: "អង្គរវត្ត",
+    xpPoints: 100,
     description:
       "The largest religious monument in the world and Cambodia's crown jewel. Built in the 12th century, this magnificent temple complex is a masterpiece of Khmer architecture. Witness breathtaking sunrise views and explore intricate bas-reliefs depicting Hindu epics.",
     province: "Siem Reap",
@@ -186,6 +192,7 @@ const sampleListings: NewListing[] = [
     tags: ["palace", "royal", "culture", "phnom-penh"],
     title: "Royal Palace Phnom Penh",
     titleKh: "ព្រះបរមរាជវាំងភ្នំពេញ",
+    xpPoints: 75,
     description:
       "Official residence of the King of Cambodia. Marvel at the stunning Silver Pagoda with its floor of 5,000 silver tiles. Explore beautiful Khmer architecture, manicured gardens, and witness the grandeur of Cambodian royalty.",
     province: "Phnom Penh",
@@ -239,6 +246,7 @@ const sampleListings: NewListing[] = [
     tags: ["island", "beach", "nature", "preah Sihanouk"],
     title: "Koh Rong Island",
     titleKh: "កោះរ៉ុង",
+    xpPoints: 85,
     description:
       "Paradise island with pristine white sand beaches and crystal-clear waters. Experience bioluminescent plankton at night, snorkel in coral reefs, or simply relax in beach hammocks. Perfect for digital detox and island life.",
     province: "Preah Sihanouk",
@@ -261,6 +269,7 @@ const sampleListings: NewListing[] = [
     tags: ["traditional", "curry", "seafood", "national-dish"],
     title: "Fish Amok",
     titleKh: "អាម៉ុកត្រី",
+    xpPoints: 30,
     description:
       "Cambodia's national dish. Steamed fish mousse with coconut milk, lemongrass, and aromatic spices in banana leaf. The creamy texture and fragrant spices make this a must-try dish that represents the essence of Khmer cuisine.",
     province: "Phnom Penh",
@@ -280,6 +289,7 @@ const sampleListings: NewListing[] = [
     tags: ["beef", "stir-fry", "traditional", "lunch"],
     title: "Beef Lok Lak",
     titleKh: "លក់​ឡក់​សាច់​គោ",
+    xpPoints: 25,
     description:
       "Stir-fried marinated beef cubes served with fresh vegetables, rice, and a tangy lime-pepper dipping sauce. Popular lunch dish that's both flavorful and satisfying.",
     province: "Phnom Penh",
@@ -296,6 +306,7 @@ const sampleListings: NewListing[] = [
     tags: ["noodles", "breakfast", "traditional", "curry"],
     title: "Nom Banh Chok (Khmer Noodles)",
     titleKh: "នំបញ្ចុក",
+    xpPoints: 30,
     description:
       "Fresh rice noodles topped with green fish curry gravy and raw vegetables. Traditional breakfast dish beloved by locals. The light yet flavorful curry makes it perfect for starting your day.",
     province: "Phnom Penh",
@@ -312,6 +323,7 @@ const sampleListings: NewListing[] = [
     tags: ["pork", "rice", "breakfast", "grilled"],
     title: "Bai Sach Chrouk",
     titleKh: "បាយសាច់ជ្រូក",
+    xpPoints: 25,
     description:
       "Grilled marinated pork served over broken rice with pickled vegetables and clear soup. The most popular breakfast dish in Cambodia. The caramelized pork is sweet, savory, and absolutely addictive.",
     province: "Phnom Penh",
@@ -328,6 +340,7 @@ const sampleListings: NewListing[] = [
     tags: ["curry", "traditional", "spicy", "coconut"],
     title: "Khmer Red Curry",
     titleKh: "ការីក្រហម",
+    xpPoints: 20,
     description:
       "Rich and aromatic red curry with beef, chicken, or fish, mixed with vegetables, potatoes, and coconut milk. Less spicy than Thai curry but full of complex flavors from lemongrass, galangal, and Khmer spices.",
     province: "Phnom Penh",
@@ -348,6 +361,7 @@ const sampleListings: NewListing[] = [
     tags: ["traditional", "sweet", "natural", "refreshing"],
     title: "Palm Juice (Tuk Tnout Choo)",
     titleKh: "ទឹកត្នោតជ្រូក",
+    xpPoints: 10,
     description:
       "Fresh juice from sugar palm trees. Sweet and refreshing with a unique flavor. Best served cold. This traditional drink has been enjoyed for generations and is both delicious and nutritious.",
     province: "Phnom Penh",
@@ -364,6 +378,7 @@ const sampleListings: NewListing[] = [
     tags: ["coffee", "iced", "traditional", "breakfast"],
     title: "Teuk Krola Paeng (Iced Coffee)",
     titleKh: "ទឹកកាហ្វេប៉េងខ្មៅ",
+    xpPoints: 10,
     description:
       "Strong Cambodian iced coffee made with robusta beans and sweetened condensed milk. Incredibly smooth and energizing. The perfect pick-me-up on a hot Cambodian day.",
     province: "Phnom Penh",
@@ -380,6 +395,7 @@ const sampleListings: NewListing[] = [
     tags: ["juice", "sweet", "fresh", "natural"],
     title: "Sugarcane Juice (Tuk Ampov)",
     titleKh: "ទឹកអំពៅ",
+    xpPoints: 10,
     description:
       "Freshly pressed sugarcane juice, sometimes mixed with lime and kumquat. Natural sweetness with a refreshing citrus twist. Watch vendors press the cane through manual or electric presses.",
     province: "Phnom Penh",
@@ -396,6 +412,7 @@ const sampleListings: NewListing[] = [
     tags: ["smoothie", "traditional", "healthy", "breakfast"],
     title: "Num Tkak Cho (Lime Shake)",
     titleKh: "នំត្កាកឈូ",
+    xpPoints: 15,
     description:
       "Sweet and tangy shake made with fresh lime, sugar, and ice. Often blended with egg for extra richness. A popular breakfast drink that's both refreshing and energizing.",
     province: "Phnom Penh",
@@ -416,6 +433,7 @@ const sampleListings: NewListing[] = [
     tags: ["textile", "traditional", "clothing", "handmade"],
     title: "Krama (Traditional Scarf)",
     titleKh: "ក្រមា",
+    xpPoints: 15,
     description:
       "Iconic checkered cotton scarf worn by Cambodians. Multiple uses: headwrap, towel, baby carrier. Various colors available. An essential item in Cambodian culture with countless practical applications.",
     province: "Siem Reap",
@@ -435,6 +453,7 @@ const sampleListings: NewListing[] = [
     tags: ["spice", "gourmet", "kampot", "gift"],
     title: "Kampot Pepper",
     titleKh: "ម្រេចកំពត",
+    xpPoints: 20,
     description:
       "World-renowned Kampot peppercorns with geographical indication status. Red, black, and white varieties. Considered some of the finest pepper in the world, with a unique aromatic profile.",
     province: "Kampong Cham",
@@ -454,6 +473,7 @@ const sampleListings: NewListing[] = [
     tags: ["silk", "handwoven", "luxury", "traditional"],
     title: "Silk Scarf",
     titleKh: "ក្រមាសូត្រ",
+    xpPoints: 25,
     description:
       "Hand-woven silk scarves with traditional patterns. Made in Cambodian silk villages. Luxury quality with intricate designs inspired by ancient Khmer art.",
     province: "Siem Reap",
@@ -492,6 +512,7 @@ const sampleListings: NewListing[] = [
     tags: ["art", "sculpture", "traditional", "handmade"],
     title: "Angkor Stone Carving",
     titleKh: "ចម្លាក់ថ្មអង្គរ",
+    xpPoints: 20,
     description:
       "Miniature replicas of Angkor Wat and other temples, or Buddha statues carved from sandstone. Skilled artisans recreate the intricate details of ancient Khmer architecture in these beautiful keepsakes.",
     province: "Siem Reap",
@@ -515,6 +536,7 @@ const sampleListings: NewListing[] = [
     tags: ["nature", "waterfall", "mountain", "sacred"],
     title: "Phnom Kulen National Park",
     titleKh: "ឧទ្យានជាតិភ្នំគូលេន",
+    xpPoints: 75,
     description:
       "Sacred mountain with spectacular waterfalls and ancient carvings. Home to the River of a Thousand Lingas with intricate underwater stone carvings. The birthplace of the Khmer Empire with religious significance and natural beauty.",
     province: "Siem Reap",
@@ -541,6 +563,7 @@ const sampleListings: NewListing[] = [
     tags: ["beach", "seafood", "relaxation", "kep"],
     title: "Kep Beach",
     titleKh: "ឆ្នេរកែប",
+    xpPoints: 60,
     description:
       "Quiet coastal town famous for fresh crab and laid-back atmosphere. Black sand beach with sunset views over the Gulf of Thailand. Visit the famous Crab Market and enjoy the freshest seafood in Cambodia.",
     province: "Takeo",
@@ -558,6 +581,7 @@ const sampleListings: NewListing[] = [
     tags: ["temple", "unesco", "mountain", "history"],
     title: "Preah Vihear Temple",
     titleKh: "ប្រាសាទព្រះវិហារ",
+    xpPoints: 90,
     description:
       "Spectacular temple perched on cliff edge with panoramic views. UNESCO World Heritage Site dating back to 9th century. The dramatic location and stunning architecture make this one of Cambodia's most impressive temples.",
     province: "Phnom Penh",
@@ -584,6 +608,7 @@ const sampleListings: NewListing[] = [
     tags: ["temple", "angkor", "faces", "unesco"],
     title: "Bayon Temple",
     titleKh: "ប្រាសាទបាយ័ន",
+    xpPoints: 85,
     description:
       "Famous temple featuring 216 serene stone faces. Built in late 12th century as the state temple of King Jayavarman VII. The enigmatic smiling faces create an unforgettable spiritual atmosphere.",
     province: "Siem Reap",
@@ -610,6 +635,7 @@ const sampleListings: NewListing[] = [
     tags: ["temple", "angkor", "nature", "tomb-raider"],
     title: "Ta Prohm Temple",
     titleKh: "ប្រាសាទតាព្រហ្ម",
+    xpPoints: 80,
     description:
       "Jungle temple where massive trees grow through ancient ruins. Famous filming location for Tomb Raider. Nature and architecture merge in this atmospheric temple left partly unrestored.",
     province: "Siem Reap",
@@ -636,6 +662,7 @@ const sampleListings: NewListing[] = [
     tags: ["island", "beach", "quiet", "escape"],
     title: "Koh Tonsay (Rabbit Island)",
     titleKh: "កោះតុនស័យ",
+    xpPoints: 55,
     description:
       "Peaceful island paradise near Kep with pristine beaches. Basic bungalows and fresh seafood. Perfect for travelers seeking tranquility away from tourist crowds. No electricity in many areas after dark adds to the authentic experience.",
     province: "Takeo",
@@ -654,6 +681,7 @@ const sampleListings: NewListing[] = [
     tags: ["market", "shopping", "architecture", "art-deco"],
     title: "Phnom Penh Central Market (Psar Thmei)",
     titleKh: "ផ្សារថ្មី",
+    xpPoints: 40,
     description:
       "Iconic Art Deco market built in 1937. Shop for jewelry, clothing, electronics, and local crafts under the distinctive yellow dome. The central hall specializes in gold and jewelry while outer sections offer everything imaginable.",
     province: "Phnom Penh",
@@ -679,6 +707,7 @@ const sampleListings: NewListing[] = [
     tags: ["temple", "pink", "detailed", "angkor"],
     title: "Banteay Srei Temple",
     titleKh: "ប្រាសាទបន្ទាយស្រី",
+    xpPoints: 75,
     description:
       "Exquisite pink sandstone temple with incredibly detailed carvings. Known as the 'Citadel of Women' for its fine craftsmanship. The intricate bas-reliefs are considered the finest in Cambodia.",
     province: "Siem Reap",
@@ -705,6 +734,7 @@ const sampleListings: NewListing[] = [
     tags: ["beach", "relaxation", "backpacker", "preah Sihanouk"],
     title: "Otres Beach",
     titleKh: "ឆ្នេរអូទ្រេស",
+    xpPoints: 50,
     description:
       "Long stretch of golden sand beach with laid-back vibe. Beachfront restaurants and bungalows. Less crowded than other Preah Sihanouk beaches. Perfect for sunset watching and swimming.",
     province: "Preah Sihanouk",
@@ -722,6 +752,7 @@ const sampleListings: NewListing[] = [
     tags: ["lake", "floating-village", "nature", "culture"],
     title: "Tonle Sap Lake",
     titleKh: "បឹងទន្លេសាប",
+    xpPoints: 70,
     description:
       "Southeast Asia's largest freshwater lake. Floating villages and unique ecosystem. The lake expands dramatically during monsoon season. Visit floating schools, markets, and see traditional fishing methods.",
     province: "Phnom Penh",
@@ -744,6 +775,7 @@ const sampleListings: NewListing[] = [
     tags: ["noodles", "soup", "breakfast", "pork"],
     title: "Kuy Teav",
     titleKh: "គុយទាវ",
+    xpPoints: 25,
     description:
       "Rice noodle soup with pork or seafood. Clear broth with fresh herbs and crispy fried garlic. A beloved breakfast dish that's light yet satisfying. Each vendor has their own secret recipe.",
     province: "Phnom Penh",
@@ -760,6 +792,7 @@ const sampleListings: NewListing[] = [
     tags: ["bbq", "group", "meat", "social"],
     title: "Khmer BBQ",
     titleKh: "អាំងត្រឹង",
+    xpPoints: 25,
     description:
       "Interactive grilling experience with dome-shaped grill. Cook marinated meats and vegetables at your table. The central dome grills meat while the outer moat cooks soup. Perfect for groups.",
     province: "Phnom Penh",
@@ -776,6 +809,7 @@ const sampleListings: NewListing[] = [
     tags: ["salad", "lime", "beef", "traditional"],
     title: "Lap Khmer",
     titleKh: "ឡាបខ្មែរ",
+    xpPoints: 20,
     description:
       "Lime-marinated beef salad with fresh herbs and spices. Thin slices of beef 'cooked' in lime juice. Refreshing and zesty, often eaten with rice. A favorite among locals on hot days.",
     province: "Phnom Penh",
@@ -792,6 +826,7 @@ const sampleListings: NewListing[] = [
     tags: ["soup", "traditional", "kroeung", "vegetables"],
     title: "Samlor Korko",
     titleKh: "សម្លកកូរ",
+    xpPoints: 20,
     description:
       "Traditional stirring soup with roasted rice and kroeung paste. Thick consistency with vegetables and meat or fish. A rustic countryside dish full of authentic flavors and comforting warmth.",
     province: "Phnom Penh",
@@ -808,6 +843,7 @@ const sampleListings: NewListing[] = [
     tags: ["sandwich", "french", "street-food", "breakfast"],
     title: "Nom Pang Pâté (Khmer Sandwich)",
     titleKh: "នំបុ័ងប៉ាតេ",
+    xpPoints: 15,
     description:
       "Baguette sandwich with pâté, pickled vegetables, and herbs. French colonial influence meets Khmer flavors. Crispy bread with savory fillings makes for perfect breakfast or snack on the go.",
     province: "Phnom Penh",
@@ -824,6 +860,7 @@ const sampleListings: NewListing[] = [
     tags: ["dip", "traditional", "pork", "fermented"],
     title: "Prahok Ktis",
     titleKh: "ប្រហុកក្តិស",
+    xpPoints: 20,
     description:
       "Creamy dip made with fermented fish paste, pork, and coconut milk. Eaten with fresh vegetables and rice. Strong flavor that's beloved by locals. An essential part of Cambodian cuisine.",
     province: "Phnom Penh",
@@ -844,6 +881,7 @@ const sampleListings: NewListing[] = [
     tags: ["coconut", "fresh", "natural", "refreshing"],
     title: "Fresh Coconut Water (Teuk Doh)",
     titleKh: "ទឹកដូង",
+    xpPoints: 10,
     description:
       "Fresh young coconut water straight from the fruit. Naturally sweet and incredibly hydrating. Vendors often chill coconuts in ice carts. After drinking, request the soft coconut meat inside.",
     province: "Phnom Penh",
@@ -860,6 +898,8 @@ const sampleListings: NewListing[] = [
     tags: ["smoothie", "fruit", "fresh", "healthy"],
     title: "Cambodian Fruit Shake",
     titleKh: "ទឹកផ្លែឈើ",
+    xpPoints: 15,
+    xpPoints: 15,
     description:
       "Blended fruit shakes with ice, milk, and sugar. Choose from mango, dragon fruit, avocado, or mixed fruits. Thick and creamy texture makes these incredibly satisfying on hot days.",
     province: "Phnom Penh",
@@ -876,6 +916,7 @@ const sampleListings: NewListing[] = [
     tags: ["wine", "traditional", "herbal", "tonic"],
     title: "Golden Muscle Wine",
     titleKh: "ស្រាសាច់ចំណេញ",
+    xpPoints: 15,
     description:
       "Traditional Cambodian rice wine infused with herbs and sometimes snake or scorpion. Believed to have medicinal properties. Popular at celebrations and with BBQ. Strong alcohol content and unique taste.",
     province: "Phnom Penh",
@@ -892,6 +933,7 @@ const sampleListings: NewListing[] = [
     tags: ["beer", "local", "refreshing", "popular"],
     title: "Angkor Beer",
     titleKh: "ស្រាបៀរអង្គរ",
+    xpPoints: 10,
     description:
       "Cambodia's most popular local beer. Light lager perfect for hot weather. Brewed since 1960s with Cambodian water. Pair with any Khmer dish or enjoy ice-cold at the beach.",
     province: "Phnom Penh",
@@ -915,6 +957,8 @@ const sampleListings: NewListing[] = [
     tags: ["pottery", "handmade", "traditional", "decor"],
     title: "Khmer Ceramics",
     titleKh: "គ្រឿងស្មូរខ្មែរ",
+    xpPoints: 20,
+    xpPoints: 20,
     description:
       "Traditional pottery with ancient Khmer designs. From decorative vases to functional bowls. Many pieces feature celadon glaze reminiscent of ancient Angkorian ceramics. Each piece tells a story of Cambodia's ceramic heritage.",
     province: "Siem Reap",
@@ -934,6 +978,8 @@ const sampleListings: NewListing[] = [
     tags: ["bamboo", "eco-friendly", "handmade", "traditional"],
     title: "Bamboo Handicrafts",
     titleKh: "សិប្បកម្មឬស្សី",
+    xpPoints: 15,
+    xpPoints: 15,
     description:
       "Woven bamboo products from baskets to decorative items. Sustainable and eco-friendly crafts made by skilled artisans. Includes sticky rice containers, lampshades, and traditional rice baskets. Lightweight and perfect for travel.",
     province: "Phnom Penh",
@@ -953,6 +999,7 @@ const sampleListings: NewListing[] = [
     tags: ["art", "sculpture", "traditional", "dance"],
     title: "Apsara Dancing Figurines",
     titleKh: "រូបចម្លាក់អប្សរា",
+    xpPoints: 20,
     description:
       "Beautiful figurines depicting traditional Apsara dancers. Made from resin, wood, or metal. Captures the elegant hand gestures and ornate costumes of classical Khmer dance. Available in various sizes and finishes.",
     province: "Phnom Penh",
@@ -972,6 +1019,7 @@ const sampleListings: NewListing[] = [
     tags: ["silk", "luxury", "rare", "eco-friendly"],
     title: "Lotus Silk Products",
     titleKh: "សូត្រផ្កាឈូក",
+    xpPoints: 30,
     description:
       "Rare fabric made from lotus flower stems. One of the world's most expensive natural textiles. Eco-friendly and incredibly soft. Available as scarves, shawls, and clothing. A truly unique Cambodian product.",
     province: "Siem Reap",
@@ -995,6 +1043,7 @@ const sampleListings: NewListing[] = [
     tags: ["festival", "boat-race", "november", "celebration"],
     title: "Water Festival (Bon Om Touk)",
     titleKh: "បុណ្យអុំទូក",
+    xpPoints: 50,
     description:
       "Cambodia's largest festival celebrating the reversal of Tonle Sap River. Three days of boat races, concerts, and celebrations in Phnom Penh. Millions gather to watch traditional longboat races. Spectacular fireworks and festive atmosphere.",
     province: "Phnom Penh",
@@ -1016,6 +1065,7 @@ const sampleListings: NewListing[] = [
     tags: ["new-year", "traditional", "april", "celebration"],
     title: "Khmer New Year (Choul Chnam Thmey)",
     titleKh: "ចូលឆ្នាំថ្មី",
+    xpPoints: 50,
     description:
       "Cambodia's most important holiday celebrating the end of harvest season. Three days of temple visits, traditional games, and family gatherings. Water splashing festivities similar to Thai Songkran. Experience authentic Cambodian culture and traditions.",
     province: "Siem Reap",
@@ -1033,6 +1083,7 @@ const sampleListings: NewListing[] = [
     tags: ["festival", "religious", "buddhist", "ancestors"],
     title: "Pchum Ben (Ancestors' Day)",
     titleKh: "បុណ្យភ្ជុំបិណ្ឌ",
+    xpPoints: 40,
     description:
       "15-day Buddhist festival honoring deceased ancestors. Cambodians visit pagodas to make offerings and pray for their ancestors. Peak celebrations during the final three days. Witness deep spiritual devotion and Khmer Buddhist traditions.",
     province: "Phnom Penh",
@@ -1050,6 +1101,7 @@ const sampleListings: NewListing[] = [
     tags: ["festival", "culture", "siem-reap", "traditional"],
     title: "Angkor Sankranta",
     titleKh: "សង្រ្កាន្តអង្គរ",
+    xpPoints: 45,
     description:
       "Cultural festival celebrating Khmer New Year in Siem Reap. Traditional performances, exhibitions, and games near Angkor Wat. Experience classical Apsara dance, shadow puppetry, and traditional music. Three days of cultural immersion and entertainment.",
     province: "Siem Reap",

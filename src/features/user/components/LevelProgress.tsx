@@ -30,7 +30,7 @@ export function LevelProgress({
             : "Max level!"}
         </p>
       </div>
-      <div className="w-full h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+      <div className="relative w-full h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
         <div
           className="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-orange-400 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}

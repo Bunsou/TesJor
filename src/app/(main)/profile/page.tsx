@@ -33,7 +33,7 @@ export default async function ProfilePage() {
     initialStats = {
       bookmarkedCount: stats?.totalBookmarked || 0,
       visitedCount: stats?.totalVisited || 0,
-      points: stats?.totalVisited ? stats.totalVisited * 10 : 0, // 10 points per visit
+      points: stats?.xpPoints || 0, // Use xpPoints from stats
       reviewCount: 0, // Reviews not yet tracked
     };
   } catch (err) {

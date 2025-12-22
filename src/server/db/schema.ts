@@ -120,6 +120,7 @@ export const listings = pgTable(
     tags: text("tags").array().default([]).notNull(),
     title: text("title").notNull(),
     titleKh: text("title_kh"),
+    xpPoints: integer("xp_points").default(0).notNull(),
     description: text("description").notNull(),
     province: provinceEnum("province").notNull(),
     addressText: text("address_text"),
