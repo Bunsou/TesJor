@@ -72,7 +72,10 @@ export const contactInfoSchema = z.object({
 // Listings Query Schema (offset-based pagination)
 export const listingsQuerySchema = z.object({
   category: categoryEnum.optional(),
-  priceLevel: priceLevelEnum.optional(),
+  province: provinceEnum.optional(),
+  tag: z.string().optional(), // filter by tag
+  sortByRating: z.enum(["default", "asc", "desc"]).optional(), // sort by rating
+  sortByPrice: z.enum(["default", "asc", "desc"]).optional(), // sort by price
   q: z.string().optional(), // search term
   page: z.coerce.number().min(1).default(1), // page number for pagination
   limit: z.coerce.number().min(1).max(50).default(10),

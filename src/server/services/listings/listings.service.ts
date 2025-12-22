@@ -4,7 +4,10 @@ import type { NewListing } from "@/server/db/schema";
 
 interface GetListingsParams {
   category?: string;
-  priceLevel?: string;
+  province?: string;
+  tag?: string;
+  sortByRating?: "default" | "asc" | "desc";
+  sortByPrice?: "default" | "asc" | "desc";
   q?: string;
   page: number;
   limit: number;
@@ -21,12 +24,16 @@ interface NearbyParams {
  * Get listings with offset-based pagination
  */
 export async function getListings(params: GetListingsParams) {
-  const { category, priceLevel, q, page, limit } = params;
+  const { category, province, tag, sortByRating, sortByPrice, q, page, limit } =
+    params;
 
   // Fetch one extra item to determine if there are more pages
   const items = await repository.findListings({
     category,
-    priceLevel,
+    province,
+    tag,
+    sortByRating,
+    sortByPrice,
     q,
     page,
     limit: limit + 1,

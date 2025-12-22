@@ -3,6 +3,10 @@ import { Listing } from "@/server/db/schema";
 
 interface UseListingsParams {
   category: string;
+  province?: string;
+  tag?: string;
+  sortByRating?: string;
+  sortByPrice?: string;
   searchQuery: string;
   initialData?: {
     items: Listing[];
@@ -25,11 +29,19 @@ interface UseListingsReturn {
 
 async function fetchListings({
   category,
+  province,
+  tag,
+  sortByRating,
+  sortByPrice,
   query,
   page,
   limit = 10,
 }: {
   category: string;
+  province?: string;
+  tag?: string;
+  sortByRating?: string;
+  sortByPrice?: string;
   query: string;
   page: number;
   limit?: number;
@@ -38,6 +50,10 @@ async function fetchListings({
     page: String(page),
     limit: String(limit),
     ...(category && category !== "all" && { category }),
+    ...(province && province !== "all" && { province }),
+    ...(tag && tag !== "all" && { tag }),
+    ...(sortByRating && sortByRating !== "default" && { sortByRating }),
+    ...(sortByPrice && sortByPrice !== "default" && { sortByPrice }),
     ...(query && { q: query }),
   });
 
@@ -69,6 +85,10 @@ async function fetchTrendingListings(category?: string) {
 
 export function useListings({
   category,
+  province,
+  tag,
+  sortByRating,
+  sortByPrice,
   searchQuery,
   initialData,
   initialError,
@@ -86,7 +106,15 @@ export function useListings({
   // Fetch initial data (page 1) - only when filters change
   useEffect(() => {
     // Skip initial load if we have initialData and no filters applied
-    if (initialData && category === "all" && !searchQuery) {
+    if (
+      initialData &&
+      category === "all" &&
+      !searchQuery &&
+      !province &&
+      !tag &&
+      !sortByRating &&
+      !sortByPrice
+    ) {
       return;
     }
 
@@ -102,6 +130,10 @@ export function useListings({
         const [listingsData, trendingData] = await Promise.all([
           fetchListings({
             category,
+            province,
+            tag,
+            sortByRating,
+            sortByPrice,
             query: searchQuery,
             page: 1,
           }),
@@ -142,7 +174,15 @@ export function useListings({
     return () => {
       isMounted = false;
     };
-  }, [category, searchQuery, initialData]);
+  }, [
+    category,
+    province,
+    tag,
+    sortByRating,
+    sortByPrice,
+    searchQuery,
+    initialData,
+  ]);
 
   // Load more function
   const loadMore = useCallback(async () => {
@@ -153,6 +193,10 @@ export function useListings({
 
       const data = await fetchListings({
         category,
+        province,
+        tag,
+        sortByRating,
+        sortByPrice,
         query: searchQuery,
         page,
       });
@@ -170,7 +214,17 @@ export function useListings({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [category, searchQuery, page, hasMore, isLoadingMore]);
+  }, [
+    category,
+    province,
+    tag,
+    sortByRating,
+    sortByPrice,
+    searchQuery,
+    page,
+    hasMore,
+    isLoadingMore,
+  ]);
 
   return {
     items,

@@ -12,6 +12,7 @@ import {
   CategoryFilter,
   type CategoryOption,
 } from "@/components/shared/CategoryFilter";
+import AdvancedFilters from "@/components/shared/AdvancedFilters";
 import {
   CalendarHeart,
   MapPinCheck,
@@ -45,6 +46,10 @@ export default function ExplorePageClient({
   initialError,
 }: ExplorePageClientProps) {
   const [category, setCategory] = useState("all");
+  const [province, setProvince] = useState("all");
+  const [tag, setTag] = useState("all");
+  const [rating, setRating] = useState("default");
+  const [price, setPrice] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 500);
 
@@ -58,6 +63,10 @@ export default function ExplorePageClient({
     loadMore,
   } = useListings({
     category,
+    province: province !== "all" ? province : undefined,
+    tag: tag !== "all" ? tag : undefined,
+    sortByRating: rating !== "default" ? rating : undefined,
+    sortByPrice: price !== "default" ? price : undefined,
     searchQuery: debouncedSearch,
     initialData,
     initialError,
@@ -70,7 +79,7 @@ export default function ExplorePageClient({
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pb-6 lg:px-10 scrollbar-hide">
-        <div className="max-w-5xl mx-auto flex flex-col gap-8 pb-10">
+        <div className="max-w-5xl mx-auto flex flex-col gap-4 pb-10">
           {/* Category Pills */}
           <CategoryFilter
             categories={categories}
@@ -78,6 +87,18 @@ export default function ExplorePageClient({
             onSelect={setCategory}
             variant="pills"
             className="-mx-4 px-4"
+          />
+
+          {/* Advanced Filters */}
+          <AdvancedFilters
+            province={province}
+            tag={tag}
+            rating={rating}
+            price={price}
+            onProvinceChange={setProvince}
+            onTagChange={setTag}
+            onRatingChange={setRating}
+            onPriceChange={setPrice}
           />
 
           {/* Loading State */}

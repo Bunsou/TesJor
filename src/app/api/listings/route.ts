@@ -15,6 +15,9 @@ export const GET = asyncHandler(async (request: NextRequest) => {
   const rawParams = {
     category: searchParams.get("category") || undefined,
     province: searchParams.get("province") || undefined,
+    tag: searchParams.get("tag") || undefined,
+    sortByRating: searchParams.get("sortByRating") || undefined,
+    sortByPrice: searchParams.get("sortByPrice") || undefined,
     q: searchParams.get("q") || undefined,
     page: searchParams.get("page") || "1",
     limit: searchParams.get("limit") || "10",

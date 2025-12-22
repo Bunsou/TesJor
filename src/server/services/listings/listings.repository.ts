@@ -11,7 +11,10 @@ import { eq, and, or, ilike, desc, sql, inArray } from "drizzle-orm";
 
 interface ListingsQueryOptions {
   category?: string;
-  priceLevel?: string;
+  province?: string;
+  tag?: string;
+  sortByRating?: "default" | "asc" | "desc";
+  sortByPrice?: "default" | "asc" | "desc";
   q?: string;
   page: number;
   limit: number;
@@ -30,7 +33,17 @@ interface NearbyListingsOptions {
  * Find listings with optional filters
  */
 export async function findListings(options: ListingsQueryOptions) {
-  const { category, priceLevel, q, page, limit, pageSize } = options;
+  const {
+    category,
+    province,
+    tag,
+    sortByRating,
+    sortByPrice,
+    q,
+    page,
+    limit,
+    pageSize,
+  } = options;
 
   const conditions = [];
 
@@ -39,11 +52,14 @@ export async function findListings(options: ListingsQueryOptions) {
     conditions.push(eq(listings.category, category as Listing["category"]));
   }
 
-  // Filter by price level
-  if (priceLevel) {
-    conditions.push(
-      eq(listings.priceLevel, priceLevel as "$" | "$$" | "$$$" | "Free")
-    );
+  // Filter by province
+  if (province) {
+    conditions.push(eq(listings.province, province as Listing["province"]));
+  }
+
+  // Filter by tag
+  if (tag) {
+    conditions.push(sql`${listings.tags} @> ARRAY[${tag}]::text[]`);
   }
 
   // Search by title or description
@@ -60,12 +76,51 @@ export async function findListings(options: ListingsQueryOptions) {
   // Calculate offset using original page size (not fetch limit)
   const offset = (page - 1) * pageSize;
 
+  // Build order by clauses
+  const orderByClauses = [];
+
+  // Sort by rating if specified
+  if (sortByRating === "desc") {
+    orderByClauses.push(desc(listings.avgRating));
+  } else if (sortByRating === "asc") {
+    orderByClauses.push(sql`${listings.avgRating} ASC NULLS LAST`);
+  }
+
+  // Sort by price if specified
+  if (sortByPrice === "desc") {
+    // Order: $$$ -> $$ -> $ -> Free
+    orderByClauses.push(
+      sql`CASE ${listings.priceLevel} 
+        WHEN '$$$' THEN 4 
+        WHEN '$$' THEN 3 
+        WHEN '$' THEN 2 
+        WHEN 'Free' THEN 1 
+        ELSE 0 
+      END DESC`
+    );
+  } else if (sortByPrice === "asc") {
+    // Order: Free -> $ -> $$ -> $$$
+    orderByClauses.push(
+      sql`CASE ${listings.priceLevel} 
+        WHEN 'Free' THEN 1 
+        WHEN '$' THEN 2 
+        WHEN '$$' THEN 3 
+        WHEN '$$$' THEN 4 
+        ELSE 5 
+      END ASC`
+    );
+  }
+
+  // Default sort by creation date (most recent first)
+  orderByClauses.push(desc(listings.createdAt));
+  orderByClauses.push(listings.id);
+
   const query = db.select().from(listings);
   const results = await (conditions.length > 0
     ? query.where(and(...conditions)!)
     : query
   )
-    .orderBy(desc(listings.createdAt), listings.id)
+    .orderBy(...orderByClauses)
     .limit(limit)
     .offset(offset);
 
