@@ -16,6 +16,7 @@ export { ReviewsSection } from "./components/ReviewsSection";
 export { ActionHub } from "./components/ActionHub";
 export { MapPreview } from "./components/MapPreview";
 export { HighlightsList } from "./components/HighlightsList";
+export { default as RelatedListings } from "./components/RelatedListings";
 export {
   ListingsSkeletonLoader,
   ItemDetailSkeletonLoader,

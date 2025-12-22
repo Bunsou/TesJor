@@ -13,7 +13,7 @@ import {
   ReviewsSection,
   ActionHub,
   MapPreview,
-  HighlightsList,
+  RelatedListings,
 } from "@/features/listings";
 
 interface Review {
@@ -154,9 +154,10 @@ export default function ExploreDetailClient({
               </div>
             )}
 
-            {/* <div className="order-3">
-              <HighlightsList />
-            </div> */}
+            {/* You might also like */}
+            <div className="order-3">
+              <RelatedListings slug={slug} />
+            </div>
           </div>
         </div>
       </div>

@@ -309,3 +309,62 @@ export async function findTrendingListings(
 
   return results;
 }
+
+/**
+ * Find related listings by tags and category
+ */
+export async function findRelatedListings(
+  currentSlug: string,
+  currentTags: string[],
+  currentCategory: string
+) {
+  const relatedItems: Listing[] = [];
+
+  // First, try to get items with matching tags (up to 2)
+  if (currentTags && currentTags.length > 0) {
+    const tagConditions = currentTags.map(
+      (tag) => sql`${listings.tags} @> ARRAY[${tag}]::text[]`
+    );
+
+    const tagMatches = await db
+      .select()
+      .from(listings)
+      .where(
+        and(or(...tagConditions)!, sql`${listings.slug} != ${currentSlug}`)!
+      )
+      .orderBy(desc(listings.avgRating), desc(listings.views))
+      .limit(2);
+
+    relatedItems.push(...tagMatches);
+  }
+
+  // Then get items from same category to fill remaining slots (up to 4 total)
+  const remainingSlots = 4 - relatedItems.length;
+  if (remainingSlots > 0) {
+    const excludedIds = relatedItems.map((item) => item.id);
+    const excludeCondition =
+      excludedIds.length > 0
+        ? sql`${listings.id} NOT IN (${sql.join(
+            excludedIds.map((id) => sql`${id}`),
+            sql`, `
+          )})`
+        : sql`1=1`;
+
+    const categoryMatches = await db
+      .select()
+      .from(listings)
+      .where(
+        and(
+          eq(listings.category, currentCategory as Listing["category"]),
+          sql`${listings.slug} != ${currentSlug}`,
+          excludeCondition
+        )!
+      )
+      .orderBy(desc(listings.avgRating), desc(listings.views))
+      .limit(remainingSlots);
+
+    relatedItems.push(...categoryMatches);
+  }
+
+  return relatedItems;
+}
