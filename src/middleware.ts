@@ -28,8 +28,7 @@ export async function middleware(request: NextRequest) {
     pathname.includes("/explore") ||
     pathname.includes("/map") ||
     pathname.includes("/saved") ||
-    pathname.includes("/profile") ||
-    pathname.includes("/item")
+    pathname.includes("/profile")
   ) {
     if (!session) {
       log.warn("Unauthorized access attempt", { pathname });

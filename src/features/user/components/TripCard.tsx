@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Check, Heart, History, MapPin } from "lucide-react";
+import { BookCheck, Check, Heart, History, MapPin } from "lucide-react";
 import type { ListingWithProgress } from "@/shared/types";
 import { getDefaultImage } from "@/lib/default-images";
 
@@ -29,7 +29,7 @@ export function TripCard({ item, showVisitedState = false }: TripCardProps) {
       : item.mainImage;
 
   return (
-    <Link href={`/explore/${item.id}`}>
+    <Link href={`/explore/${item.slug}`}>
       <div
         className={`group bg-white dark:bg-[#2A201D] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 ${
           showVisitedState && item.isVisited
@@ -59,17 +59,17 @@ export function TripCard({ item, showVisitedState = false }: TripCardProps) {
           {/* Bookmark/Visited Button */}
           <div className="absolute top-3 right-3 z-10">
             {showVisitedState && item.isVisited ? (
-              <button className="w-8 h-8 rounded-full bg-green-500 text-white shadow-md flex items-center justify-center cursor-default">
+              <button className="w-8 h-8 rounded-full bg-green-200/90 dark:bg-green-900/30 text-white shadow-md flex items-center justify-center cursor-default">
                 <span className="material-symbols-outlined text-lg">
-                  <Check />
+                  <BookCheck size={20} color="green" />
                 </span>
               </button>
             ) : (
-              <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-[#E07A5F] transition-colors">
+              <button className="w-8 h-8 rounded-full bg-orange-100/80 dark:bg-orange-900/30 backdrop-blur-md flex items-center justify-center text-primary hover:text-white transition-colors">
                 <Heart
                   fill="currentColor"
                   strokeWidth={0}
-                  className="h-4 w-4"
+                  className="h-5 w-5"
                 />
               </button>
             )}

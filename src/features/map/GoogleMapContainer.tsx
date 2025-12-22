@@ -207,7 +207,7 @@ function createInfoWindowContent(
           : ""
       }
       <div style="margin-top: 12px;">
-        <a href="/item/${markerData.id}" 
+        <a href="/explore/${markerData.id}" 
            style="display: inline-block; padding: 8px 16px; background: #3B82F6; color: white; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500;">
           View Details →
         </a>

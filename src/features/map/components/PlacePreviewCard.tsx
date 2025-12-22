@@ -113,7 +113,7 @@ export function PlacePreviewCard({ item, onClose }: PlacePreviewCardProps) {
 
             {/* View Details Button */}
             <Link
-              href={`/explore/${item.id}`}
+              href={`/explore/${item.slug}`}
               className="w-8 h-8 rounded-xl bg-primary hover:bg-primary/90 text-white flex items-center justify-center shadow-lg shadow-primary/30 transition-all hover:scale-105"
             >
               <span className="material-symbols-outlined text-lg">
