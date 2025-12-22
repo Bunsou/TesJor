@@ -12,7 +12,6 @@ import {
   ProfileCTA,
 } from "@/features/user";
 import {
-  SAMPLE_TRAVEL_HISTORY,
   SAMPLE_SAVED_ITEMS,
   SAMPLE_BADGES,
 } from "@/features/user/constants/profile-sample-data";
@@ -46,7 +45,6 @@ export default function ProfilePageClient({
   });
 
   // Sample data - in production, these would come from API
-  const [travelHistory] = useState(SAMPLE_TRAVEL_HISTORY);
   const [savedItems] = useState(SAMPLE_SAVED_ITEMS);
   const [badges] = useState(SAMPLE_BADGES);
 
@@ -87,7 +85,7 @@ export default function ProfilePageClient({
             />
 
             {/* Travel History */}
-            <TravelHistory items={travelHistory} />
+            <TravelHistory />
           </div>
 
           {/* Right Column - Saved & Badges */}
