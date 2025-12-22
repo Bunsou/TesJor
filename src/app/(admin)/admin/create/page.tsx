@@ -45,7 +45,12 @@ export default function CreateCardPage() {
     priceLevel: "$",
     priceOptions: [{ label: "Entry Fee", price: "5.00" }] as PriceOption[],
     timeSlots: [
-      { days: ["M", "T", "W", "T", "F"], open: "09:00", close: "17:00", closed: false },
+      {
+        days: ["M", "T", "W", "T", "F"],
+        open: "09:00",
+        close: "17:00",
+        closed: false,
+      },
       { days: ["S", "S"], open: "", close: "", closed: true },
     ] as TimeSlot[],
     phone: "",
@@ -55,6 +60,7 @@ export default function CreateCardPage() {
 
   const [newTag, setNewTag] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchAddress, setSearchAddress] = useState("");
 
   const handleTagAdd = () => {
     if (newTag && !formData.tags.includes(newTag)) {
@@ -81,7 +87,11 @@ export default function CreateCardPage() {
     });
   };
 
-  const updatePriceOption = (index: number, field: keyof PriceOption, value: string) => {
+  const updatePriceOption = (
+    index: number,
+    field: keyof PriceOption,
+    value: string
+  ) => {
     const updated = [...formData.priceOptions];
     updated[index][field] = value;
     setFormData({ ...formData, priceOptions: updated });
@@ -107,7 +117,9 @@ export default function CreateCardPage() {
           <ChevronRight className="w-4 h-4" />
           <span className="hover:text-[#E07A5F] cursor-pointer">Places</span>
           <ChevronRight className="w-4 h-4" />
-          <span className="font-medium text-gray-900 dark:text-white">Create New</span>
+          <span className="font-medium text-gray-900 dark:text-white">
+            Create New
+          </span>
         </div>
         <div className="flex gap-3">
           <button
@@ -139,7 +151,11 @@ export default function CreateCardPage() {
           </p>
         </div>
 
-        <form id="create-card-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form
+          id="create-card-form"
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6"
+        >
           {/* Basic Information */}
           <div className="bg-white dark:bg-[#2A201D] rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
             <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
@@ -154,8 +170,10 @@ export default function CreateCardPage() {
                 <input
                   type="text"
                   value={formData.titleEn}
-                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
-                  className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
+                  onChange={(e) =>
+                    setFormData({ ...formData, titleEn: e.target.value })
+                  }
+                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
                   placeholder="e.g. Bamboo Train Experience"
                 />
               </div>
@@ -166,8 +184,10 @@ export default function CreateCardPage() {
                 <input
                   type="text"
                   value={formData.titleKh}
-                  onChange={(e) => setFormData({ ...formData, titleKh: e.target.value })}
-                  className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] font-serif dark:bg-[#201512] dark:text-white transition-colors"
+                  onChange={(e) =>
+                    setFormData({ ...formData, titleKh: e.target.value })
+                  }
+                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] font-serif dark:bg-[#201512] dark:text-white transition-colors"
                   placeholder="e.g. ឡូរីបាត់ដំបង"
                 />
               </div>
@@ -177,8 +197,10 @@ export default function CreateCardPage() {
                 </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
                   placeholder="Describe the experience, history, and what makes it special..."
                   rows={4}
                 />
@@ -193,8 +215,10 @@ export default function CreateCardPage() {
                   </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   >
                     <option value="">Select category</option>
                     <option value="place">Place</option>
@@ -210,8 +234,10 @@ export default function CreateCardPage() {
                   </label>
                   <select
                     value={formData.province}
-                    onChange={(e) => setFormData({ ...formData, province: e.target.value })}
-                    className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
+                    onChange={(e) =>
+                      setFormData({ ...formData, province: e.target.value })
+                    }
+                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   >
                     <option value="">Select province</option>
                     <option value="Siem Reap">Siem Reap</option>
@@ -226,7 +252,7 @@ export default function CreateCardPage() {
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Tags
                   </label>
-                  <div className="flex items-center gap-2 p-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#201512] focus-within:border-[#E07A5F] focus-within:ring-1 focus-within:ring-[#E07A5F] transition-colors">
+                  <div className="flex items-center gap-2 p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#201512] focus-within:border-[#E07A5F] focus-within:ring-1 focus-within:ring-[#E07A5F] transition-colors">
                     {formData.tags.map((tag) => (
                       <span
                         key={tag}
@@ -257,7 +283,7 @@ export default function CreateCardPage() {
                     />
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    Separate tags with Enter or Comma.
+                    Enter one tag at a time.
                   </p>
                 </div>
                 <div className="w-full md:w-48">
@@ -268,9 +294,12 @@ export default function CreateCardPage() {
                     <Star className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       type="number"
+                      step="any"
                       value={formData.xpPoints}
-                      onChange={(e) => setFormData({ ...formData, xpPoints: e.target.value })}
-                      className="pl-10 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
+                      onChange={(e) =>
+                        setFormData({ ...formData, xpPoints: e.target.value })
+                      }
+                      className="pl-10 w-full py-2 md:py-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
                       placeholder="0"
                     />
                   </div>
@@ -293,13 +322,28 @@ export default function CreateCardPage() {
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                   Full Address
                 </label>
+                <input
+                  type="text"
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
+                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
+                  placeholder="e.g. O Dambang, Battambang Province, Cambodia"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                  Search Address
+                </label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="pl-10 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
+                    value={searchAddress}
+                    onChange={(e) => setSearchAddress(e.target.value)}
+                    className="pl-10 w-full py-2 md:py-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
                     placeholder="Search for a location..."
                   />
                 </div>
@@ -385,7 +429,9 @@ export default function CreateCardPage() {
                       <button
                         key={level}
                         type="button"
-                        onClick={() => setFormData({ ...formData, priceLevel: level })}
+                        onClick={() =>
+                          setFormData({ ...formData, priceLevel: level })
+                        }
                         className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
                           formData.priceLevel === level
                             ? "bg-white dark:bg-[#2A201D] shadow-sm text-[#E07A5F] ring-1 ring-black/5 dark:ring-white/10"
@@ -407,8 +453,10 @@ export default function CreateCardPage() {
                         <input
                           type="text"
                           value={option.label}
-                          onChange={(e) => updatePriceOption(index, "label", e.target.value)}
-                          className="grow rounded-lg border-gray-300 dark:border-gray-700 text-sm dark:bg-[#201512] dark:text-white"
+                          onChange={(e) =>
+                            updatePriceOption(index, "label", e.target.value)
+                          }
+                          className="grow p-2 rounded-md border border-gray-300 dark:border-gray-700 text-sm dark:bg-[#201512] dark:text-white"
                           placeholder="Label (e.g. Adult)"
                         />
                         <div className="w-24 relative">
@@ -418,8 +466,10 @@ export default function CreateCardPage() {
                           <input
                             type="number"
                             value={option.price}
-                            onChange={(e) => updatePriceOption(index, "price", e.target.value)}
-                            className="w-full pl-5 rounded-lg border-gray-300 dark:border-gray-700 text-sm dark:bg-[#201512] dark:text-white"
+                            onChange={(e) =>
+                              updatePriceOption(index, "price", e.target.value)
+                            }
+                            className="w-full pl-5 py-2 rounded-md border border-gray-300 dark:border-gray-700 text-sm dark:bg-[#201512] dark:text-white"
                             placeholder="0.00"
                           />
                         </div>
@@ -541,8 +591,10 @@ export default function CreateCardPage() {
                   <input
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="pl-9 w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    className="pl-9 w-full py-2 md:py-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                     placeholder="+855 12 345 678"
                   />
                 </div>
@@ -554,8 +606,10 @@ export default function CreateCardPage() {
                 <input
                   type="url"
                   value={formData.website}
-                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                  className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
+                  onChange={(e) =>
+                    setFormData({ ...formData, website: e.target.value })
+                  }
+                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   placeholder="https://"
                 />
               </div>
@@ -566,8 +620,10 @@ export default function CreateCardPage() {
                 <input
                   type="url"
                   value={formData.facebook}
-                  onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
-                  className="w-full rounded-xl border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
+                  onChange={(e) =>
+                    setFormData({ ...formData, facebook: e.target.value })
+                  }
+                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   placeholder="fb.com/page-name"
                 />
               </div>

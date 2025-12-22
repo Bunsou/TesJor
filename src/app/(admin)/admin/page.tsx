@@ -53,20 +53,12 @@ export default function AdminDashboardPage() {
     <>
       {/* Header */}
       <div className="sticky top-0 z-10 bg-[#F9F7F5]/80 dark:bg-[#201512]/80 backdrop-blur-md px-6 py-4 border-b border-gray-200/50 dark:border-gray-800/50 flex justify-between items-center">
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 pt-2">
           <span className="hover:text-[#E07A5F] cursor-pointer">Admin</span>
           <ChevronRight className="w-4 h-4" />
           <span className="font-medium text-gray-900 dark:text-white">
             Dashboard
           </span>
-        </div>
-        <div className="flex gap-3">
-          <button className="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors flex items-center gap-2">
-            <span className="material-symbols-outlined text-lg">
-              calendar_month
-            </span>
-            Last 30 Days
-          </button>
         </div>
       </div>
 
