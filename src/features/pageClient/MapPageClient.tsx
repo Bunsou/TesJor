@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { Listing } from "@/server/db/schema";
 import {
@@ -44,24 +44,33 @@ export default function MapPageClient({
     isLoading,
   } = useMapData({ initialItems, initialError });
 
-  // Check for lat/lng in URL params and center map on that location
-  useEffect(() => {
+  // Get target location from URL params
+  const targetLocation = useMemo(() => {
     const lat = searchParams.get("lat");
     const lng = searchParams.get("lng");
 
-    if (lat && lng && mapRef.current) {
+    if (lat && lng) {
       const latitude = parseFloat(lat);
       const longitude = parseFloat(lng);
 
       if (!isNaN(latitude) && !isNaN(longitude)) {
-        // Wait a bit for map to initialize
-        setTimeout(() => {
-          mapRef.current?.panTo({ lat: latitude, lng: longitude });
-          mapRef.current?.setZoom(15);
-        }, 500);
+        return { lat: latitude, lng: longitude };
       }
     }
+    return null;
   }, [searchParams]);
+
+  // Center map on target location when map is ready
+  useEffect(() => {
+    if (targetLocation && mapRef.current) {
+      // Small delay to ensure map is fully initialized
+      const timer = setTimeout(() => {
+        mapRef.current?.panTo(targetLocation);
+        mapRef.current?.setZoom(15);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [targetLocation]);
 
   const hasActiveFilters =
     selectedProvince !== "all" ||
@@ -87,8 +96,8 @@ export default function MapPageClient({
     <div className="relative w-full h-[calc(100vh-4rem)] md:h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
       <GoogleMapContainer
         ref={mapRef}
-        center={userLocation || undefined}
-        zoom={10}
+        center={targetLocation || userLocation || undefined}
+        zoom={targetLocation ? 15 : 10}
         markers={markers}
         onMarkerClick={handleMarkerClick}
         className="w-full h-full"
