@@ -37,7 +37,7 @@ export default function ProfileLoading() {
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid gap-6">
           {/* Left Column */}
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
@@ -57,7 +57,7 @@ export default function ProfileLoading() {
           </div>
 
           {/* Right Column */}
-          <div className="lg:col-span-4 space-y-6">
+          {/* <div className="lg:col-span-4 space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
               <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded mb-4" />
               <div className="space-y-3">
@@ -84,7 +84,7 @@ export default function ProfileLoading() {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
