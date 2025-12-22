@@ -102,12 +102,14 @@ export function useListings({
   const [page, setPage] = useState(initialData?.nextPage || 2);
   const [hasMore, setHasMore] = useState(initialData?.hasMore ?? true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasUsedInitialData, setHasUsedInitialData] = useState(false);
 
   // Fetch initial data (page 1) - only when filters change
   useEffect(() => {
-    // Skip initial load if we have initialData and no filters applied
+    // Skip initial load ONLY ONCE if we have initialData and no filters applied
     if (
       initialData &&
+      !hasUsedInitialData &&
       category === "all" &&
       !searchQuery &&
       !province &&
@@ -115,6 +117,7 @@ export function useListings({
       !sortByRating &&
       !sortByPrice
     ) {
+      setHasUsedInitialData(true);
       return;
     }
 

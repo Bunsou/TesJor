@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import {
   SearchBar,
@@ -52,6 +52,17 @@ export default function ExplorePageClient({
   const [price, setPrice] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 500);
+
+  // Debug logging for filter changes
+  useEffect(() => {
+    console.log("[ExplorePageClient] Filter state updated:", {
+      category,
+      province,
+      tag,
+      rating,
+      price,
+    });
+  }, [category, province, tag, rating, price]);
 
   const {
     items,

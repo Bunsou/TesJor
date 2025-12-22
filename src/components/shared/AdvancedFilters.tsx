@@ -108,14 +108,26 @@ export default function AdvancedFilters({
     return value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
+  const handleProvinceChange = (value: string) => {
+    console.log("[AdvancedFilters] Province change:", value);
+    onProvinceChange(value);
+  };
+
+  const handleTagChange = (value: string) => {
+    console.log("[AdvancedFilters] Tag change:", value);
+    onTagChange(value);
+  };
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-4 lg:px-0 mb-4">
       {/* Province Filter */}
-      <Select value={province} onValueChange={onProvinceChange}>
+      <Select value={province} onValueChange={handleProvinceChange}>
         <SelectTrigger className="w-full bg-white border-gray-200 h-11">
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-gray-500" />
-            <SelectValue placeholder="All of Cambodia" />
+            <span className="truncate text-sm">
+              {province === "all" ? "All of Cambodia" : province}
+            </span>
           </div>
         </SelectTrigger>
         <SelectContent className="max-h-70 overflow-y-auto">
@@ -128,7 +140,7 @@ export default function AdvancedFilters({
       </Select>
 
       {/* Tags Filter */}
-      <Select value={tag} onValueChange={onTagChange}>
+      <Select value={tag} onValueChange={handleTagChange}>
         <SelectTrigger className="w-full bg-white border-gray-200 h-11">
           <div className="flex items-center gap-2">
             <Tag className="w-4 h-4 text-gray-500" />
