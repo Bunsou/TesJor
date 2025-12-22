@@ -71,10 +71,7 @@ export function useMapData({
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
-  }>({
-    lat: 13.3622,
-    lng: 103.8597,
-  });
+  } | null>(null);
   const [selectedCategory] = useState("place"); // Only places
   const [radius, setRadius] = useState(10);
   const [useRadiusFilter, setUseRadiusFilter] = useState(false);
@@ -215,6 +212,7 @@ export function useMapData({
         description: item.description,
         avgRating: item.avgRating,
         category: item.category,
+        imageUrl: item.mainImage,
       });
       return {
         id: item.id,
@@ -233,6 +231,7 @@ export function useMapData({
   console.log("[useMapData] Filtered items count:", filteredItems.length);
   console.log("[useMapData] Markers count:", markers.length);
 
+  // Add user location marker only if we have actual geolocation data
   const allMarkers = userLocation
     ? [
         {

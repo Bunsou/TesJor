@@ -33,44 +33,94 @@ export interface MapRef {
   setZoom: (zoom: number) => void;
 }
 
-function createLocationPinMarker(category: string): HTMLElement {
-  const div = document.createElement("div");
-  div.style.position = "relative";
-  div.style.width = "40px";
-  div.style.height = "50px";
-  div.style.cursor = "pointer";
-  div.style.transition = "transform 0.2s";
+function createLocationPinMarker(
+  imageUrl?: string,
+  category?: string
+): HTMLElement {
+  const container = document.createElement("div");
+  container.style.cssText = `
+    position: relative;
+    width: 52px;
+    height: 66px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  `;
 
-  div.onmouseenter = () => {
-    div.style.transform = "scale(1.1)";
+  // Hover animation
+  container.onmouseenter = () => {
+    container.style.transform = "scale(1.1) translateY(-3px)";
   };
 
-  div.onmouseleave = () => {
-    div.style.transform = "scale(1)";
+  container.onmouseleave = () => {
+    container.style.transform = "scale(1) translateY(0)";
   };
 
-  // Create image element
+  // Create the pin body (circle with image)
+  const pinBody = document.createElement("div");
+  pinBody.style.cssText = `
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: oklch(0.6925 0.1321 36.39);
+    border: 2px solid oklch(0.6925 0.1321 36.39);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  `;
+
+  // Create inner container for image
+  const imageContainer = document.createElement("div");
+  imageContainer.style.cssText = `
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative;
+  `;
+
+  // Create the image element
   const img = document.createElement("img");
-  img.src = "/icons/location-pin.png";
-  img.alt = "Location Pin";
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.objectFit = "contain";
-  img.style.filter = "drop-shadow(0 2px 4px rgba(0,0,0,0.3))";
+  const imageSrc = imageUrl || "/default-image/placeholder.png";
+  img.src = imageSrc;
+  img.alt = "Location";
+  img.style.cssText = `
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  `;
 
-  // Add error handler
+  console.log("[createLocationPinMarker] Setting image src:", imageSrc);
+
+  // Add error handler for fallback
   img.onerror = () => {
-    console.error("Failed to load location pin image:", img.src);
+    console.error("[createLocationPinMarker] Failed to load image:", imageSrc);
+    img.src = "/default-image/placeholder.png";
   };
 
-  // Add load handler
-  img.onload = () => {
-    console.log("Location pin image loaded successfully");
-  };
+  imageContainer.appendChild(img);
+  pinBody.appendChild(imageContainer);
 
-  div.appendChild(img);
+  // Create the pointer (triangle at bottom)
+  const pointer = document.createElement("div");
+  pointer.style.cssText = `
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 14px solid oklch(0.6925 0.1321 36.39);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  `;
 
-  return div;
+  container.appendChild(pinBody);
+  container.appendChild(pointer);
+
+  return container;
 }
 
 function createUserLocationMarker(): HTMLElement {
@@ -264,6 +314,7 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
     const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [useAdvancedMarkers, setUseAdvancedMarkers] = useState(false);
 
     // Expose map control methods
     useImperativeHandle(ref, () => ({
@@ -289,6 +340,16 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
           await loadGoogleMaps();
 
           if (!mounted) return;
+
+          // Try to load the marker library for Advanced Markers
+          try {
+            await google.maps.importLibrary("marker");
+            setUseAdvancedMarkers(true);
+            console.log("[Map] Advanced Markers library loaded successfully");
+          } catch (err) {
+            console.warn("[Map] Advanced Markers not available:", err);
+            setUseAdvancedMarkers(false);
+          }
 
           // Create map
           mapInstanceRef.current = new google.maps.Map(mapRef.current, {
@@ -370,16 +431,19 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
         console.log(
           "[Map] Creating marker for:",
           markerData.title,
-          markerData.category
+          markerData.category,
+          "Advanced Markers available:",
+          useAdvancedMarkers
         );
 
         // Create marker content based on type
+        console.log("[Map] Marker imageUrl:", markerData.imageUrl);
         const content = markerData.isUserLocation
           ? createUserLocationMarker()
-          : createLocationPinMarker(markerData.category);
+          : createLocationPinMarker(markerData.imageUrl, markerData.category);
 
-        // Try to use Advanced Markers (new API)
-        try {
+        if (useAdvancedMarkers) {
+          // Use Advanced Markers API with real DOM elements
           const marker = new google.maps.marker.AdvancedMarkerElement({
             position: markerData.position,
             map: mapInstanceRef.current!,
@@ -403,12 +467,77 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
           });
 
           markersRef.current.push(marker);
-        } catch (error) {
-          // Fallback to regular markers if Advanced Markers not available
-          console.warn(
-            "Advanced Markers not available, using regular markers",
-            error
+        } else {
+          // Fallback to canvas-based markers when Advanced Markers not available
+          console.log(
+            "[Canvas Fallback] Creating marker with image:",
+            markerData.imageUrl
           );
+
+          // Create canvas-based icon
+          const createCanvasIcon = (imageUrl?: string): string => {
+            const canvas = document.createElement("canvas");
+            const size = 56;
+            const circleSize = 52;
+            const borderWidth = 4;
+            const innerSize = circleSize - borderWidth * 2;
+            const pointerHeight = 14;
+
+            canvas.width = size;
+            canvas.height = size + pointerHeight;
+
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return "";
+
+            // Draw white circle (border)
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(size / 2, circleSize / 2, circleSize / 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Clip to inner circle for image
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(size / 2, circleSize / 2, innerSize / 2, 0, Math.PI * 2);
+            ctx.clip();
+
+            // Draw placeholder circle (will be replaced by image if available)
+            ctx.fillStyle = "#E5E7EB";
+            ctx.fillRect(borderWidth, borderWidth, innerSize, innerSize);
+
+            // If image URL provided, load and draw it
+            if (imageUrl) {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => {
+                ctx.drawImage(
+                  img,
+                  borderWidth,
+                  borderWidth,
+                  innerSize,
+                  innerSize
+                );
+              };
+              img.onerror = () => {
+                console.error("[Canvas] Failed to load image:", imageUrl);
+              };
+              img.src = imageUrl;
+            }
+
+            ctx.restore();
+
+            // Draw white pointer triangle
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.moveTo(size / 2, circleSize);
+            ctx.lineTo(size / 2 - 7, circleSize + pointerHeight);
+            ctx.lineTo(size / 2 + 7, circleSize + pointerHeight);
+            ctx.closePath();
+            ctx.fill();
+
+            return canvas.toDataURL();
+          };
+
           const fallbackMarker = new google.maps.Marker({
             position: markerData.position,
             map: mapInstanceRef.current!,
@@ -423,9 +552,9 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
                   scale: 10,
                 }
               : {
-                  url: "/icons/location-pin.png",
-                  scaledSize: new google.maps.Size(40, 50),
-                  anchor: new google.maps.Point(20, 50),
+                  url: createCanvasIcon(markerData.imageUrl),
+                  scaledSize: new google.maps.Size(56, 70),
+                  anchor: new google.maps.Point(28, 70),
                 },
           });
 
@@ -440,7 +569,6 @@ export const GoogleMapContainer = forwardRef<MapRef, GoogleMapContainerProps>(
             }
           });
 
-          // IMPORTANT: Add fallback marker to ref too
           markersRef.current.push(fallbackMarker);
         }
       });
