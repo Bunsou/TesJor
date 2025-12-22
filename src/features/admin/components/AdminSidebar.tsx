@@ -11,6 +11,7 @@ import {
   List,
   MessageSquare,
   Users,
+  Home,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -19,6 +20,7 @@ const adminNavItems = [
   { href: "/admin/places", label: "All Places", icon: List },
   { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/explore", label: "Go to Explore", icon: Home },
 ];
 
 export function AdminSidebar() {
@@ -29,9 +31,9 @@ export function AdminSidebar() {
     <aside className="hidden md:flex w-64 h-full bg-white dark:bg-[#2A201D] border-r border-gray-200 dark:border-gray-800 flex-col justify-between shrink-0 transition-colors duration-200 z-20">
       <div className="p-6">
         <div className="flex flex-col mb-10">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-primary">
             TesJor{" "}
-            <span className="text-xs font-normal text-[#E07A5F] align-top">
+            <span className="text-xs font-normal text-primary align-top">
               Admin
             </span>
           </h1>

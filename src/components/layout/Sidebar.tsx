@@ -75,11 +75,9 @@ export function Sidebar() {
             </Avatar>
           </div>
 
-          <div>
-            <p className="text-sm text-foreground-muted">
-              {(session?.user?.email?.length || 0) > 15
-                ? `${session?.user?.email?.slice(0, 15)}...`
-                : session?.user?.email}
+          <div className="flex flex-col">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              {session?.user?.name || "Admin"}
             </p>
           </div>
         </div>
