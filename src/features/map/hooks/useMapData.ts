@@ -62,6 +62,11 @@ export function useMapData({
   initialItems,
   initialError,
 }: UseMapDataParams = {}) {
+  console.log(
+    "[useMapData] Initialized with initialItems:",
+    initialItems?.length || 0
+  );
+
   // State
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -77,9 +82,14 @@ export function useMapData({
   const [selectedProvince, setSelectedProvince] = useState<string>("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
-  const [items, setItems] = useState<Listing[]>(initialItems || []);
+  // Filter initialItems to only places
+  const [items, setItems] = useState<Listing[]>(
+    (initialItems || []).filter((item) => item.category === "place")
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [hasInitialLoad, setHasInitialLoad] = useState(!!initialItems);
+  const [hasInitialLoad, setHasInitialLoad] = useState(
+    !!initialItems && initialItems.length > 0
+  );
 
   // Get user location
   useEffect(() => {
@@ -103,6 +113,13 @@ export function useMapData({
     let isMounted = true;
 
     async function loadData() {
+      console.log(
+        "[loadData] hasInitialLoad:",
+        hasInitialLoad,
+        "useRadiusFilter:",
+        useRadiusFilter
+      );
+
       // Skip initial load if we have initialItems and no filters applied
       if (
         hasInitialLoad &&
@@ -110,26 +127,29 @@ export function useMapData({
         selectedCategory === "place" &&
         selectedProvince === "all"
       ) {
+        console.log("[loadData] Skipping fetch, using initialItems");
         setHasInitialLoad(false); // Only skip once
         return;
       }
 
+      console.log("[loadData] Fetching data...");
       try {
         setIsLoading(true);
 
         let data;
         if (useRadiusFilter && userLocation) {
-          console.log("fetchNearbyItems 11");
+          console.log("[loadData] Using fetchNearbyItems");
           data = await fetchNearbyItems({
             lat: userLocation.lat,
             lng: userLocation.lng,
             radius,
           });
         } else {
-          console.log("fetchAllItems 11");
+          console.log("[loadData] Using fetchAllItems");
           data = await fetchAllItems();
         }
 
+        console.log("[loadData] Fetched items:", data.items?.length || 0);
         if (isMounted) {
           setItems(data.items || []);
         }
