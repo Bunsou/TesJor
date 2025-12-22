@@ -212,6 +212,7 @@ export function useMapData({
     .filter((item) => item.lat && item.lng)
     .map((item) => ({
       id: item.id,
+      slug: item.slug,
       position: { lat: Number(item.lat), lng: Number(item.lng) },
       title: item.title,
       category: item.category,

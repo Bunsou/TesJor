@@ -14,6 +14,7 @@ interface GoogleMapContainerProps {
   zoom?: number;
   markers?: Array<{
     id: string;
+    slug?: string;
     position: { lat: number; lng: number };
     title: string;
     category: string;
@@ -162,7 +163,7 @@ function createInfoWindowContent(
           : ""
       }
       <div style="margin-top: 12px;">
-        <a href="/explore/${markerData.id}" 
+        <a href="/explore/${markerData.slug}" 
            style="display: inline-block; padding: 8px 16px; background: #3B82F6; color: white; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500;">
           View Details →
         </a>
