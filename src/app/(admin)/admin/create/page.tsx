@@ -239,7 +239,8 @@ export default function CreateCardPage() {
     }
 
     const data = await response.json();
-    return data.url;
+    // Response is wrapped in { success: true, data: { url, publicId } }
+    return data.data.url;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

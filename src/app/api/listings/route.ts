@@ -86,14 +86,24 @@ export const POST = asyncHandler(async (request: NextRequest) => {
   // Create listing
   const newListing = await createListing(listingData);
 
-  // Insert photos if provided
+  // Insert photos if provided - filter out any empty/null URLs
   if (body.photos && body.photos.length > 0) {
-    await db.insert(listingPhotos).values(
-      body.photos.map((url: string) => ({
-        listingId: newListing.id,
-        imageUrl: url,
-      }))
+    console.log("Photos received:", body.photos);
+
+    const validPhotos = body.photos.filter(
+      (url: string) => url && typeof url === "string" && url.trim().length > 0
     );
+
+    console.log("Valid photos after filtering:", validPhotos);
+
+    if (validPhotos.length > 0) {
+      await db.insert(listingPhotos).values(
+        validPhotos.map((url: string) => ({
+          listingId: newListing.id,
+          imageUrl: url,
+        }))
+      );
+    }
   }
 
   return sendSuccessResponse({
