@@ -15,6 +15,7 @@ import {
   MapPreview,
   RelatedListings,
 } from "@/features/listings";
+import { OperatingHoursProps } from "../listings/components/OperatingHours";
 
 interface Review {
   id: string;
@@ -120,7 +121,11 @@ export default function ExploreDetailClient({
               <p>{item.description}</p>
             </div>
 
-            <OperatingHours />
+            <OperatingHours
+              operatingHours={
+                item.operatingHours as OperatingHoursProps["operatingHours"]
+              }
+            />
 
             <ReviewsSection
               item={item}

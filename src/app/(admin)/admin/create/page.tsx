@@ -58,12 +58,12 @@ export default function CreateCardPage() {
     priceOptions: [{ label: "Entry Fee", price: "5.00" }] as PriceOption[],
     timeSlots: [
       {
-        days: ["M", "T", "W", "T", "F"],
+        days: ["M", "T", "W", "Th", "F"],
         open: "09:00",
         close: "17:00",
         closed: false,
       },
-      { days: ["S", "S"], open: "", close: "", closed: true },
+      { days: ["Sa", "Su"], open: "10:00", close: "16:00", closed: false },
     ] as TimeSlot[],
     phone: "",
     website: "",
