@@ -15,9 +15,12 @@ export function Breadcrumb({ category, title }: BreadcrumbProps) {
       <span className="material-symbols-outlined text-xs">
         <ChevronRight size={16} />
       </span>
-      <span className="hover:text-[#E07A5F] cursor-pointer capitalize">
+      <Link
+        href={`/explore`}
+        className="hover:text-[#E07A5F] cursor-pointer capitalize"
+      >
         {category}
-      </span>
+      </Link>
       <span className="material-symbols-outlined text-xs">
         <ChevronRight size={16} />
       </span>
