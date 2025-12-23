@@ -72,13 +72,15 @@ export const POST = asyncHandler(async (request: NextRequest) => {
     lng: body.lng ? parseFloat(body.lng) : 0,
     mainImage: body.mainImage || "",
     priceLevel: body.priceLevel || "$",
-    priceOptions: body.priceOptions || [],
+    priceDetails: body.priceOptions || [],
     operatingHours: body.operatingHours || [],
+    contactInfo: {
+      phone: body.phone || "",
+      website: body.website || "",
+      facebook: body.facebook || "",
+    },
     xpPoints: body.xpPoints ? parseInt(body.xpPoints) : 10,
     province: body.province,
-    phone: body.phone || "",
-    website: body.website || "",
-    facebook: body.facebook || "",
   };
 
   // Create listing

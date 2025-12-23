@@ -109,6 +109,51 @@ export default function CreateCardPage() {
     setFormData({ ...formData, priceOptions: updated });
   };
 
+  // Operating Hours handlers
+  const addTimeSlot = () => {
+    setFormData({
+      ...formData,
+      timeSlots: [
+        ...formData.timeSlots,
+        { days: [], open: "09:00", close: "17:00", closed: false },
+      ],
+    });
+  };
+
+  const removeTimeSlot = (index: number) => {
+    setFormData({
+      ...formData,
+      timeSlots: formData.timeSlots.filter((_, i) => i !== index),
+    });
+  };
+
+  const toggleDay = (slotIndex: number, day: string) => {
+    const updated = [...formData.timeSlots];
+    const currentDays = updated[slotIndex].days;
+
+    if (currentDays.includes(day)) {
+      updated[slotIndex].days = currentDays.filter((d) => d !== day);
+    } else {
+      updated[slotIndex].days = [...currentDays, day];
+    }
+
+    setFormData({ ...formData, timeSlots: updated });
+  };
+
+  const updateTimeSlot = (
+    index: number,
+    field: keyof TimeSlot,
+    value: string | boolean
+  ) => {
+    const updated = [...formData.timeSlots];
+    if (field === "closed") {
+      updated[index][field] = value as boolean;
+    } else if (field === "open" || field === "close") {
+      updated[index][field] = value as string;
+    }
+    setFormData({ ...formData, timeSlots: updated });
+  };
+
   const handleLocationSelect = (data: {
     lat: number;
     lng: number;
@@ -731,11 +776,16 @@ export default function CreateCardPage() {
                   >
                     <div className="flex justify-between items-center mb-3">
                       <div className="flex gap-1.5 flex-wrap">
-                        {slot.days.map((day) => (
+                        {["M", "T", "W", "Th", "F", "Sa", "Su"].map((day) => (
                           <button
                             key={day}
                             type="button"
-                            className="w-7 h-7 rounded-full bg-[#E07A5F] text-white text-xs font-medium border border-[#E07A5F] transition-all"
+                            onClick={() => toggleDay(index, day)}
+                            className={`w-7 h-7 rounded-full text-xs font-medium border transition-all ${
+                              slot.days.includes(day)
+                                ? "bg-[#E07A5F] text-white border-[#E07A5F]"
+                                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:border-[#E07A5F]"
+                            }`}
                           >
                             {day}
                           </button>
@@ -743,53 +793,63 @@ export default function CreateCardPage() {
                       </div>
                       <button
                         type="button"
+                        onClick={() => removeTimeSlot(index)}
                         className="text-xs text-red-500 font-medium hover:text-red-700 flex items-center gap-1"
                       >
                         <X className="w-3 h-3" /> Remove
                       </button>
                     </div>
-                    {slot.closed ? (
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={slot.closed}
-                            className="rounded border-gray-300 text-[#E07A5F] focus:ring-[#E07A5F] h-4 w-4"
-                          />
-                          <label className="text-sm font-medium text-gray-900 dark:text-white">
-                            Closed
-                          </label>
-                        </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={slot.closed}
+                          onChange={(e) =>
+                            updateTimeSlot(index, "closed", e.target.checked)
+                          }
+                          className="rounded border-gray-300 text-[#E07A5F] focus:ring-[#E07A5F] h-4 w-4"
+                        />
+                        <label className="text-sm font-medium text-gray-900 dark:text-white">
+                          Closed
+                        </label>
                       </div>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-4 items-center">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1">
-                            Open
-                          </label>
-                          <input
-                            type="time"
-                            value={slot.open}
-                            className="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 dark:bg-[#201512] dark:text-white"
-                          />
+                      {!slot.closed && (
+                        <div className="grid grid-cols-2 gap-4 items-center">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">
+                              Open
+                            </label>
+                            <input
+                              type="time"
+                              value={slot.open}
+                              onChange={(e) =>
+                                updateTimeSlot(index, "open", e.target.value)
+                              }
+                              className="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 px-2 dark:bg-[#201512] dark:text-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">
+                              Close
+                            </label>
+                            <input
+                              type="time"
+                              value={slot.close}
+                              onChange={(e) =>
+                                updateTimeSlot(index, "close", e.target.value)
+                              }
+                              className="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 px-2 dark:bg-[#201512] dark:text-white"
+                            />
+                          </div>
                         </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1">
-                            Close
-                          </label>
-                          <input
-                            type="time"
-                            value={slot.close}
-                            className="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 dark:bg-[#201512] dark:text-white"
-                          />
-                        </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 ))}
                 <button
                   type="button"
-                  className="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl flex items-center justify-center text-gray-600 hover:text-[#E07A5F] hover:border-[#E07A5F] hover:bg-[#E07A5F]/5 transition-all"
+                  onClick={addTimeSlot}
+                  className="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-[#E07A5F] hover:border-[#E07A5F] hover:bg-[#E07A5F]/5 transition-all"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Day Group
