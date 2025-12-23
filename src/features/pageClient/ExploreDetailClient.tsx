@@ -27,8 +27,16 @@ interface Review {
   createdAt: Date;
 }
 
+interface ListingPhoto {
+  id: string;
+  listingId: string;
+  imageUrl: string;
+  caption: string | null;
+  createdAt: Date;
+}
+
 interface ItemDetailResponse {
-  item: Listing & { reviews?: Review[] };
+  item: Listing & { reviews?: Review[]; photos?: ListingPhoto[] };
   isBookmarked: boolean;
   isVisited: boolean;
 }
@@ -100,7 +108,21 @@ export default function ExploreDetailClient({
       ? getDefaultImage(item.category)
       : item.mainImage;
 
+  // Build images array: main image first, then gallery photos
   const images = [imageSrc];
+
+  // Add gallery photos if they exist
+  const itemWithPhotos = item as Listing & { photos?: ListingPhoto[] };
+  if (
+    itemWithPhotos.photos &&
+    Array.isArray(itemWithPhotos.photos) &&
+    itemWithPhotos.photos.length > 0
+  ) {
+    const galleryImages = itemWithPhotos.photos
+      .filter((photo) => photo.imageUrl && photo.imageUrl.trim() !== "")
+      .map((photo) => photo.imageUrl);
+    images.push(...galleryImages);
+  }
 
   return (
     <div className="flex-1 h-full overflow-y-auto bg-[#FDFCF6] dark:bg-[#201512]">

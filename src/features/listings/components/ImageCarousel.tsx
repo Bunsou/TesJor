@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight, CircleSmall } from "lucide-react";
 
 interface ImageCarouselProps {
   images: string[];
@@ -11,53 +12,124 @@ interface ImageCarouselProps {
 
 export function ImageCarousel({ images, alt, onError }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
+
+  // Auto-slide every 5 seconds if there are multiple images
+  useEffect(() => {
+    if (isPaused || images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((index) => {
+        if (index === images.length - 1) return 0;
+        return index + 1;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, images.length]);
 
   if (images.length === 0) return null;
 
+  const showNextImage = () => {
+    setCurrentIndex((index) => {
+      if (index === images.length - 1) return 0;
+      return index + 1;
+    });
+  };
+
+  const showPrevImage = () => {
+    setCurrentIndex((index) => {
+      if (index === 0) return images.length - 1;
+      return index - 1;
+    });
+  };
+
+  const handleImageError = (index: number) => {
+    setImageErrors((prev) => ({ ...prev, [index]: true }));
+    if (index === 0 && onError) {
+      onError();
+    }
+  };
+
   return (
-    <div className="w-full relative group rounded-2xl overflow-hidden shadow-sm aspect-video md:aspect-21/9 bg-gray-200 dark:bg-gray-800">
-      <div className="absolute inset-0 transition-transform duration-500 ease-out">
-        <Image
-          src={images[currentIndex]}
-          alt={alt}
-          fill
-          className="object-cover"
-          onError={onError}
-        />
+    <div
+      className="w-full relative group rounded-2xl overflow-hidden shadow-sm aspect-video md:aspect-21/9 bg-gray-200 dark:bg-gray-800"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* Images Container with slide animation */}
+      <div className="w-full h-full flex overflow-hidden relative">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            aria-hidden={currentIndex !== index}
+            className="min-w-full h-full shrink-0 grow-0 relative transition-transform duration-300 ease-in-out"
+            style={{ translate: `${-100 * currentIndex}%` }}
+          >
+            <Image
+              src={image}
+              alt={`${alt} - Image ${index + 1}`}
+              fill
+              className="object-cover"
+              onError={() => handleImageError(index)}
+              priority={index === 0}
+            />
+          </div>
+        ))}
       </div>
+
+      {/* Image counter badge */}
+      {images.length > 1 && (
+        <div className="absolute top-4 right-4 z-10">
+          <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-sm font-medium">
+            {currentIndex + 1} / {images.length}
+          </span>
+        </div>
+      )}
 
       {/* Carousel Controls */}
       {images.length > 1 && (
         <>
+          {/* Previous Button */}
           <button
-            onClick={() =>
-              setCurrentIndex((prev) =>
-                prev === 0 ? images.length - 1 : prev - 1
-              )
-            }
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center hover:bg-white dark:hover:bg-black/70 transition-colors shadow-lg"
+            onClick={showPrevImage}
+            className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm hover:bg-white dark:hover:bg-black/80 transition-all shadow-lg z-10 opacity-0 group-hover:opacity-100"
+            aria-label="Previous image"
           >
-            <span className="material-symbols-outlined">chevron_left</span>
+            <ChevronLeft className="w-6 h-6 text-gray-800 dark:text-white" />
           </button>
+
+          {/* Next Button */}
           <button
-            onClick={() =>
-              setCurrentIndex((prev) =>
-                prev === images.length - 1 ? 0 : prev + 1
-              )
-            }
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center hover:bg-white dark:hover:bg-black/70 transition-colors shadow-lg"
+            onClick={showNextImage}
+            className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm hover:bg-white dark:hover:bg-black/80 transition-all shadow-lg z-10 opacity-0 group-hover:opacity-100"
+            aria-label="Next image"
           >
-            <span className="material-symbols-outlined">chevron_right</span>
+            <ChevronRight className="w-6 h-6 text-gray-800 dark:text-white" />
           </button>
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {images.map((_, idx) => (
+
+          {/* Dot Indicators */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-0 z-10">
+            {images.map((_, index) => (
               <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`w-2 h-2 rounded-full shadow-sm transition-colors ${
-                  idx === currentIndex ? "bg-white" : "bg-white/50"
-                }`}
-              />
+                key={index}
+                className="block cursor-pointer w-4 h-4 transition-transform duration-100 hover:scale-125 focus-visible:scale-125 focus-visible:outline-none"
+                aria-label={`View image ${index + 1}`}
+                onClick={() => setCurrentIndex(index)}
+              >
+                {index === currentIndex ? (
+                  <CircleSmall
+                    className="w-full h-full text-white/80 fill-white"
+                    aria-hidden
+                  />
+                ) : (
+                  <CircleSmall
+                    className="w-full h-full text-white/50 hover:fill-white/80"
+                    aria-hidden
+                  />
+                )}
+              </button>
             ))}
           </div>
         </>
