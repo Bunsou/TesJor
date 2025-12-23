@@ -1,99 +1,125 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronRight, Search, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface User {
   id: string;
-  userId: string;
   name: string;
   email: string;
   image: string | null;
-  level: string;
-  registeredAt: string;
-  lastActive: string;
+  role: string;
+  xpPoints: number;
+  createdAt: string;
+  lastActive: string | null;
 }
 
 export default function UsersPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+
+  // Get state from URL
+  const searchQuery = searchParams.get("search") || "";
+  const dateFilter = searchParams.get("date") || "";
+  const roleFilter = searchParams.get("role") || "";
+  const currentPage = Number(searchParams.get("page")) || 1;
   const itemsPerPage = 10;
 
-  // Mock data for demonstration
+  // Debounce search to avoid excessive API calls
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
+  // Fetch users from API
   useEffect(() => {
     async function fetchUsers() {
       setIsLoading(true);
+      try {
+        const params = new URLSearchParams();
+        params.set("page", currentPage.toString());
+        params.set("limit", itemsPerPage.toString());
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        if (dateFilter) params.set("date", dateFilter);
+        if (roleFilter) params.set("role", roleFilter);
 
-      // Simulate API call - replace with actual endpoint
-      setTimeout(() => {
-        const mockUsers: User[] = [
-          {
-            id: "1",
-            userId: "#TJ-8821",
-            name: "Sophea Vann",
-            email: "sophea.v@example.com",
-            image: null,
-            level: "Level 4 Explorer",
-            registeredAt: "2023-10-24",
-            lastActive: "2 hours ago",
-          },
-          {
-            id: "2",
-            userId: "#TJ-8822",
-            name: "David Miller",
-            email: "david.m@gmail.com",
-            image: null,
-            level: "Level 2 Tourist",
-            registeredAt: "2023-10-23",
-            lastActive: "1 day ago",
-          },
-          {
-            id: "3",
-            userId: "#TJ-8823",
-            name: "Chanda Meas",
-            email: "chanda.m@cam-tours.com",
-            image:
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuCRG0MoF_Oz92xOFO0cTeglMsfZT_MUrR6TvnRqeJ8Vp2ti3CXekWCqVPVOePgloPrdcCbXE5e4-nPu5Tmc-2TjQoJQnsHhuC2QLmlQkGsXOJ8SwoFLssEFD-Jwv-BwYoHQ7Ng2tYWPr88ZOKAjjzUGO4brcx1ivDNPuHxaIO3vyPbRWd0hxOXWHMu00KfKMssUjoUf_TnH7F2azfolHTJgIuc_NjVDp3Y1mJy6BUYNF8JAQqGNQa0-3DbRLYED_yeEgziW9cYaFh4",
-            level: "Guide",
-            registeredAt: "2023-10-20",
-            lastActive: "5 mins ago",
-          },
-          {
-            id: "4",
-            userId: "#TJ-8824",
-            name: "Sarah Jenkins",
-            email: "sarah.j@hotmail.com",
-            image: null,
-            level: "Level 1 Novice",
-            registeredAt: "2023-10-15",
-            lastActive: "Oct 28, 2023",
-          },
-        ];
-        setUsers(mockUsers);
-        setTotalItems(128);
+        const response = await fetch(`/api/admin/users?${params}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setUsers(data.data.items);
+          setTotalItems(data.data.total);
+        }
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      } finally {
         setIsLoading(false);
-      }, 500);
+      }
     }
 
     fetchUsers();
-  }, [currentPage, searchQuery, dateFilter, statusFilter]);
+  }, [currentPage, debouncedSearch, dateFilter, roleFilter, itemsPerPage]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      // Replace with actual API call
-      setUsers(users.filter((u) => u.id !== id));
-      alert("User deleted successfully");
-    } catch {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        // Update state
+        setUsers(users.filter((u) => u.id !== id));
+        const newTotal = totalItems - 1;
+        setTotalItems(newTotal);
+
+        // If current page becomes empty, go to previous page
+        const totalPages = Math.ceil(newTotal / itemsPerPage);
+        if (currentPage > totalPages && currentPage > 1) {
+          updateURLParams({ page: (currentPage - 1).toString() });
+        }
+      } else {
+        alert("Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
       alert("Failed to delete user");
     }
+  };
+
+  // Update URL parameters
+  const updateURLParams = (updates: Record<string, string>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Handle filter changes
+  const handleSearchChange = (value: string) => {
+    updateURLParams({ search: value, page: "1" });
+  };
+
+  const handleDateFilterChange = (value: string) => {
+    updateURLParams({ date: value, page: "1" });
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    updateURLParams({ role: value, page: "1" });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateURLParams({ page: page.toString() });
   };
 
   const getInitials = (name: string) => {
@@ -136,7 +162,7 @@ export default function UsersPage() {
             User Management
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            View and manage all registered tourists and guides on TesJor.
+            View and manage all {totalItems} registered users on TesJor.
           </p>
         </div>
 
@@ -147,7 +173,7 @@ export default function UsersPage() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 focus:bg-white dark:focus:bg-black focus:border-[#E07A5F] focus:ring-1 focus:ring-[#E07A5F] outline-none transition-all dark:text-white text-sm"
               placeholder="Search by name, email or ID..."
             />
@@ -155,7 +181,7 @@ export default function UsersPage() {
           <div className="flex gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
             <select
               value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
+              onChange={(e) => handleDateFilterChange(e.target.value)}
               className="pl-3 pr-8 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 focus:border-[#E07A5F] focus:ring-[#E07A5F] text-sm text-gray-900 dark:text-white appearance-none cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               <option value="">Any Date</option>
@@ -164,13 +190,13 @@ export default function UsersPage() {
               <option value="365">This Year</option>
             </select>
             <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              value={roleFilter}
+              onChange={(e) => handleRoleFilterChange(e.target.value)}
               className="pl-3 pr-8 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 focus:border-[#E07A5F] focus:ring-[#E07A5F] text-sm text-gray-900 dark:text-white appearance-none cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
+              <option value="">All Roles</option>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
         </div>
@@ -259,7 +285,7 @@ export default function UsersPage() {
                       className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600 dark:text-gray-400">
-                        {user.userId}
+                        {user.id.slice(0, 8)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
@@ -286,7 +312,7 @@ export default function UsersPage() {
                               {user.name}
                             </span>
                             <span className="text-xs text-gray-600 dark:text-gray-400">
-                              {user.level}
+                              {user.role} • {user.xpPoints} XP
                             </span>
                           </div>
                         </div>
@@ -295,17 +321,23 @@ export default function UsersPage() {
                         {user.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                        {new Date(user.registeredAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          }
-                        )}
+                        {new Date(user.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                        {user.lastActive}
+                        {user.lastActive
+                          ? new Date(user.lastActive).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              }
+                            )
+                          : "Never"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end gap-2">
@@ -345,14 +377,117 @@ export default function UsersPage() {
             <div className="flex gap-2">
               <button
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
+                onClick={() => handlePageChange(currentPage - 1)}
                 className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>
+
+              {/* Smart page number display */}
+              {(() => {
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+                const pages = [];
+
+                if (totalPages <= 7) {
+                  // Show all pages if 7 or fewer
+                  for (let i = 1; i <= totalPages; i++) {
+                    pages.push(
+                      <button
+                        key={i}
+                        onClick={() => handlePageChange(i)}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === i
+                            ? "bg-[#E07A5F] text-white"
+                            : "border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        }`}
+                      >
+                        {i}
+                      </button>
+                    );
+                  }
+                } else {
+                  // Always show first page
+                  pages.push(
+                    <button
+                      key={1}
+                      onClick={() => handlePageChange(1)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === 1
+                          ? "bg-[#E07A5F] text-white"
+                          : "border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      }`}
+                    >
+                      1
+                    </button>
+                  );
+
+                  // Show ellipsis if needed
+                  if (currentPage > 3) {
+                    pages.push(
+                      <span
+                        key="ellipsis-start"
+                        className="px-2 py-1.5 text-gray-400"
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+
+                  // Show pages around current page
+                  const start = Math.max(2, currentPage - 1);
+                  const end = Math.min(totalPages - 1, currentPage + 1);
+
+                  for (let i = start; i <= end; i++) {
+                    pages.push(
+                      <button
+                        key={i}
+                        onClick={() => handlePageChange(i)}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === i
+                            ? "bg-[#E07A5F] text-white"
+                            : "border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        }`}
+                      >
+                        {i}
+                      </button>
+                    );
+                  }
+
+                  // Show ellipsis if needed
+                  if (currentPage < totalPages - 2) {
+                    pages.push(
+                      <span
+                        key="ellipsis-end"
+                        className="px-2 py-1.5 text-gray-400"
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+
+                  // Always show last page
+                  pages.push(
+                    <button
+                      key={totalPages}
+                      onClick={() => handlePageChange(totalPages)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === totalPages
+                          ? "bg-[#E07A5F] text-white"
+                          : "border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      }`}
+                    >
+                      {totalPages}
+                    </button>
+                  );
+                }
+
+                return pages;
+              })()}
+
               <button
-                onClick={() => setCurrentPage((p) => p + 1)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                disabled={currentPage >= Math.ceil(totalItems / itemsPerPage)}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>
