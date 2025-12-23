@@ -100,7 +100,7 @@ export default function AdminDashboardPage() {
               icon={MapPin}
               iconColor="text-[#E07A5F]"
               iconBgColor="bg-[#E07A5F]/10"
-              hoverBorderColor="hover:border-[#E07A5F]/50"
+              hoverBorderColor="hover:border-[#E07A5F]"
             />
             <StatCard
               title="Total Users"
@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
               icon={Users}
               iconColor="text-[#E1B860]"
               iconBgColor="bg-[#E1B860]/10"
-              hoverBorderColor="hover:border-[#E1B860]/50"
+              hoverBorderColor="hover:border-[#E1B860]"
             />
             <StatCard
               title="Total Bookmarks"
@@ -116,7 +116,7 @@ export default function AdminDashboardPage() {
               icon={Bookmark}
               iconColor="text-[#609BE1]"
               iconBgColor="bg-[#609BE1]/10"
-              hoverBorderColor="hover:border-[#609BE1]/50"
+              hoverBorderColor="hover:border-[#609BE1]"
             />
             <StatCard
               title="Total Visited"
@@ -124,7 +124,7 @@ export default function AdminDashboardPage() {
               icon={Eye}
               iconColor="text-purple-500"
               iconBgColor="bg-purple-100 dark:bg-purple-500/10"
-              hoverBorderColor="hover:border-purple-500/50"
+              hoverBorderColor="hover:border-purple-500"
             />
           </div>
         )}
