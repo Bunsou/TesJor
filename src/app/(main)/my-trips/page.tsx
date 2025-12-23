@@ -1,8 +1,8 @@
 import MyTripsClient from "../../../features/pageClient/MyTripsClient";
+import { SignInPrompt } from "@/components/shared/SignInPrompt";
 import { auth } from "@/server/services/auth";
 import { getUserBookmarks, getUserVisited } from "@/server/services/user";
 import type { ListingWithProgress } from "@/shared/types";
-import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 interface InitialTripsData {
@@ -15,13 +15,18 @@ interface InitialTripsData {
 }
 
 export default async function MyTripsPage() {
-  // Check authentication - redirect if not logged in
+  // Check authentication - show sign-in prompt if not logged in
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session) {
-    redirect("/sign-in");
+    return (
+      <SignInPrompt
+        title="My Trips"
+        description="Sign in to view your saved places and visited destinations."
+      />
+    );
   }
 
   const userId = session.user.id;

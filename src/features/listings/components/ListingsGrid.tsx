@@ -7,7 +7,9 @@ import type { ListingWithDistance } from "@/shared/types";
 import { TrendingSlider } from "./TrendingSlider";
 import { PlaceCard } from "./PlaceCard";
 import { EmptyState } from "./EmptyState";
+import { SignInModal } from "@/components/shared/SignInModal";
 import { ListingWithBookmarkAndVisit } from "@/shared/types/content.types";
+import { useSession } from "@/hooks/useSession";
 
 interface ListingsGridProps {
   trendingItems: ListingWithDistance[];
@@ -28,8 +30,12 @@ export function ListingsGrid({
   isLoadingMore,
   onLoadMore,
 }: ListingsGridProps) {
+  const { session } = useSession();
   const totalCount = items.length;
   const hasNoResults = items.length === 0;
+
+  const [showSignInModal, setShowSignInModal] = useState(false);
+  const [modalAction, setModalAction] = useState("");
 
   // State for user progress (bookmarks and visits)
   const [userProgress, setUserProgress] = useState<
@@ -79,6 +85,13 @@ export function ListingsGrid({
 
   // Handle bookmark toggle
   const handleBookmark = async (itemId: string) => {
+    // Check auth first
+    if (!session) {
+      setModalAction("bookmark this place");
+      setShowSignInModal(true);
+      return;
+    }
+
     const currentState = userProgress[itemId]?.isBookmarked || false;
     const action = currentState ? "remove" : "add";
 
@@ -129,6 +142,13 @@ export function ListingsGrid({
 
   // Handle visited toggle
   const handleVisit = async (itemId: string) => {
+    // Check auth first
+    if (!session) {
+      setModalAction("mark this place as visited");
+      setShowSignInModal(true);
+      return;
+    }
+
     const currentState = userProgress[itemId]?.isVisited || false;
     const action = currentState ? "remove" : "add";
 
@@ -228,7 +248,7 @@ export function ListingsGrid({
           {hasMore && (
             <div
               ref={ref}
-              className="flex justify-center items-center mt-12 mb-8 min-h-[80px]"
+              className="flex justify-center items-center mt-12 mb-8 min-h-20"
             >
               <div className="flex flex-col items-center gap-3">
                 <svg
@@ -255,6 +275,12 @@ export function ListingsGrid({
           )}
         </>
       )}
+
+      <SignInModal
+        isOpen={showSignInModal}
+        onClose={() => setShowSignInModal(false)}
+        action={modalAction}
+      />
     </section>
   );
 }

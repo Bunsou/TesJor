@@ -8,14 +8,10 @@ export default async function Home() {
     headers: await headers(),
   });
 
-  // Redirect based on authentication status
-  if (session) {
-    if (session.user.role === "admin") {
-      redirect("/admin/");
-    } else {
-      redirect("/explore");
-    }
+  // Redirect admin to admin dashboard, everyone else to explore
+  if (session && session.user.role === "admin") {
+    redirect("/admin/");
   } else {
-    redirect("/sign-in");
+    redirect("/explore");
   }
 }

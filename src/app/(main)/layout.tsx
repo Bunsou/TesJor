@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "@/hooks/useSession";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -14,12 +14,18 @@ export default function MainLayout({
 }) {
   const { session, isLoading } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Public pages that don't require authentication
+  const publicPages = ["/explore", "/map"];
+  const isPublicPage = publicPages.some((route) => pathname.startsWith(route));
 
   useEffect(() => {
-    if (!isLoading && !session) {
+    // Only redirect to sign-in if on a protected page without session
+    if (!isLoading && !session && !isPublicPage) {
       router.push("/sign-in");
     }
-  }, [session, isLoading, router]);
+  }, [session, isLoading, router, isPublicPage]);
 
   if (isLoading) {
     return (
@@ -32,7 +38,8 @@ export default function MainLayout({
     );
   }
 
-  if (!session) {
+  // Don't render content for protected pages without session
+  if (!session && !isPublicPage) {
     return null;
   }
 

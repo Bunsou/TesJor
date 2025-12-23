@@ -2,6 +2,9 @@
 
 import { Listing } from "@/server/db/schema";
 import { BookCheck, Heart, MapPinned, Zap, Loader2 } from "lucide-react";
+import { useSession } from "@/hooks/useSession";
+import { SignInModal } from "@/components/shared/SignInModal";
+import { useState } from "react";
 
 interface ActionHubProps {
   item: Listing;
@@ -24,6 +27,19 @@ export function ActionHub({
   onToggleVisited,
   onToggleBookmark,
 }: ActionHubProps) {
+  const { session } = useSession();
+  const [showSignInModal, setShowSignInModal] = useState(false);
+  const [modalAction, setModalAction] = useState("");
+
+  const handleAuthRequired = (action: () => void, actionName: string) => {
+    if (!session) {
+      setModalAction(actionName);
+      setShowSignInModal(true);
+      return;
+    }
+    action();
+  };
+
   return (
     <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#2A201D] p-5 flex flex-col gap-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -48,7 +64,12 @@ export function ActionHub({
           Get Directions
         </button>
         <button
-          onClick={() => onToggleVisited(isVisited ? "remove" : "add")}
+          onClick={() =>
+            handleAuthRequired(
+              () => onToggleVisited(isVisited ? "remove" : "add"),
+              "mark this place as visited"
+            )
+          }
           disabled={isVisitedLoading}
           className={`w-full px-4 py-3 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
             isVisited
@@ -70,7 +91,12 @@ export function ActionHub({
           {isVisited ? "Visited" : "Mark Visited"}
         </button>
         <button
-          onClick={() => onToggleBookmark(isBookmarked ? "remove" : "add")}
+          onClick={() =>
+            handleAuthRequired(
+              () => onToggleBookmark(isBookmarked ? "remove" : "add"),
+              "bookmark this place"
+            )
+          }
           disabled={isBookmarkLoading}
           className={`w-full px-4 py-3 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
             isBookmarked
@@ -92,6 +118,16 @@ export function ActionHub({
           {isBookmarked ? "Saved" : "Bookmark"}
         </button>
       </div>
+      {!session && (
+        <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+          Sign in to bookmark or mark as visited
+        </p>
+      )}
+      <SignInModal
+        isOpen={showSignInModal}
+        onClose={() => setShowSignInModal(false)}
+        action={modalAction}
+      />
     </div>
   );
 }

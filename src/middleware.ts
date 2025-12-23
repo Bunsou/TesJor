@@ -17,19 +17,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Public pages that don't require authentication
+  const publicPages = ["/explore", "/map"];
+  if (publicPages.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
   // Get session
   const session = await auth.api.getSession({
     headers: request.headers,
   });
 
-  // Protect authenticated routes
-  if (
-    pathname.startsWith("/(main)") ||
-    pathname.includes("/explore") ||
-    pathname.includes("/map") ||
-    pathname.includes("/saved") ||
-    pathname.includes("/profile")
-  ) {
+  // Protect authenticated routes (profile, my-trips, etc.)
+  const protectedRoutes = ["/profile", "/my-trips"];
+  if (protectedRoutes.some((route) => pathname.startsWith(route))) {
     if (!session) {
       log.warn("Unauthorized access attempt", { pathname });
       return NextResponse.redirect(new URL("/sign-in", request.url));
