@@ -248,9 +248,44 @@ export default function CreateCardPage() {
     setIsSubmitting(true);
 
     try {
-      // Validate required fields
-      if (!formData.titleEn || !formData.category || !formData.province) {
-        toast.error("Please fill in all required fields");
+      // ========== REQUIRED FIELDS VALIDATION ==========
+      const missingFields = [];
+
+      if (!formData.titleEn || formData.titleEn.trim() === "") {
+        missingFields.push("Title (English)");
+      }
+
+      if (!formData.description || formData.description.trim() === "") {
+        missingFields.push("Description");
+      }
+
+      if (!formData.category) {
+        missingFields.push("Category");
+      }
+
+      if (!formData.province) {
+        missingFields.push("Province");
+      }
+
+      if (!formData.xpPoints || formData.xpPoints.trim() === "") {
+        missingFields.push("XP Points");
+      }
+
+      if (missingFields.length > 0) {
+        toast.error(
+          `📝 Required fields missing: ${missingFields.join(
+            ", "
+          )}\n\n✅ Optional: Province 'All of Cambodia', Location, Address, Contact Info, Price, Operating Hours`
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate XP Points (must be a positive number)
+      const xpPointsNum = parseInt(formData.xpPoints);
+      if (isNaN(xpPointsNum) || xpPointsNum < 0) {
+        toast.error("XP Points must be a positive number (minimum 0)");
+        setIsSubmitting(false);
         return;
       }
 
@@ -268,32 +303,64 @@ export default function CreateCardPage() {
         );
       }
 
+      // Process operating hours - only include valid slots
+      const validOperatingHours = formData.timeSlots
+        .filter((slot) => {
+          // Include if it's marked as closed, or if it has valid open/close times
+          return (
+            slot.closed || (slot.open && slot.close && slot.days.length > 0)
+          );
+        })
+        .map((slot) => ({
+          days: slot.days,
+          open: slot.open || "",
+          close: slot.close || "",
+          closed: slot.closed,
+        }));
+
+      // Process price options - only include filled options
+      const validPriceOptions = formData.priceOptions
+        .filter((option) => option.label && option.price)
+        .map((option) => ({
+          label: option.label.trim(),
+          price: option.price.trim(),
+        }));
+
+      // Process contact info - only include if at least one field is filled
+      let contactInfo = null;
+      if (formData.phone || formData.website || formData.facebook) {
+        contactInfo = {
+          phone: formData.phone.trim(),
+          website: formData.website.trim(),
+          facebook: formData.facebook.trim(),
+        };
+      }
+
       // Prepare data
       const listingData = {
-        title: formData.titleEn,
-        titleKh: formData.titleKh,
-        description: formData.description,
+        title: formData.titleEn.trim(),
+        titleKh: formData.titleKh.trim() || null,
+        description: formData.description.trim(),
         category: formData.category,
-        province: formData.province,
+        province: formData.province, // Already validated above
         tags: formData.tags,
-        xpPoints: formData.xpPoints,
-        address: formData.address,
-        lat: formData.lat,
-        lng: formData.lng,
-        mainImage: mainImageUrl,
+        xpPoints: xpPointsNum,
+        // Optional fields
+        address: formData.address.trim() || null,
+        lat: formData.lat && formData.lat.trim() !== "" ? formData.lat : null,
+        lng: formData.lng && formData.lng.trim() !== "" ? formData.lng : null,
+        mainImage: mainImageUrl || null,
         photos: galleryImageUrls,
-        priceLevel: formData.priceLevel,
-        priceOptions: formData.priceOptions,
-        operatingHours: formData.timeSlots.map((slot) => ({
-          days: slot.days,
-          open: slot.open,
-          close: slot.close,
-          closed: slot.closed,
-        })),
-        phone: formData.phone,
-        website: formData.website,
-        facebook: formData.facebook,
+        priceLevel: formData.priceLevel || null,
+        priceOptions: validPriceOptions.length > 0 ? validPriceOptions : null,
+        operatingHours:
+          validOperatingHours.length > 0 ? validOperatingHours : null,
+        phone: contactInfo?.phone || null,
+        website: contactInfo?.website || null,
+        facebook: contactInfo?.facebook || null,
       };
+
+      console.log("📤 Sending listing data:", listingData);
 
       const response = await fetch("/api/listings", {
         method: "POST",
@@ -305,6 +372,7 @@ export default function CreateCardPage() {
 
       if (!response.ok) {
         const error = await response.json();
+        console.error("❌ API Error:", error);
         throw new Error(error.message || "Failed to create listing");
       }
 

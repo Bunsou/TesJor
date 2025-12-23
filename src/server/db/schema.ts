@@ -24,6 +24,7 @@ export const categoryEnum = pgEnum("category", [
 ]);
 export const priceLevelEnum = pgEnum("price_level", ["$", "$$", "$$$", "Free"]);
 export const provinceEnum = pgEnum("province", [
+  "All of Cambodia",
   "Banteay Meanchey",
   "Battambang",
   "Kampong Cham",
@@ -124,8 +125,8 @@ export const listings = pgTable(
     description: text("description").notNull(),
     province: provinceEnum("province").notNull(),
     addressText: text("address_text"),
-    lat: doublePrecision("lat").notNull(),
-    lng: doublePrecision("lng").notNull(),
+    lat: doublePrecision("lat"),
+    lng: doublePrecision("lng"),
     mainImage: text("main_image"),
     priceLevel: priceLevelEnum("price_level"),
     priceDetails: jsonb("price_details"), // Array of { label, price, currency }

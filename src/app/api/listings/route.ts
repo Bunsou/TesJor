@@ -46,9 +46,30 @@ export const POST = asyncHandler(async (request: NextRequest) => {
 
   const body = await request.json();
 
+  console.log("📦 Received listing data:", JSON.stringify(body, null, 2));
+
   // Validate required fields
   if (!body.title || !body.category || !body.province) {
-    throw new AppError("VALIDATION_ERROR", "Missing required fields");
+    throw new AppError(
+      "VALIDATION_ERROR",
+      "Missing required fields: title, category, and province"
+    );
+  }
+
+  if (!body.description || body.description.trim() === "") {
+    throw new AppError("VALIDATION_ERROR", "Description is required");
+  }
+
+  // Location coordinates are OPTIONAL - convert empty strings to null
+  // If province is "All of Cambodia", location can be null
+
+  // Validate XP Points
+  const xpPoints = body.xpPoints ? parseInt(body.xpPoints) : 10;
+  if (isNaN(xpPoints) || xpPoints < 0) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      "XP Points must be a positive number"
+    );
   }
 
   // Create slug from title
@@ -59,29 +80,40 @@ export const POST = asyncHandler(async (request: NextRequest) => {
     .replace(/-+/g, "-")
     .trim();
 
+  // Prepare contact info - only if at least one field is provided
+  let contactInfo = null;
+  if (body.phone || body.website || body.facebook) {
+    contactInfo = {
+      phone: body.phone || "",
+      website: body.website || "",
+      facebook: body.facebook || "",
+    };
+  }
+
   // Prepare listing data
   const listingData = {
     slug,
     category: body.category,
-    tags: body.tags || [],
-    title: body.title,
-    titleKh: body.titleKh || "",
-    description: body.description || "",
-    addressText: body.address || "",
-    lat: body.lat ? parseFloat(body.lat) : 0,
-    lng: body.lng ? parseFloat(body.lng) : 0,
-    mainImage: body.mainImage || "",
-    priceLevel: body.priceLevel || "$",
-    priceDetails: body.priceOptions || [],
-    operatingHours: body.operatingHours || [],
-    contactInfo: {
-      phone: body.phone || "",
-      website: body.website || "",
-      facebook: body.facebook || "",
-    },
-    xpPoints: body.xpPoints ? parseInt(body.xpPoints) : 10,
+    tags: body.tags && body.tags.length > 0 ? body.tags : [],
+    title: body.title.trim(),
+    titleKh: body.titleKh || null,
+    description: body.description.trim(),
+    addressText: body.address || null,
+    lat: parseFloat(body.lat),
+    lng: parseFloat(body.lng),
+    mainImage: body.mainImage || null,
+    priceLevel: body.priceLevel || null,
+    priceDetails: body.priceOptions || null,
+    operatingHours: body.operatingHours || null,
+    contactInfo: contactInfo,
+    xpPoints: xpPoints,
     province: body.province,
   };
+
+  console.log(
+    "Creating listing with data:",
+    JSON.stringify(listingData, null, 2)
+  );
 
   // Create listing
   const newListing = await createListing(listingData);
