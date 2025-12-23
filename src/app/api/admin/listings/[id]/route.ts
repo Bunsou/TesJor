@@ -8,12 +8,12 @@ import { eq } from "drizzle-orm";
 export const DELETE = asyncHandler(
   async (
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    context?: { params: Promise<{ id: string }> }
   ) => {
     // Check if user is authenticated and is admin
     await requireAdmin(request);
 
-    const { id } = await params;
+    const { id } = await context!.params;
 
     if (!id) {
       throw new AppError("VALIDATION_ERROR", "Listing ID is required");
