@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronRight, Search, Trash2 } from "lucide-react";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface Review {
   id: string;
@@ -15,9 +17,8 @@ interface Review {
   listingTitle: string;
   listingProvince: string;
   rating: number;
-  comment: string;
+  content: string | null;
   createdAt: string;
-  isSpam?: boolean;
 }
 
 const StarRating = ({ rating }: { rating: number }) => {
@@ -38,98 +39,107 @@ const StarRating = ({ rating }: { rating: number }) => {
 };
 
 export default function ReviewsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [ratingFilter, setRatingFilter] = useState("");
-  const [sortFilter, setSortFilter] = useState("newest");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
+  const [ratingFilter, setRatingFilter] = useState(
+    searchParams.get("rating") || ""
+  );
+  const [sortFilter, setSortFilter] = useState(
+    searchParams.get("sort") || "newest"
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1
+  );
   const [totalItems, setTotalItems] = useState(0);
+  const itemsPerPage = 10;
 
-  // Mock data for demonstration
+  // Debounce search query
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [ratingFilter, sortFilter, debouncedSearch]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (currentPage > 1) params.set("page", currentPage.toString());
+    if (ratingFilter) params.set("rating", ratingFilter);
+    if (sortFilter !== "newest") params.set("sort", sortFilter);
+    if (debouncedSearch) params.set("search", debouncedSearch);
+
+    const queryString = params.toString();
+    router.push(`/admin/reviews${queryString ? `?${queryString}` : ""}`, {
+      scroll: false,
+    });
+  }, [currentPage, ratingFilter, sortFilter, debouncedSearch, router]);
+
+  // Fetch reviews from API
   useEffect(() => {
     async function fetchReviews() {
-      setIsLoading(true);
+      try {
+        setIsLoading(true);
+        const params = new URLSearchParams({
+          page: currentPage.toString(),
+          limit: itemsPerPage.toString(),
+        });
 
-      // Simulate API call - replace with actual endpoint
-      setTimeout(() => {
-        const mockReviews: Review[] = [
-          {
-            id: "1",
-            userId: "user1",
-            userName: "Dara Sok",
-            userImage:
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuCRG0MoF_Oz92xOFO0cTeglMsfZT_MUrR6TvnRqeJ8Vp2ti3CXekWCqVPVOePgloPrdcCbXE5e4-nPu5Tmc-2TjQoJQnsHhuC2QLmlQkGsXOJ8SwoFLssEFD-Jwv-BwYoHQ7Ng2tYWPr88ZOKAjjzUGO4brcx1ivDNPuHxaIO3vyPbRWd0hxOXWHMu00KfKMssUjoUf_TnH7F2azfolHTJgIuc_NjVDp3Y1mJy6BUYNF8JAQqGNQa0-3DbRLYED_yeEgziW9cYaFh4",
-            userRole: "Traveler",
-            listingId: "listing1",
-            listingTitle: "Bamboo Train",
-            listingProvince: "Battambang",
-            rating: 5,
-            comment:
-              "Absolutely loved the experience! It's a bit bumpy but that's part of the charm. The views of the rice paddies were stunning...",
-            createdAt: "2023-10-24T10:30:00Z",
-          },
-          {
-            id: "2",
-            userId: "user2",
-            userName: "Sophie M.",
-            userImage: null,
-            userRole: "Local Guide",
-            listingId: "listing2",
-            listingTitle: "Kampot Pepper Farm",
-            listingProvince: "Kampot",
-            rating: 4,
-            comment:
-              "Very informative tour about pepper cultivation. The tasting session was unique. A bit hot walking around though.",
-            createdAt: "2023-10-22T14:15:00Z",
-          },
-          {
-            id: "3",
-            userId: "user3",
-            userName: "John Smith",
-            userImage:
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuAZmxUP-Jl3ki4bmM22aMvIrDFcQ7gKM4g-HgN_ciLuWN7tr2aUHL0Q4tgnIcxfx6s3kL4OUSstZe21F635M_rgsGtwZk2BHNsTwK7YfvzkOjmnHh3JEi_9-WIvsRa4-Z91hxPr6YLdoeOCsCqLLFznlSjI_Iv0oqSW-mBavMaIECPjai9-rUZShQXg0OB7cJDkP0j_4cAWFI0P57Xhc6k8Gx2OwGe2CY5BOIoDDtIgIobShDZ9Dwfhs_aNOUgWN2ZWmRPrv3T_6Yc",
-            userRole: "Visitor",
-            listingId: "listing3",
-            listingTitle: "Floating Village",
-            listingProvince: "Siem Reap",
-            rating: 2,
-            comment:
-              "The boat ride was okay but felt very commercialized. Not as 'hidden' as expected. Food was good though.",
-            createdAt: "2023-10-20T16:45:00Z",
-          },
-          {
-            id: "4",
-            userId: "bot99",
-            userName: "Bot User 99",
-            userImage: null,
-            userRole: "Unknown",
-            listingId: "listing4",
-            listingTitle: "Wat Ek Phnom",
-            listingProvince: "Battambang",
-            rating: 1,
-            comment: "Buy cheap raybans at...",
-            createdAt: "2023-10-19T09:00:00Z",
-            isSpam: true,
-          },
-        ];
-        setReviews(mockReviews);
-        setTotalItems(128);
+        if (ratingFilter) params.set("rating", ratingFilter);
+        if (sortFilter) params.set("sort", sortFilter);
+        if (debouncedSearch) params.set("search", debouncedSearch);
+
+        const res = await fetch(`/api/admin/reviews?${params}`);
+        if (res.ok) {
+          const data = await res.json();
+          setReviews(data.data.items || []);
+          setTotalItems(data.data.total || 0);
+        } else {
+          console.error("Failed to fetch reviews:", res.status, res.statusText);
+          setReviews([]);
+          setTotalItems(0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+        setReviews([]);
+        setTotalItems(0);
+      } finally {
         setIsLoading(false);
-      }, 500);
+      }
     }
 
     fetchReviews();
-  }, [currentPage, searchQuery, ratingFilter, sortFilter]);
+  }, [currentPage, ratingFilter, sortFilter, debouncedSearch]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this review?")) return;
 
     try {
-      // Replace with actual API call
-      setReviews(reviews.filter((r) => r.id !== id));
-      alert("Review deleted successfully");
-    } catch {
+      const res = await fetch(`/api/admin/reviews/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setReviews(reviews.filter((r) => r.id !== id));
+        setTotalItems((prev) => prev - 1);
+
+        // If we deleted the last item on this page and we're not on page 1, go back one page
+        if (reviews.length === 1 && currentPage > 1) {
+          setCurrentPage((prev) => prev - 1);
+        }
+
+        alert("Review deleted successfully");
+      } else {
+        alert("Failed to delete review");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
       alert("Failed to delete review");
     }
   };
@@ -155,8 +165,7 @@ export default function ReviewsPage() {
     return name.charAt(0).toUpperCase();
   };
 
-  const pendingCount = 12;
-  const reportedCount = 3;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (
     <>
@@ -183,15 +192,9 @@ export default function ReviewsPage() {
               Manage and moderate reviews from the community.
             </p>
           </div>
-          <div className="flex gap-2">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-[#2A201D] border border-gray-200 dark:border-gray-700 shadow-sm text-xs font-medium text-gray-600">
-              <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
-              Pending: {pendingCount}
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-[#2A201D] border border-gray-200 dark:border-gray-700 shadow-sm text-xs font-medium text-gray-600">
-              <span className="w-2 h-2 rounded-full bg-red-500"></span>
-              Reported: {reportedCount}
-            </div>
+          <div className="text-xs font-medium px-3 py-1 bg-white dark:bg-[#2A201D] rounded-full border border-gray-200 dark:border-gray-800 text-gray-600">
+            <span className="text-[#E07A5F] font-bold">{totalItems}</span> Total
+            Reviews
           </div>
         </div>
 
@@ -288,8 +291,6 @@ export default function ReviewsPage() {
                     <tr
                       key={review.id}
                       className={`group hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors ${
-                        review.isSpam ? "opacity-70" : ""
-                      } ${
                         review.rating >= 4
                           ? "bg-green-50/30 dark:bg-green-900/5"
                           : ""
@@ -307,13 +308,7 @@ export default function ReviewsPage() {
                               />
                             </div>
                           ) : (
-                            <div
-                              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
-                                review.isSpam
-                                  ? "bg-indigo-100 text-indigo-600"
-                                  : "bg-[#E07A5F]/10 text-[#E07A5F]"
-                              }`}
-                            >
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg bg-[#E07A5F]/10 text-[#E07A5F]">
                               {getInitials(review.userName)}
                             </div>
                           )}
@@ -338,13 +333,15 @@ export default function ReviewsPage() {
                       <td className="p-5 align-top">
                         <div className="flex flex-col gap-2">
                           <StarRating rating={review.rating} />
-                          <p
-                            className={`text-gray-900 dark:text-white leading-relaxed ${
-                              review.isSpam ? "italic text-gray-500" : ""
-                            }`}
-                          >
-                            &ldquo;{review.comment}&rdquo;
-                          </p>
+                          {review.content ? (
+                            <p className="text-gray-900 dark:text-white leading-relaxed">
+                              &ldquo;{review.content}&rdquo;
+                            </p>
+                          ) : (
+                            <p className="text-gray-500 dark:text-gray-400 italic text-sm">
+                              No comment provided
+                            </p>
+                          )}
                         </div>
                       </td>
                       <td className="p-5 align-top text-gray-600 dark:text-gray-400">
@@ -358,7 +355,7 @@ export default function ReviewsPage() {
                           <button
                             onClick={() => handleDelete(review.id)}
                             className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-200"
-                            title={review.isSpam ? "Delete Forever" : "Delete"}
+                            title="Delete"
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>
@@ -372,21 +369,91 @@ export default function ReviewsPage() {
           </div>
 
           {/* Pagination */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              Showing {reviews.length} of {totalItems} reviews
+          <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
+              {totalItems > 0 ? (
+                <>
+                  Showing{" "}
+                  {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)}{" "}
+                  to {Math.min(currentPage * itemsPerPage, totalItems)} of{" "}
+                  {totalItems} reviews
+                </>
+              ) : (
+                "No reviews found"
+              )}
             </span>
-            <div className="flex gap-2">
+            <div className="flex gap-2 order-1 sm:order-2">
               <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1 || totalPages === 0}
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>
+              <div className="hidden sm:flex items-center gap-1">
+                {totalPages > 0 &&
+                  (() => {
+                    const pages = [];
+                    const showPages = 5;
+
+                    if (totalPages <= showPages) {
+                      for (let i = 1; i <= totalPages; i++) {
+                        pages.push(i);
+                      }
+                    } else {
+                      if (currentPage <= 3) {
+                        for (let i = 1; i <= 4; i++) pages.push(i);
+                        pages.push(-1);
+                        pages.push(totalPages);
+                      } else if (currentPage >= totalPages - 2) {
+                        pages.push(1);
+                        pages.push(-1);
+                        for (let i = totalPages - 3; i <= totalPages; i++)
+                          pages.push(i);
+                      } else {
+                        pages.push(1);
+                        pages.push(-1);
+                        pages.push(currentPage - 1);
+                        pages.push(currentPage);
+                        pages.push(currentPage + 1);
+                        pages.push(-2);
+                        pages.push(totalPages);
+                      }
+                    }
+
+                    return pages.map((page, idx) => {
+                      if (page === -1 || page === -2) {
+                        return (
+                          <span
+                            key={`ellipsis-${idx}`}
+                            className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-400"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                            currentPage === page
+                              ? "bg-[#E07A5F] text-white"
+                              : "hover:bg-gray-50 dark:hover:bg-white/5 text-gray-600 dark:text-gray-400"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    });
+                  })()}
+              </div>
               <button
-                onClick={() => setCurrentPage((p) => p + 1)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={currentPage === totalPages || totalPages === 0}
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>
