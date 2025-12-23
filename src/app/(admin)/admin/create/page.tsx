@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   ChevronRight,
   Save,
@@ -13,7 +14,6 @@ import {
   X,
   Plus,
   Star,
-  Search,
   Tag,
   Layers,
 } from "lucide-react";
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { provinces, categories, tags } from "@/constants/constants";
 import { AdminMapPicker } from "@/features/admin/components/AdminMapPicker";
+import { toast } from "sonner";
 
 interface PriceOption {
   label: string;
@@ -121,15 +122,161 @@ export default function CreateCardPage() {
     });
   };
 
+  const handleMainImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB");
+      return;
+    }
+
+    // Store file locally
+    setFormData((prev) => ({ ...prev, mainImage: file }));
+  };
+
+  const handleGalleryImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Validate file types
+    if (files.some((file) => !file.type.startsWith("image/"))) {
+      toast.error("Please upload only image files");
+      return;
+    }
+
+    // Validate file sizes
+    if (files.some((file) => file.size > 5 * 1024 * 1024)) {
+      toast.error("Each image must be less than 5MB");
+      return;
+    }
+
+    // Store files locally
+    setFormData((prev) => ({
+      ...prev,
+      galleryImages: [...prev.galleryImages, ...files],
+    }));
+  };
+
+  const handleRemoveMainImage = () => {
+    setFormData((prev) => ({ ...prev, mainImage: null }));
+  };
+
+  const handleRemoveGalleryImage = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      galleryImages: prev.galleryImages.filter((_, i) => i !== index),
+    }));
+  };
+
+  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/cloudinary/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+
+    const data = await response.json();
+    return data.url;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // TODO: Implement submit logic
-    console.log("Form data:", formData);
-    setTimeout(() => {
+
+    try {
+      // Validate required fields
+      if (!formData.titleEn || !formData.category || !formData.province) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+
+      // Upload main image if exists
+      let mainImageUrl = "";
+      if (formData.mainImage) {
+        mainImageUrl = await uploadImageToCloudinary(formData.mainImage);
+      }
+
+      // Upload gallery images if exist
+      let galleryImageUrls: string[] = [];
+      if (formData.galleryImages.length > 0) {
+        galleryImageUrls = await Promise.all(
+          formData.galleryImages.map((file) => uploadImageToCloudinary(file))
+        );
+      }
+
+      // Prepare data
+      const listingData = {
+        title: formData.titleEn,
+        titleKh: formData.titleKh,
+        description: formData.description,
+        category: formData.category,
+        province: formData.province,
+        tags: formData.tags,
+        xpPoints: formData.xpPoints,
+        address: formData.address,
+        lat: formData.lat,
+        lng: formData.lng,
+        mainImage: mainImageUrl,
+        photos: galleryImageUrls,
+        priceLevel: formData.priceLevel,
+        priceOptions: formData.priceOptions,
+        operatingHours: formData.timeSlots.map((slot) => ({
+          days: slot.days,
+          open: slot.open,
+          close: slot.close,
+          closed: slot.closed,
+        })),
+        phone: formData.phone,
+        website: formData.website,
+        facebook: formData.facebook,
+      };
+
+      const response = await fetch("/api/listings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(listingData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to create listing");
+      }
+
+      const result = await response.json();
+      toast.success("Card published successfully!");
+
+      // Redirect to places page
+      window.location.href = "/admin/places";
+    } catch (error) {
+      console.error("Submit error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to publish card. Please try again."
+      );
+    } finally {
       setIsSubmitting(false);
-      alert("Card published successfully!");
-    }, 1000);
+    }
   };
 
   return (
@@ -407,29 +554,78 @@ export default function CreateCardPage() {
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">
                   Main Cover Image
                 </label>
-                <div className="w-full aspect-4/3 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-center p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
-                  <div className="w-12 h-12 rounded-full bg-[#E07A5F]/10 text-[#E07A5F] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <Plus className="w-6 h-6" />
+                {formData.mainImage ? (
+                  <div className="w-full aspect-4/3 rounded-xl border-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 relative overflow-hidden group">
+                    <Image
+                      src={URL.createObjectURL(formData.mainImage)}
+                      alt="Main cover"
+                      fill
+                      className="object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveMainImage}
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    Click to upload
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    PNG, JPG up to 5MB
-                  </p>
-                </div>
+                ) : (
+                  <label className="w-full aspect-4/3 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-center p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleMainImageUpload}
+                      className="hidden"
+                    />
+                    <div className="w-12 h-12 rounded-full bg-[#E07A5F]/10 text-[#E07A5F] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      <Plus className="w-6 h-6" />
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      Click to upload
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      PNG, JPG up to 5MB
+                    </p>
+                  </label>
+                )}
               </div>
               <div className="md:col-span-7 flex flex-col gap-2">
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Gallery Images
+                  Gallery Images ({formData.galleryImages.length})
                 </label>
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="aspect-square rounded-lg bg-gray-200 dark:bg-gray-700 relative overflow-hidden group"></div>
-                  <div className="aspect-square rounded-lg bg-gray-200 dark:bg-gray-700 relative overflow-hidden group"></div>
-                  <div className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer text-gray-600 hover:text-[#E07A5F] transition-colors">
+                  {formData.galleryImages.map((file, index) => (
+                    <div
+                      key={index}
+                      className="aspect-square rounded-lg border-2 border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 relative overflow-hidden group"
+                    >
+                      <Image
+                        src={URL.createObjectURL(file)}
+                        alt={`Gallery ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveGalleryImage(index)}
+                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer text-gray-600 hover:text-[#E07A5F] transition-colors">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleGalleryImageUpload}
+                      className="hidden"
+                    />
                     <Plus className="w-6 h-6" />
                     <span className="text-xs font-medium mt-1">Add</span>
-                  </div>
+                  </label>
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
                   Recommended: 3-5 images showing different angles.
