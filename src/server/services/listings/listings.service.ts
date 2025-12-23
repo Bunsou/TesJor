@@ -28,7 +28,7 @@ export async function getListings(params: GetListingsParams) {
     params;
 
   // Fetch one extra item to determine if there are more pages
-  const items = await repository.findListings({
+  const { items, total } = await repository.findListings({
     category,
     province,
     tag,
@@ -52,6 +52,7 @@ export async function getListings(params: GetListingsParams) {
     page,
     nextPage,
     hasMore,
+    total,
   };
 }
 

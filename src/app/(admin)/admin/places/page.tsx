@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import {
   ChevronRight,
@@ -14,6 +14,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { getDefaultImage } from "@/lib/default-images";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface Listing {
   id: string;
@@ -55,15 +56,64 @@ const getCategoryLabel = (category: string) => {
 
 export default function AllPlacesPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [provinceFilter, setProvinceFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
+  const [categoryFilter, setCategoryFilter] = useState(
+    searchParams.get("category") || ""
+  );
+  const [provinceFilter, setProvinceFilter] = useState(
+    searchParams.get("province") || ""
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1
+  );
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
 
+  // Debounce search query
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [categoryFilter, provinceFilter, debouncedSearch]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (currentPage > 1) params.set("page", currentPage.toString());
+    if (categoryFilter) params.set("category", categoryFilter);
+    if (provinceFilter) params.set("province", provinceFilter);
+    if (debouncedSearch) params.set("search", debouncedSearch);
+
+    const queryString = params.toString();
+    router.push(`/admin/places${queryString ? `?${queryString}` : ""}`, {
+      scroll: false,
+    });
+  }, [currentPage, categoryFilter, provinceFilter, debouncedSearch, router]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (currentPage > 1) params.set("page", currentPage.toString());
+    if (categoryFilter) params.set("category", categoryFilter);
+    if (provinceFilter) params.set("province", provinceFilter);
+    if (debouncedSearch) params.set("search", debouncedSearch);
+
+    const queryString = params.toString();
+    router.push(`/admin/places${queryString ? `?${queryString}` : ""}`, {
+      scroll: false,
+    });
+  }, [currentPage, categoryFilter, provinceFilter, debouncedSearch, router]);
+
+  // Fetch listings
   useEffect(() => {
     async function fetchListings() {
       try {
@@ -75,23 +125,33 @@ export default function AllPlacesPage() {
 
         if (categoryFilter) params.set("category", categoryFilter);
         if (provinceFilter) params.set("province", provinceFilter);
-        if (searchQuery) params.set("search", searchQuery);
+        if (debouncedSearch) params.set("q", debouncedSearch);
 
-        const res = await fetch(`/api/listings/all?${params}`);
+        const res = await fetch(`/api/listings?${params}`);
         if (res.ok) {
           const data = await res.json();
           setListings(data.data.items || []);
           setTotalItems(data.data.total || 0);
+        } else {
+          console.error(
+            "Failed to fetch listings:",
+            res.status,
+            res.statusText
+          );
+          setListings([]);
+          setTotalItems(0);
         }
       } catch (error) {
         console.error("Failed to fetch listings:", error);
+        setListings([]);
+        setTotalItems(0);
       } finally {
         setIsLoading(false);
       }
     }
 
     fetchListings();
-  }, [currentPage, categoryFilter, provinceFilter, searchQuery]);
+  }, [currentPage, categoryFilter, provinceFilter, debouncedSearch]);
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -104,9 +164,19 @@ export default function AllPlacesPage() {
       });
       if (res.ok) {
         setListings(listings.filter((l) => l.id !== id));
+        setTotalItems((prev) => prev - 1);
+
+        // If we deleted the last item on this page and we're not on page 1, go back one page
+        if (listings.length === 1 && currentPage > 1) {
+          setCurrentPage((prev) => prev - 1);
+        }
+
         alert("Listing deleted successfully");
+      } else {
+        alert("Failed to delete listing");
       }
-    } catch {
+    } catch (error) {
+      console.error("Delete error:", error);
       alert("Failed to delete listing");
     }
   };
@@ -349,55 +419,91 @@ export default function AllPlacesPage() {
           {/* Pagination */}
           <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <span className="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-              {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}{" "}
-              entries
+              {totalItems > 0 ? (
+                <>
+                  Showing{" "}
+                  {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)}{" "}
+                  to {Math.min(currentPage * itemsPerPage, totalItems)} of{" "}
+                  {totalItems} entries
+                </>
+              ) : (
+                "No entries found"
+              )}
             </span>
             <div className="flex gap-2 order-1 sm:order-2">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                disabled={currentPage === 1 || totalPages === 0}
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>
               <div className="hidden sm:flex items-center gap-1">
-                {Array.from(
-                  { length: Math.min(totalPages, 5) },
-                  (_, i) => i + 1
-                ).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === page
-                        ? "bg-[#E07A5F] text-white"
-                        : "hover:bg-gray-50 dark:hover:bg-white/5 text-gray-600"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-                {totalPages > 5 && (
-                  <>
-                    <span className="w-9 h-9 flex items-center justify-center text-gray-600">
-                      ...
-                    </span>
-                    <button
-                      onClick={() => setCurrentPage(totalPages)}
-                      className="w-9 h-9 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 text-gray-600 text-sm font-medium transition-colors"
-                    >
-                      {totalPages}
-                    </button>
-                  </>
-                )}
+                {totalPages > 0 &&
+                  (() => {
+                    const pages = [];
+                    const showPages = 5;
+
+                    if (totalPages <= showPages) {
+                      // Show all pages if total is less than showPages
+                      for (let i = 1; i <= totalPages; i++) {
+                        pages.push(i);
+                      }
+                    } else {
+                      // Show first, last, and pages around current
+                      if (currentPage <= 3) {
+                        for (let i = 1; i <= 4; i++) pages.push(i);
+                        pages.push(-1); // ellipsis
+                        pages.push(totalPages);
+                      } else if (currentPage >= totalPages - 2) {
+                        pages.push(1);
+                        pages.push(-1); // ellipsis
+                        for (let i = totalPages - 3; i <= totalPages; i++)
+                          pages.push(i);
+                      } else {
+                        pages.push(1);
+                        pages.push(-1); // ellipsis
+                        pages.push(currentPage - 1);
+                        pages.push(currentPage);
+                        pages.push(currentPage + 1);
+                        pages.push(-2); // ellipsis
+                        pages.push(totalPages);
+                      }
+                    }
+
+                    return pages.map((page, idx) => {
+                      if (page === -1 || page === -2) {
+                        return (
+                          <span
+                            key={`ellipsis-${idx}`}
+                            className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-400"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                            currentPage === page
+                              ? "bg-[#E07A5F] text-white"
+                              : "hover:bg-gray-50 dark:hover:bg-white/5 text-gray-600 dark:text-gray-400"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    });
+                  })()}
               </div>
               <button
                 onClick={() =>
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                disabled={currentPage === totalPages || totalPages === 0}
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>

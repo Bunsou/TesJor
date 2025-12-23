@@ -124,7 +124,13 @@ export async function findListings(options: ListingsQueryOptions) {
     .limit(limit)
     .offset(offset);
 
-  return results;
+  // Get total count for pagination
+  const countQuery = db.select({ count: sql<number>`count(*)` }).from(listings);
+  const [{ count }] = await (conditions.length > 0
+    ? countQuery.where(and(...conditions)!)
+    : countQuery);
+
+  return { items: results, total: Number(count) };
 }
 
 /**
