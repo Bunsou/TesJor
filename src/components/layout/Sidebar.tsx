@@ -22,7 +22,7 @@ const adminNavItem = {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { session } = useSession();
+  const { session, isLoading } = useSession();
   const isAdmin = session?.user?.role === "admin";
 
   // Always show all nav items, add admin if user is admin
@@ -61,7 +61,14 @@ export function Sidebar() {
       </nav>
 
       <div className="p-6 border-t border-border flex items-center justify-center">
-        {session ? (
+        {isLoading ? (
+          <div className="flex flex-row items-center gap-2 w-full animate-pulse">
+            <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="flex flex-col gap-2 flex-1">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+            </div>
+          </div>
+        ) : session ? (
           <div className="flex flex-row items-center gap-2">
             <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border-4 border-white dark:border-[#2A201D] shadow-lg bg-cover bg-center bg-gray-200 dark:bg-gray-700 overflow-hidden">
               <Avatar className="w-full h-full">

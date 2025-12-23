@@ -30,7 +30,7 @@ export function ListingsGrid({
   isLoadingMore,
   onLoadMore,
 }: ListingsGridProps) {
-  const { session } = useSession();
+  const { session, isLoading: isSessionLoading } = useSession();
   const totalCount = items.length;
   const hasNoResults = items.length === 0;
 
@@ -85,6 +85,9 @@ export function ListingsGrid({
 
   // Handle bookmark toggle
   const handleBookmark = async (itemId: string) => {
+    // Don't show modal while session is still loading
+    if (isSessionLoading) return;
+
     // Check auth first
     if (!session) {
       setModalAction("bookmark this place");
@@ -142,6 +145,9 @@ export function ListingsGrid({
 
   // Handle visited toggle
   const handleVisit = async (itemId: string) => {
+    // Don't show modal while session is still loading
+    if (isSessionLoading) return;
+
     // Check auth first
     if (!session) {
       setModalAction("mark this place as visited");

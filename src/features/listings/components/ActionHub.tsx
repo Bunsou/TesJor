@@ -27,11 +27,14 @@ export function ActionHub({
   onToggleVisited,
   onToggleBookmark,
 }: ActionHubProps) {
-  const { session } = useSession();
+  const { session, isLoading } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [modalAction, setModalAction] = useState("");
 
   const handleAuthRequired = (action: () => void, actionName: string) => {
+    // Don't show modal while session is still loading
+    if (isLoading) return;
+
     if (!session) {
       setModalAction(actionName);
       setShowSignInModal(true);
@@ -118,7 +121,7 @@ export function ActionHub({
           {isBookmarked ? "Saved" : "Bookmark"}
         </button>
       </div>
-      {!session && (
+      {!isLoading && !session && (
         <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
           Sign in to bookmark or mark as visited
         </p>
