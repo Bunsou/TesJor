@@ -51,10 +51,20 @@ if (isServer) {
   parsedEnv = envSchema.safeParse(process.env);
 
   if (!parsedEnv.success) {
+    const errors = parsedEnv.error.flatten().fieldErrors;
+    console.error("❌ Invalid environment variables:", errors);
+
+    // During build, provide more helpful error message
+    const missingVars = Object.keys(errors);
+    console.error("\n📋 Missing environment variables in Vercel:");
     console.error(
-      "❌ Invalid environment variables:",
-      parsedEnv.error.flatten().fieldErrors
+      "Please add these in your Vercel project settings (Settings > Environment Variables):\n"
     );
+    missingVars.forEach((varName) => {
+      console.error(`  ${varName}`);
+    });
+    console.error("\nSee .env.example for reference values.\n");
+
     throw new Error("Invalid environment variables");
   }
 } else {
