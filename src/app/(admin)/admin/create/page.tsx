@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { provinces, categories, tags } from "@/constants/constants";
+import { AdminMapPicker } from "@/features/admin/components/AdminMapPicker";
 
 interface PriceOption {
   label: string;
@@ -105,6 +106,19 @@ export default function CreateCardPage() {
     const updated = [...formData.priceOptions];
     updated[index][field] = value;
     setFormData({ ...formData, priceOptions: updated });
+  };
+
+  const handleLocationSelect = (data: {
+    lat: number;
+    lng: number;
+    address: string;
+  }) => {
+    setFormData({
+      ...formData,
+      lat: data.lat.toString(),
+      lng: data.lng.toString(),
+      address: data.address,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -373,39 +387,12 @@ export default function CreateCardPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                  Search Address
-                </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input
-                    type="text"
-                    value={searchAddress}
-                    onChange={(e) => setSearchAddress(e.target.value)}
-                    className="pl-10 w-full py-2 md:py-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
-                    placeholder="Search for a location..."
-                  />
-                </div>
-              </div>
-              <div className="w-full h-64 bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-700 relative overflow-hidden cursor-crosshair">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-gray-600 font-medium bg-white/80 dark:bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
-                    Click to drop pin
-                  </p>
-                </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full text-[#E07A5F] drop-shadow-lg">
-                  <MapPin className="w-10 h-10 fill-current" />
-                </div>
-                <div className="absolute bottom-3 right-3 flex gap-2">
-                  <div className="bg-white dark:bg-[#2A201D] px-3 py-1.5 rounded-lg shadow-md text-xs font-mono border border-gray-200 dark:border-gray-700">
-                    Lat: {formData.lat}
-                  </div>
-                  <div className="bg-white dark:bg-[#2A201D] px-3 py-1.5 rounded-lg shadow-md text-xs font-mono border border-gray-200 dark:border-gray-700">
-                    Lng: {formData.lng}
-                  </div>
-                </div>
-              </div>
+              <AdminMapPicker
+                initialLat={parseFloat(formData.lat)}
+                initialLng={parseFloat(formData.lng)}
+                onLocationSelect={handleLocationSelect}
+                className="w-full h-120"
+              />
             </div>
           </div>
 
