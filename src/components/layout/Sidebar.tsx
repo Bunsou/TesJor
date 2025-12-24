@@ -29,7 +29,7 @@ export function Sidebar() {
   const allItems = isAdmin ? [...navItems, adminNavItem] : navItems;
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen bg-primary-foreground border-r border-border fixed left-0 top-0 z-40">
+    <aside className="hidden md:flex flex-col w-64 h-screen bg-white border-r border-border fixed left-0 top-0 z-40">
       <div className="p-6">
         <Link href="/explore" className="flex items-center gap-2">
           <h1 className="text-3xl font-bold text-primary">TesJor</h1>
@@ -60,7 +60,7 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="p-6 border-t border-border flex items-center justify-center">
+      <div className="p-6 border-t border-border flex items-center">
         {isLoading ? (
           <div className="flex flex-row items-center gap-2 w-full animate-pulse">
             <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -70,7 +70,7 @@ export function Sidebar() {
           </div>
         ) : session ? (
           <div className="flex flex-row items-center gap-2">
-            <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border-4 border-white dark:border-[#2A201D] shadow-lg bg-cover bg-center bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            <div className="w-8 h-8 md:w-11 md:h-11 rounded-full border-4 border-white dark:border-[#2A201D] shadow-lg bg-cover bg-center bg-gray-200 dark:bg-gray-700 overflow-hidden">
               <Avatar className="w-full h-full">
                 <AvatarImage
                   src={session?.user?.image || undefined}
