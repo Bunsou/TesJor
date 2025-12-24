@@ -4,6 +4,7 @@ import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Chrome } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,10 +23,17 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 via-background to-secondary-50 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 via-background to-secondary-50 px-4 py-12">
       <div className="max-w-md w-full space-y-8 text-center">
         {/* Logo/Brand */}
         <div>
+          <Image
+            src={"/logo.png"}
+            alt="TesJor Logo"
+            width={124}
+            height={124}
+            className="mx-auto mb-4"
+          />
           <h1 className="text-6xl font-bold text-primary">TesJor</h1>
           <p className="text-xl text-foreground-muted mt-2">
             Discover Hidden Cambodia

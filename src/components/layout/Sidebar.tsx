@@ -6,6 +6,7 @@ import { Home, Map, Bookmark, User, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/hooks/useSession";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Image from "next/image";
 
 const navItems = [
   { href: "/explore", label: "Explore", icon: Home },
@@ -31,7 +32,8 @@ export function Sidebar() {
   return (
     <aside className="hidden md:flex flex-col w-64 h-screen bg-white border-r border-border fixed left-0 top-0 z-40">
       <div className="p-6">
-        <Link href="/explore" className="flex items-center gap-2">
+        <Link href="/explore" className="flex items-center gap-4">
+          <Image src={"/logo.png"} alt="TesJor Logo" width={32} height={32} />
           <h1 className="text-3xl font-bold text-primary">TesJor</h1>
         </Link>
       </div>
