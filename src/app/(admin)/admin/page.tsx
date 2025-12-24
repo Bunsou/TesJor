@@ -148,16 +148,19 @@ export default function AdminDashboardPage() {
                 <PlusCircle className="w-4 h-4" />
                 Add New Place
               </button>
-              <button className="px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-900 dark:text-white rounded-xl font-medium text-sm transition-colors flex items-center gap-2">
-                <Megaphone className="w-4 h-4" />
-                Create Event
-              </button>
               <button
                 onClick={() => (window.location.href = "/admin/users")}
                 className="px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-900 dark:text-white rounded-xl font-medium text-sm transition-colors flex items-center gap-2"
               >
                 <UserCog className="w-4 h-4" />
                 Manage Users
+              </button>
+              <button
+                onClick={() => (window.location.href = "/explore")}
+                className="px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-900 dark:text-white rounded-xl font-medium text-sm transition-colors flex items-center gap-2"
+              >
+                <Megaphone className="w-4 h-4" />
+                Go to Explore
               </button>
             </div>
           </div>
