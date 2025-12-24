@@ -8,13 +8,6 @@ import {
   Star,
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TravelHistoryItem {
   id: string;
@@ -61,7 +54,7 @@ const getHistoryColor = (type: string) => {
 export function TravelHistory({ initialItems = [] }: TravelHistoryProps) {
   const [allItems, setAllItems] = useState<TravelHistoryItem[]>(initialItems);
   const [isLoading, setIsLoading] = useState(false);
-  const [showFullHistory, setShowFullHistory] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   // Fetch user history on mount
   useEffect(() => {
@@ -90,12 +83,12 @@ export function TravelHistory({ initialItems = [] }: TravelHistoryProps) {
     fetchHistory();
   }, []);
 
-  // Show only first 3 items initially
-  const displayedItems = allItems.slice(0, 3);
+  // Show first 3 items or all items based on state
+  const displayedItems = showAll ? allItems : allItems.slice(0, 3);
   const hasMore = allItems.length > 3;
 
-  const handleViewFullHistory = () => {
-    setShowFullHistory(true);
+  const handleToggleHistory = () => {
+    setShowAll(!showAll);
   };
 
   const renderHistoryItems = (items: TravelHistoryItem[]) => (
@@ -203,27 +196,15 @@ export function TravelHistory({ initialItems = [] }: TravelHistoryProps) {
 
         {hasMore && (
           <button
-            onClick={handleViewFullHistory}
+            onClick={handleToggleHistory}
             className="w-full mt-4 py-3 rounded-xl bg-white dark:bg-[#2A201D] border border-gray-200 dark:border-gray-800 text-[#1a110f] dark:text-[#f2eae8] font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shadow-sm"
           >
-            View Full History ({allItems.length} total)
+            {showAll
+              ? "Show Less"
+              : `View Full History (${allItems.length} total)`}
           </button>
         )}
       </div>
-
-      {/* Full History Modal */}
-      <Dialog open={showFullHistory} onOpenChange={setShowFullHistory}>
-        <DialogContent className="max-w-2xl max-h-[80vh]">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">
-              Complete Travel History
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-[60vh] pr-4">
-            {renderHistoryItems(allItems)}
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

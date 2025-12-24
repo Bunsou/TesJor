@@ -57,6 +57,7 @@ export function ReviewsSection({
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -309,7 +310,7 @@ export function ReviewsSection({
           <h4 className="font-semibold text-sm md:text-base text-gray-900 dark:text-white">
             User Reviews
           </h4>
-          {reviews.map((review) => (
+          {(showAllReviews ? reviews : reviews.slice(0, 3)).map((review) => (
             <div
               key={review.id}
               className="bg-white dark:bg-[#2A201D] p-3 md:p-4 rounded-lg border border-gray-200 dark:border-gray-800"
@@ -346,6 +347,18 @@ export function ReviewsSection({
               </div>
             </div>
           ))}
+
+          {/* Toggle button for more/less reviews */}
+          {reviews.length > 3 && (
+            <button
+              onClick={() => setShowAllReviews(!showAllReviews)}
+              className="w-full py-3 rounded-xl bg-white dark:bg-[#2A201D] border border-gray-200 dark:border-gray-800 text-[#1a110f] dark:text-[#f2eae8] font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shadow-sm"
+            >
+              {showAllReviews
+                ? "Show Less"
+                : `View All Reviews (${reviews.length} total)`}
+            </button>
+          )}
         </div>
       )}
     </div>
