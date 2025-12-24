@@ -162,21 +162,21 @@ export function ReviewsSection({
   };
 
   return (
-    <div className="flex flex-col gap-6 pt-4" id="reviews">
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+    <div className="flex flex-col gap-4 md:gap-6 pt-3 md:pt-4" id="reviews">
+      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
         Reviews
       </h3>
 
       {/* Rating Overview */}
-      <div className="bg-white dark:bg-[#2A201D] p-6 rounded-xl border border-gray-200 dark:border-gray-800 flex flex-wrap gap-8 items-center">
+      <div className="bg-white dark:bg-[#2A201D] p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-800 flex flex-wrap gap-4 md:gap-8 items-center">
         <div className="flex flex-col items-center">
-          <span className="text-5xl font-black text-gray-900 dark:text-white">
+          <span className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white">
             {item.avgRating ? Number(item.avgRating).toFixed(1) : "N/A"}
           </span>
-          <div className="flex gap-1 my-2">
+          <div className="flex gap-0.5 md:gap-1 my-1.5 md:my-2">
             {renderStars(Number(item.avgRating) || 0, "lg")}
           </div>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
             {totalReviews > 0
               ? `${totalReviews} review${totalReviews !== 1 ? "s" : ""}`
               : "No reviews yet"}
@@ -184,23 +184,26 @@ export function ReviewsSection({
         </div>
 
         {/* Rating Distribution */}
-        <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+        <div className="flex-1 min-w-[200px] flex flex-col gap-1 md:gap-1.5">
           {[5, 4, 3, 2, 1].map((rating, index) => {
             const count = ratingCounts[index];
             const percentage =
               totalReviews > 0 ? (count / totalReviews) * 100 : 0;
             return (
-              <div key={rating} className="flex items-center gap-3 text-xs">
+              <div
+                key={rating}
+                className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs"
+              >
                 <span className="w-3 text-gray-900 dark:text-white">
                   {rating}
                 </span>
-                <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="flex-1 h-1.5 md:h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#E07A5F] rounded-full transition-all"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
-                <span className="w-8 text-right text-gray-500 dark:text-gray-400">
+                <span className="w-6 md:w-8 text-right text-gray-500 dark:text-gray-400">
                   {count}
                 </span>
               </div>
@@ -232,24 +235,26 @@ export function ReviewsSection({
               Write a Review
             </Button>
           ) : (
-            <div className="bg-white dark:bg-[#2A201D] p-6 rounded-xl border border-gray-200 dark:border-gray-800">
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-[#2A201D] p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+              <h4 className="font-semibold text-sm md:text-base text-gray-900 dark:text-white mb-3 md:mb-4">
                 Leave a Review
               </h4>
 
               {/* Star Rating */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="mb-3 md:mb-4">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Your Rating
                 </label>
-                <div className="flex gap-2">{renderInteractiveStars()}</div>
+                <div className="flex gap-1.5 md:gap-2">
+                  {renderInteractiveStars()}
+                </div>
               </div>
 
               {/* Review Content */}
-              <div className="mb-4">
+              <div className="mb-3 md:mb-4">
                 <label
                   htmlFor="review-content"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Your Review (Optional)
                 </label>
@@ -259,16 +264,17 @@ export function ReviewsSection({
                   onChange={(e) => setReviewContent(e.target.value)}
                   placeholder="Share your experience..."
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#201512] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent"
+                  style={{ fontSize: "16px" }}
+                  className="w-full px-3 md:px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#201512] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent"
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3">
+              <div className="flex gap-2 md:gap-3">
                 <Button
                   onClick={handleSubmitReview}
                   disabled={isSubmitting || userRating === 0}
-                  className="bg-[#E07A5F] hover:bg-[#E07A5F]/90 text-white"
+                  className="bg-[#E07A5F] hover:bg-[#E07A5F]/90 text-white text-xs md:text-sm min-h-[44px]"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Review"}
                 </Button>
@@ -281,6 +287,7 @@ export function ReviewsSection({
                   }}
                   variant="outline"
                   disabled={isSubmitting}
+                  className="text-xs md:text-sm min-h-[44px]"
                 >
                   Cancel
                 </Button>
@@ -298,40 +305,40 @@ export function ReviewsSection({
 
       {/* Individual Reviews */}
       {reviews.length > 0 && (
-        <div className="flex flex-col gap-4">
-          <h4 className="font-semibold text-gray-900 dark:text-white">
+        <div className="flex flex-col gap-3 md:gap-4">
+          <h4 className="font-semibold text-sm md:text-base text-gray-900 dark:text-white">
             User Reviews
           </h4>
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="bg-white dark:bg-[#2A201D] p-4 rounded-lg border border-gray-200 dark:border-gray-800"
+              className="bg-white dark:bg-[#2A201D] p-3 md:p-4 rounded-lg border border-gray-200 dark:border-gray-800"
             >
-              <div className="flex items-start gap-3 mb-3">
-                <Avatar className="h-10 w-10">
+              <div className="flex items-start gap-2 md:gap-3 mb-2 md:mb-3">
+                <Avatar className="h-8 w-8 md:h-10 md:w-10 shrink-0">
                   <AvatarImage
                     src={review.userImage || undefined}
                     alt={review.userName || "User"}
                     referrerPolicy="no-referrer"
                   />
-                  <AvatarFallback className="bg-[#E07A5F] text-white">
+                  <AvatarFallback className="bg-[#E07A5F] text-white text-xs md:text-sm">
                     {review.userName?.charAt(0).toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-gray-900 dark:text-white">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-0.5 md:mb-1 gap-2">
+                    <span className="font-medium text-xs md:text-sm text-gray-900 dark:text-white truncate">
                       {review.userName || "Anonymous"}
                     </span>
-                    <span className="flex gap-1">
+                    <span className="flex gap-0.5 shrink-0">
                       {renderStars(review.rating)}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                  <div className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 mb-2 md:mb-4">
                     {getRelativeTime(review.createdAt)}
                   </div>
                   {review.content && (
-                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                    <p className="text-gray-700 dark:text-gray-300 text-xs md:text-sm">
                       {review.content}
                     </p>
                   )}

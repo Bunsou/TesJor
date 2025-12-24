@@ -222,12 +222,12 @@ export function ListingsGrid({
       {trendingItems.length > 0 && <TrendingSlider items={trendingItems} />}
 
       {/* Section Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="font-bold text-2xl text-gray-900 dark:text-white">
+      <div className="flex items-center justify-between mb-4 md:mb-5">
+        <h2 className="font-bold text-xl md:text-2xl text-gray-900 dark:text-white">
           {category === "all" ? "All Destinations" : `All ${categoryLabel}`}
         </h2>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {totalCount} results
+        <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 md:px-3 py-1 rounded-full">
+          {totalCount}
         </span>
       </div>
 
@@ -236,7 +236,7 @@ export function ListingsGrid({
         <EmptyState />
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
             {items.map((item) => (
               <PlaceCard
                 key={item.id}
@@ -254,12 +254,12 @@ export function ListingsGrid({
           {hasMore && (
             <div
               ref={ref}
-              className="flex justify-center items-center mt-12 mb-8 min-h-20"
+              className="flex justify-center items-center mt-8 md:mt-12 mb-6 md:mb-8 min-h-16 md:min-h-20"
             >
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-2 md:gap-3">
                 <svg
                   aria-hidden="true"
-                  className="h-10 w-10 animate-spin fill-[#E07A5F] text-gray-200 dark:text-gray-600"
+                  className="h-8 w-8 md:h-10 md:w-10 animate-spin fill-[#E07A5F] text-gray-200 dark:text-gray-600"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -273,7 +273,7 @@ export function ListingsGrid({
                     fill="currentFill"
                   />
                 </svg>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
                   Loading more...
                 </span>
               </div>

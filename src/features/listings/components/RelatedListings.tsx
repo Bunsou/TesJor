@@ -82,11 +82,11 @@ export default function RelatedListings({ slug }: RelatedListingsProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-[#2A201D] rounded-2xl p-6 shadow-sm">
-      <h3 className="text-lg font-semibold mb-6 text-gray-900 dark:text-white">
+    <div className="bg-white dark:bg-[#2A201D] rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
+      <h3 className="text-base md:text-lg font-semibold mb-4 md:mb-6 text-gray-900 dark:text-white">
         You might also like
       </h3>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2 md:gap-3">
         {relatedItems.map((item) => {
           const imageSrc = item.mainImage || getDefaultImage(item.category);
           const categoryLabel = getCategoryLabel(item.category);
@@ -96,9 +96,9 @@ export default function RelatedListings({ slug }: RelatedListingsProps) {
             <button
               key={item.id}
               onClick={() => router.push(`/explore/${item.slug}`)}
-              className="flex gap-3 items-start mb-2 bg-background/90 hover:bg-background dark:hover:bg-[#3A2A25] p-2 -m-2 rounded-xl transition-colors group"
+              className="flex gap-2 md:gap-3 items-start mb-1 md:mb-2 bg-background/90 hover:bg-background dark:hover:bg-[#3A2A25] p-2 -m-2 rounded-lg md:rounded-xl transition-colors group"
             >
-              <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-800 relative">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg md:rounded-xl overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-800 relative">
                 <Image
                   src={imageSrc}
                   alt={item.title}
@@ -111,10 +111,12 @@ export default function RelatedListings({ slug }: RelatedListingsProps) {
                 />
               </div>
               <div className="flex-1 text-left min-w-0">
-                <h4 className="font-semibold text-sm text-gray-900 dark:text-white line-clamp-1 group-hover:text-primary transition-colors">
+                <h4 className="font-semibold text-xs md:text-sm text-gray-900 dark:text-white line-clamp-1 group-hover:text-primary transition-colors">
                   {item.title}
                 </h4>
-                <p className={`text-xs mt-1 ${categoryColor}`}>
+                <p
+                  className={`text-[10px] md:text-xs mt-0.5 md:mt-1 ${categoryColor}`}
+                >
                   {categoryLabel}
                   {item.tags && item.tags.length > 0 && (
                     <span className="text-gray-500 dark:text-gray-400">

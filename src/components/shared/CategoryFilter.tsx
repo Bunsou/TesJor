@@ -50,24 +50,31 @@ export function CategoryFilter({
 
   return (
     <div
-      className={`flex gap-3 overflow-x-auto pb-2 scrollbar-hide ${className}`}
+      className={`flex gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory ${className}`}
+      style={{
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+        WebkitOverflowScrolling: "touch",
+      }}
     >
       {categories.map((cat) => (
         <button
           key={cat.id}
           onClick={() => onSelect(cat.id)}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${
+          className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all snap-start flex-shrink-0 min-h-[36px] md:min-h-[40px] ${
             selected === cat.id
               ? "bg-primary text-white shadow-lg shadow-primary/20"
               : "bg-white dark:bg-[#2A201D] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-primary/50"
           }`}
         >
           {typeof cat.icon === "string" ? (
-            <span className="material-symbols-outlined text-lg">
+            <span className="material-symbols-outlined text-base md:text-lg">
               {cat.icon}
             </span>
           ) : (
-            cat.icon
+            cat.icon && (
+              <span className="w-4 h-4 md:w-5 md:h-5">{cat.icon}</span>
+            )
           )}
           {cat.label}
         </button>

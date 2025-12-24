@@ -103,31 +103,31 @@ export function TripCard({ item, showVisitedState = false }: TripCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          <h3 className="font-semibold text-base text-gray-900 dark:text-white mb-1 line-clamp-1">
+        <div className="p-3 md:p-4">
+          <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-white mb-0.5 md:mb-1 line-clamp-1">
             {item.title}
           </h3>
           {item.titleKh && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 font-khmer line-clamp-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1.5 md:mb-2 font-khmer line-clamp-1">
               {item.titleKh}
             </p>
           )}
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2 md:mb-3 leading-relaxed">
             {item.description}
           </p>
 
           {/* Footer */}
           <div className="flex items-center justify-between text-xs">
             {item.addressText && (
-              <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
-                <span className="material-symbols-outlined text-sm">
-                  <MapPin size={16} />
+              <div className="flex items-center gap-0.5 md:gap-1 text-gray-500 dark:text-gray-400 min-w-0 flex-1 mr-2">
+                <MapPin size={14} className="shrink-0" />
+                <span className="truncate text-[10px] md:text-xs">
+                  {item.addressText}
                 </span>
-                <span className="truncate">{item.addressText}</span>
               </div>
             )}
             {item.priceLevel && (
-              <span className="text-[#E07A5F] font-semibold shrink-0">
+              <span className="text-[#E07A5F] font-semibold shrink-0 text-xs md:text-sm">
                 {item.priceLevel}
               </span>
             )}

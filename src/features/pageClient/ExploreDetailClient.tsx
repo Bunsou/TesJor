@@ -126,7 +126,7 @@ export default function ExploreDetailClient({
 
   return (
     <div className="flex-1 h-full overflow-y-auto bg-[#FDFCF6] dark:bg-[#201512]">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-6 md:gap-8">
+      <div className="max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-8 flex flex-col gap-4 md:gap-8 pb-20 md:pb-8">
         <Breadcrumb category={item.category} title={item.title} />
 
         <ImageCarousel
@@ -135,8 +135,8 @@ export default function ExploreDetailClient({
           onError={() => setImageError(true)}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-8">
-          <div className="lg:col-span-7 flex flex-col gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
+          <div className="md:col-span-7 flex flex-col gap-8">
             <ItemHeader item={item} />
 
             <div className="prose dark:prose-invert max-w-none text-gray-900 dark:text-white leading-relaxed">
@@ -148,16 +148,17 @@ export default function ExploreDetailClient({
                 item.operatingHours as OperatingHoursProps["operatingHours"]
               }
             />
-
-            <ReviewsSection
-              item={item}
-              reviews={item.reviews}
-              onReviewSubmitted={refreshData}
-            />
+            <div className="hidden md:block">
+              <ReviewsSection
+                item={item}
+                reviews={item.reviews}
+                onReviewSubmitted={refreshData}
+              />
+            </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-8 h-fit">
-            <div className="order-2 lg:order-1">
+          <div className="md:col-span-5 flex flex-col gap-6 md:sticky md:top-8 h-fit">
+            <div className="order-2 md:order-1">
               <ActionHub
                 item={item}
                 isBookmarked={isBookmarked}
@@ -171,7 +172,7 @@ export default function ExploreDetailClient({
             </div>
 
             {item.lat && item.lng && (
-              <div className="order-1 lg:order-2">
+              <div className="order-1 md:order-2">
                 <MapPreview
                   lat={item.lat}
                   lng={item.lng}
@@ -184,6 +185,15 @@ export default function ExploreDetailClient({
             {/* You might also like */}
             <div className="order-3">
               <RelatedListings slug={slug} />
+            </div>
+
+            {/* Reviews - Mobile only, at the bottom */}
+            <div className="md:hidden order-4">
+              <ReviewsSection
+                item={item}
+                reviews={item.reviews}
+                onReviewSubmitted={refreshData}
+              />
             </div>
           </div>
         </div>

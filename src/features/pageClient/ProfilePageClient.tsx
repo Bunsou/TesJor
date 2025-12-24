@@ -60,7 +60,7 @@ export default function ProfilePageClient({
 
   return (
     <div className="min-h-screen bg-background dark:bg-[#201512] pb-20 md:pb-8">
-      <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 flex flex-col gap-8">
+      <div className="max-w-6xl mx-auto px-3 md:px-8 py-6 md:py-12 flex flex-col gap-6 md:gap-8">
         {/* Profile Header */}
         <ProfileHeader user={user} userLevel={userLevel} />
 

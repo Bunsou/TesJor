@@ -24,11 +24,31 @@ import { Listing } from "@/server/db/schema";
 
 const categories: CategoryOption[] = [
   { id: "all", label: "All", icon: null },
-  { id: "place", label: "Places", icon: <MapPinCheck /> },
-  { id: "event", label: "Events", icon: <CalendarHeart /> },
-  { id: "food", label: "Foods", icon: <Utensils /> },
-  { id: "drink", label: "Drinks", icon: <Wine /> },
-  { id: "souvenir", label: "Souvenirs", icon: <ShoppingBag /> },
+  {
+    id: "place",
+    label: "Places",
+    icon: <MapPinCheck className="h-4 w-4 md:h-5 md:w-5" />,
+  },
+  {
+    id: "event",
+    label: "Events",
+    icon: <CalendarHeart className="h-4 w-4 md:h-5 md:w-5" />,
+  },
+  {
+    id: "food",
+    label: "Foods",
+    icon: <Utensils className="h-4 w-4 md:h-5 md:w-5" />,
+  },
+  {
+    id: "drink",
+    label: "Drinks",
+    icon: <Wine className="h-4 w-4 md:h-5 md:w-5" />,
+  },
+  {
+    id: "souvenir",
+    label: "Souvenirs",
+    icon: <ShoppingBag className="h-4 w-4 md:h-5 md:w-5" />,
+  },
 ];
 
 interface ExplorePageClientProps {
@@ -86,18 +106,20 @@ export default function ExplorePageClient({
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden relative">
       {/* Search Header */}
-      <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      <div className="px-3 md:px-4 pt-3 md:pt-4 pb-2 md:pb-3 bg-background sticky top-0 z-10">
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      </div>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 pb-6 lg:px-10 scrollbar-hide">
-        <div className="max-w-5xl mx-auto flex flex-col gap-4 pb-10">
+      <div className="flex-1 overflow-y-auto px-3 md:px-4 pb-20 md:pb-6 lg:px-10 scrollbar-hide">
+        <div className="max-w-5xl mx-auto flex flex-col gap-3 md:gap-4">
           {/* Category Pills */}
           <CategoryFilter
             categories={categories}
             selected={category}
             onSelect={setCategory}
             variant="pills"
-            className="-mx-4 px-4"
+            className=""
           />
 
           {/* Advanced Filters */}

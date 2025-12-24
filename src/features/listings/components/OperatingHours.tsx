@@ -78,20 +78,20 @@ export function OperatingHours({ operatingHours }: OperatingHoursProps) {
     <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#2A201D] overflow-hidden">
       <button
         onClick={() => setShowHours(!showHours)}
-        className="w-full flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+        className="w-full flex items-center justify-between p-3 md:p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
             <span className="material-symbols-outlined">
-              <Clock4 />
+              <Clock4 size={18} className="md:w-5 md:h-5" />
             </span>
           </div>
           <div className="text-left">
-            <p className="font-semibold text-gray-900 dark:text-white">
+            <p className="font-semibold text-sm md:text-base text-gray-900 dark:text-white">
               Operating Hours
             </p>
             <p
-              className={`text-xs font-medium ${
+              className={`text-[10px] md:text-xs font-medium ${
                 isOpenNow
                   ? "text-green-600 dark:text-green-400"
                   : "text-red-600 dark:text-red-400"
@@ -106,22 +106,22 @@ export function OperatingHours({ operatingHours }: OperatingHoursProps) {
             showHours ? "rotate-180" : ""
           }`}
         >
-          <ChevronDown size={20} />
+          <ChevronDown size={18} className="md:w-5 md:h-5" />
         </span>
       </button>
       {showHours && (
-        <div className="px-4 pb-4 pt-0 text-sm border-t border-gray-100 dark:border-gray-800 mt-2">
-          <div className="flex flex-col gap-3 pt-3">
+        <div className="px-3 md:px-4 pb-3 md:pb-4 pt-0 text-xs md:text-sm border-t border-gray-100 dark:border-gray-800 mt-2">
+          <div className="flex flex-col gap-2 md:gap-3 pt-2 md:pt-3">
             {operatingHours.map((slot, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center py-1 border-b border-gray-50 dark:border-gray-800/50 last:border-0"
               >
-                <span className="font-medium text-gray-500 dark:text-gray-400">
+                <span className="font-medium text-gray-500 dark:text-gray-400 text-xs md:text-sm">
                   {formatDayRange(slot.days)}
                 </span>
                 <span
-                  className={`font-semibold ${
+                  className={`font-semibold text-xs md:text-sm ${
                     slot.closed
                       ? "text-red-600 dark:text-red-400"
                       : "text-gray-900 dark:text-white"

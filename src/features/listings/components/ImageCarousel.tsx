@@ -54,7 +54,7 @@ export function ImageCarousel({ images, alt, onError }: ImageCarouselProps) {
 
   return (
     <div
-      className="w-full relative group rounded-2xl overflow-hidden shadow-sm aspect-video md:aspect-21/9 bg-gray-200 dark:bg-gray-800"
+      className="w-full relative group rounded-xl md:rounded-2xl overflow-hidden shadow-sm aspect-[4/3] md:aspect-video lg:aspect-21/9 bg-gray-200 dark:bg-gray-800"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -81,8 +81,8 @@ export function ImageCarousel({ images, alt, onError }: ImageCarouselProps) {
 
       {/* Image counter badge */}
       {images.length > 1 && (
-        <div className="absolute top-4 right-4 z-10">
-          <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-sm font-medium">
+        <div className="absolute top-2 md:top-4 right-2 md:right-4 z-10">
+          <span className="px-2 md:px-3 py-0.5 md:py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm font-medium">
             {currentIndex + 1} / {images.length}
           </span>
         </div>
@@ -94,19 +94,19 @@ export function ImageCarousel({ images, alt, onError }: ImageCarouselProps) {
           {/* Previous Button */}
           <button
             onClick={showPrevImage}
-            className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm hover:bg-white dark:hover:bg-black/80 transition-all shadow-lg z-10 opacity-0 group-hover:opacity-100"
+            className="absolute top-1/2 left-2 md:left-4 -translate-y-1/2 p-1.5 md:p-2 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm hover:bg-white dark:hover:bg-black/80 transition-all shadow-lg z-10 opacity-0 group-hover:opacity-100"
             aria-label="Previous image"
           >
-            <ChevronLeft className="w-6 h-6 text-gray-800 dark:text-white" />
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-800 dark:text-white" />
           </button>
 
           {/* Next Button */}
           <button
             onClick={showNextImage}
-            className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm hover:bg-white dark:hover:bg-black/80 transition-all shadow-lg z-10 opacity-0 group-hover:opacity-100"
+            className="absolute top-1/2 right-2 md:right-4 -translate-y-1/2 p-1.5 md:p-2 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm hover:bg-white dark:hover:bg-black/80 transition-all shadow-lg z-10 opacity-0 group-hover:opacity-100"
             aria-label="Next image"
           >
-            <ChevronRight className="w-6 h-6 text-gray-800 dark:text-white" />
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-800 dark:text-white" />
           </button>
 
           {/* Dot Indicators */}

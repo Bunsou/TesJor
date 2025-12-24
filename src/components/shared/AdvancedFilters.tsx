@@ -63,13 +63,13 @@ export default function AdvancedFilters({
   };
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-4 lg:px-0 mb-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 px-0 mb-4">
       {/* Province Filter */}
       <Select value={province} onValueChange={handleProvinceChange}>
-        <SelectTrigger className="w-full bg-white border-gray-200 h-11">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-gray-500" />
-            <span className="truncate text-sm">
+        <SelectTrigger className="w-full bg-white dark:bg-[#2A201D] border-gray-200 dark:border-gray-700 h-10 md:h-11">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
+            <span className="truncate text-xs md:text-sm">
               {province === "all" ? "All of Cambodia" : province}
             </span>
           </div>
@@ -85,10 +85,12 @@ export default function AdvancedFilters({
 
       {/* Tags Filter */}
       <Select value={tag} onValueChange={handleTagChange}>
-        <SelectTrigger className="w-full bg-white border-gray-200 h-11">
-          <div className="flex items-center gap-2">
-            <Tag className="w-4 h-4 text-gray-500" />
-            <span className="truncate text-sm">{getTagDisplayLabel(tag)}</span>
+        <SelectTrigger className="w-full bg-white dark:bg-[#2A201D] border-gray-200 dark:border-gray-700 h-10 md:h-11">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <Tag className="w-3.5 h-3.5 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
+            <span className="truncate text-xs md:text-sm">
+              {getTagDisplayLabel(tag)}
+            </span>
           </div>
         </SelectTrigger>
         <SelectContent className="max-h-70 overflow-y-auto">
@@ -112,10 +114,13 @@ export default function AdvancedFilters({
 
       {/* Rating Filter */}
       <Select value={rating} onValueChange={onRatingChange}>
-        <SelectTrigger className="w-full bg-white border-gray-200 h-11">
-          <div className="flex items-center gap-2">
-            <Star className="w-4 h-4 text-gray-500" />
-            <SelectValue placeholder="Any Rating" />
+        <SelectTrigger className="w-full bg-white dark:bg-[#2A201D] border-gray-200 dark:border-gray-700 h-10 md:h-11">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <Star className="w-3.5 h-3.5 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
+            <SelectValue
+              placeholder="Any Rating"
+              className="text-xs md:text-sm"
+            />
           </div>
         </SelectTrigger>
         <SelectContent>
@@ -129,10 +134,13 @@ export default function AdvancedFilters({
 
       {/* Price Filter */}
       <Select value={price} onValueChange={onPriceChange}>
-        <SelectTrigger className="w-full bg-white border-gray-200 h-11">
-          <div className="flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-gray-500" />
-            <SelectValue placeholder="Any Price" />
+        <SelectTrigger className="w-full bg-white dark:bg-[#2A201D] border-gray-200 dark:border-gray-700 h-10 md:h-11">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
+            <SelectValue
+              placeholder="Any Price"
+              className="text-xs md:text-sm"
+            />
           </div>
         </SelectTrigger>
         <SelectContent>
