@@ -112,58 +112,41 @@ export default function AllCardsPage() {
     });
   }, [currentPage, categoryFilter, provinceFilter, debouncedSearch, router]);
 
-  // Update URL when filters change
-  useEffect(() => {
-    const params = new URLSearchParams();
-
-    if (currentPage > 1) params.set("page", currentPage.toString());
-    if (categoryFilter) params.set("category", categoryFilter);
-    if (provinceFilter) params.set("province", provinceFilter);
-    if (debouncedSearch) params.set("search", debouncedSearch);
-
-    const queryString = params.toString();
-    router.push(`/admin/cards${queryString ? `?${queryString}` : ""}`, {
-      scroll: false,
-    });
-  }, [currentPage, categoryFilter, provinceFilter, debouncedSearch, router]);
-
   // Fetch listings
-  useEffect(() => {
-    async function fetchListings() {
-      try {
-        setIsLoading(true);
-        const params = new URLSearchParams({
-          page: currentPage.toString(),
-          limit: itemsPerPage.toString(),
-        });
+  const fetchListings = async () => {
+    try {
+      setIsLoading(true);
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: itemsPerPage.toString(),
+      });
 
-        if (categoryFilter) params.set("category", categoryFilter);
-        if (provinceFilter) params.set("province", provinceFilter);
-        if (debouncedSearch) params.set("q", debouncedSearch);
+      if (categoryFilter) params.set("category", categoryFilter);
+      if (provinceFilter) params.set("province", provinceFilter);
+      if (debouncedSearch) params.set("q", debouncedSearch);
 
-        const res = await fetch(`/api/listings?${params}`);
-        if (res.ok) {
-          const data = await res.json();
-          setListings(data.data.items || []);
-          setTotalItems(data.data.total || 0);
-        } else {
-          console.error(
-            "Failed to fetch listings:",
-            res.status,
-            res.statusText
-          );
-          setListings([]);
-          setTotalItems(0);
-        }
-      } catch (error) {
-        console.error("Failed to fetch listings:", error);
+      const res = await fetch(`/api/listings?${params}`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setListings(data.data.items || []);
+        setTotalItems(data.data.total || 0);
+      } else {
+        console.error("Failed to fetch listings:", res.status, res.statusText);
         setListings([]);
         setTotalItems(0);
-      } finally {
-        setIsLoading(false);
       }
+    } catch (error) {
+      console.error("Failed to fetch listings:", error);
+      setListings([]);
+      setTotalItems(0);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchListings();
   }, [currentPage, categoryFilter, provinceFilter, debouncedSearch]);
 
@@ -184,15 +167,18 @@ export default function AllCardsPage() {
         method: "DELETE",
       });
       if (res.ok) {
-        setListings(listings.filter((l) => l.id !== listingToDelete.id));
-        setTotalItems((prev) => prev - 1);
-
-        // If we deleted the last item on this page and we're not on page 1, go back one page
-        if (listings.length === 1 && currentPage > 1) {
-          setCurrentPage((prev) => prev - 1);
-        }
-
         toast.success("Listing deleted successfully", { id: toastId });
+
+        // Check if we need to go back a page
+        const newTotal = totalItems - 1;
+        const newTotalPages = Math.ceil(newTotal / itemsPerPage);
+
+        if (currentPage > newTotalPages && currentPage > 1) {
+          setCurrentPage((prev) => prev - 1);
+        } else {
+          // Refetch current page data
+          await fetchListings();
+        }
       } else {
         toast.error("Failed to delete listing", { id: toastId });
       }

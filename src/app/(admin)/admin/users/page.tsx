@@ -51,33 +51,35 @@ export default function UsersPage() {
   const debouncedSearch = useDebounce(searchQuery, 500);
 
   // Fetch users from API
-  useEffect(() => {
-    async function fetchUsers() {
-      setIsLoading(true);
-      try {
-        const params = new URLSearchParams();
-        params.set("page", currentPage.toString());
-        params.set("limit", itemsPerPage.toString());
-        if (debouncedSearch) params.set("search", debouncedSearch);
-        if (dateFilter) params.set("date", dateFilter);
-        if (roleFilter) params.set("role", roleFilter);
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.set("page", currentPage.toString());
+      params.set("limit", itemsPerPage.toString());
+      if (debouncedSearch) params.set("search", debouncedSearch);
+      if (dateFilter) params.set("date", dateFilter);
+      if (roleFilter) params.set("role", roleFilter);
 
-        const response = await fetch(`/api/admin/users?${params}`);
-        const data = await response.json();
+      const response = await fetch(`/api/admin/users?${params}`, {
+        cache: "no-store",
+      });
+      const data = await response.json();
 
-        if (data.success) {
-          setUsers(data.data.items);
-          setTotalItems(data.data.total);
-        }
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      } finally {
-        setIsLoading(false);
+      if (data.success) {
+        setUsers(data.data.items);
+        setTotalItems(data.data.total);
       }
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchUsers();
-  }, [currentPage, debouncedSearch, dateFilter, roleFilter, itemsPerPage]);
+  }, [currentPage, debouncedSearch, dateFilter, roleFilter]);
 
   const openDeleteModal = (id: string, name: string, email: string) => {
     setUserToDelete({ id, name, email });
@@ -95,18 +97,18 @@ export default function UsersPage() {
       });
 
       if (response.ok) {
-        // Update state
-        setUsers(users.filter((u) => u.id !== userToDelete.id));
-        const newTotal = totalItems - 1;
-        setTotalItems(newTotal);
-
-        // If current page becomes empty, go to previous page
-        const totalPages = Math.ceil(newTotal / itemsPerPage);
-        if (currentPage > totalPages && currentPage > 1) {
-          updateURLParams({ page: (currentPage - 1).toString() });
-        }
-
         toast.success("User deleted successfully", { id: toastId });
+
+        // Check if we need to go back a page
+        const newTotal = totalItems - 1;
+        const newTotalPages = Math.ceil(newTotal / itemsPerPage);
+
+        if (currentPage > newTotalPages && currentPage > 1) {
+          updateURLParams({ page: (currentPage - 1).toString() });
+        } else {
+          // Refetch current page data
+          await fetchUsers();
+        }
       } else {
         toast.error("Failed to delete user", { id: toastId });
       }

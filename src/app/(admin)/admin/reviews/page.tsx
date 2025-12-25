@@ -98,38 +98,40 @@ export default function ReviewsPage() {
   }, [currentPage, ratingFilter, sortFilter, debouncedSearch, router]);
 
   // Fetch reviews from API
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        setIsLoading(true);
-        const params = new URLSearchParams({
-          page: currentPage.toString(),
-          limit: itemsPerPage.toString(),
-        });
+  const fetchReviews = async () => {
+    try {
+      setIsLoading(true);
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: itemsPerPage.toString(),
+      });
 
-        if (ratingFilter) params.set("rating", ratingFilter);
-        if (sortFilter) params.set("sort", sortFilter);
-        if (debouncedSearch) params.set("search", debouncedSearch);
+      if (ratingFilter) params.set("rating", ratingFilter);
+      if (sortFilter) params.set("sort", sortFilter);
+      if (debouncedSearch) params.set("search", debouncedSearch);
 
-        const res = await fetch(`/api/admin/reviews?${params}`);
-        if (res.ok) {
-          const data = await res.json();
-          setReviews(data.data.items || []);
-          setTotalItems(data.data.total || 0);
-        } else {
-          console.error("Failed to fetch reviews:", res.status, res.statusText);
-          setReviews([]);
-          setTotalItems(0);
-        }
-      } catch (error) {
-        console.error("Failed to fetch reviews:", error);
+      const res = await fetch(`/api/admin/reviews?${params}`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setReviews(data.data.items || []);
+        setTotalItems(data.data.total || 0);
+      } else {
+        console.error("Failed to fetch reviews:", res.status, res.statusText);
         setReviews([]);
         setTotalItems(0);
-      } finally {
-        setIsLoading(false);
       }
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
+      setReviews([]);
+      setTotalItems(0);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchReviews();
   }, [currentPage, ratingFilter, sortFilter, debouncedSearch]);
 
@@ -152,15 +154,18 @@ export default function ReviewsPage() {
         method: "DELETE",
       });
       if (res.ok) {
-        setReviews(reviews.filter((r) => r.id !== reviewToDelete.id));
-        setTotalItems((prev) => prev - 1);
-
-        // If we deleted the last item on this page and we're not on page 1, go back one page
-        if (reviews.length === 1 && currentPage > 1) {
-          setCurrentPage((prev) => prev - 1);
-        }
-
         toast.success("Review deleted successfully", { id: toastId });
+
+        // Check if we need to go back a page
+        const newTotal = totalItems - 1;
+        const newTotalPages = Math.ceil(newTotal / itemsPerPage);
+
+        if (currentPage > newTotalPages && currentPage > 1) {
+          setCurrentPage((prev) => prev - 1);
+        } else {
+          // Refetch current page data
+          await fetchReviews();
+        }
       } else {
         toast.error("Failed to delete review", { id: toastId });
       }
