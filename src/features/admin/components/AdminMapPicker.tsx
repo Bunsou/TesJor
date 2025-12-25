@@ -5,8 +5,8 @@ import { loadGoogleMaps } from "@/lib/maps";
 import { MapPin, Loader2, Search, X } from "lucide-react";
 
 interface AdminMapPickerProps {
-  initialLat: number;
-  initialLng: number;
+  initialLat?: number;
+  initialLng?: number;
   onLocationSelect: (data: {
     lat: number;
     lng: number;
@@ -38,10 +38,19 @@ export function AdminMapPicker({
     null
   );
 
+  // Default to Cambodia center if coordinates are invalid
+  const CAMBODIA_CENTER = { lat: 11.5564, lng: 104.9282 };
+  const isValidCoord = (val?: number) =>
+    val !== undefined && !isNaN(val) && isFinite(val);
+  const hasValidCoords = isValidCoord(initialLat) && isValidCoord(initialLng);
+
+  const centerLat = hasValidCoords ? initialLat! : CAMBODIA_CENTER.lat;
+  const centerLng = hasValidCoords ? initialLng! : CAMBODIA_CENTER.lng;
+
   const [isLoading, setIsLoading] = useState(true);
   const [currentPosition, setCurrentPosition] = useState({
-    lat: initialLat,
-    lng: initialLng,
+    lat: centerLat,
+    lng: centerLng,
   });
   const [searchAddress, setSearchAddress] = useState("");
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
@@ -78,9 +87,9 @@ export function AdminMapPicker({
 
         if (!mapRef.current) return;
 
-        // Create map
+        // Create map with validated coordinates
         const map = new maps.Map(mapRef.current, {
-          center: { lat: initialLat, lng: initialLng },
+          center: { lat: centerLat, lng: centerLng },
           zoom: 12,
           mapTypeId: maps.MapTypeId.TERRAIN,
           mapTypeControl: false,
@@ -96,15 +105,27 @@ export function AdminMapPicker({
         autocompleteServiceRef.current = new maps.places.AutocompleteService();
         placesServiceRef.current = new maps.places.PlacesService(map);
 
-        // Create initial marker
-        const marker = new maps.Marker({
-          position: { lat: initialLat, lng: initialLng },
-          map: map,
-          draggable: true,
-          animation: maps.Animation.DROP,
-        });
+        // Only create marker if we have valid initial coordinates
+        if (hasValidCoords) {
+          const marker = new maps.Marker({
+            position: { lat: centerLat, lng: centerLng },
+            map: map,
+            draggable: true,
+            animation: maps.Animation.DROP,
+          });
 
-        markerRef.current = marker;
+          markerRef.current = marker;
+
+          // Handle marker drag
+          marker.addListener("dragend", async () => {
+            const position = marker.getPosition();
+            if (position) {
+              const lat = position.lat();
+              const lng = position.lng();
+              await reverseGeocode(lat, lng);
+            }
+          });
+        }
 
         // Handle map click to place marker
         map.addListener("click", async (e: google.maps.MapMouseEvent) => {
@@ -112,21 +133,33 @@ export function AdminMapPicker({
             const lat = e.latLng.lat();
             const lng = e.latLng.lng();
 
-            // Update marker position
-            marker.setPosition(e.latLng);
-            marker.setAnimation(maps.Animation.DROP);
+            // Create marker if it doesn't exist, otherwise update position
+            if (!markerRef.current) {
+              const marker = new maps.Marker({
+                position: e.latLng,
+                map: map,
+                draggable: true,
+                animation: maps.Animation.DROP,
+              });
+
+              markerRef.current = marker;
+
+              // Add drag listener to new marker
+              marker.addListener("dragend", async () => {
+                const position = marker.getPosition();
+                if (position) {
+                  const lat = position.lat();
+                  const lng = position.lng();
+                  await reverseGeocode(lat, lng);
+                }
+              });
+            } else {
+              // Update existing marker position
+              markerRef.current.setPosition(e.latLng);
+              markerRef.current.setAnimation(maps.Animation.DROP);
+            }
 
             // Get address for this location
-            await reverseGeocode(lat, lng);
-          }
-        });
-
-        // Handle marker drag
-        marker.addListener("dragend", async () => {
-          const position = marker.getPosition();
-          if (position) {
-            const lat = position.lat();
-            const lng = position.lng();
             await reverseGeocode(lat, lng);
           }
         });
@@ -139,7 +172,7 @@ export function AdminMapPicker({
     };
 
     initMap();
-  }, [initialLat, initialLng]);
+  }, [centerLat, centerLng, hasValidCoords]);
 
   // Handle search using Places Autocomplete
   useEffect(() => {

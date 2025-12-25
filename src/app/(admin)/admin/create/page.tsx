@@ -167,6 +167,16 @@ export default function CreateCardPage() {
     });
   };
 
+  const handleClearLocation = () => {
+    setFormData({
+      ...formData,
+      lat: "",
+      lng: "",
+      address: "",
+    });
+    toast.success("Location cleared");
+  };
+
   const handleMainImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -628,10 +638,24 @@ export default function CreateCardPage() {
 
           {/* Location & Map */}
           <div className="bg-white dark:bg-[#2A201D] rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
-              <MapPin className="w-5 h-5 text-[#E07A5F]" />
-              Location & Map
-            </h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                <MapPin className="w-5 h-5 text-[#E07A5F]" />
+                Location & Map
+              </h3>
+              {(formData.lat !== "11.5564" ||
+                formData.lng !== "104.9282" ||
+                formData.address) && (
+                <button
+                  type="button"
+                  onClick={handleClearLocation}
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  Clear Location
+                </button>
+              )}
+            </div>
             <div className="flex flex-col gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
