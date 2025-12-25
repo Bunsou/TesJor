@@ -12,11 +12,22 @@ import {
   Phone,
   Save,
   X,
-  Upload,
-  Trash2,
+  Tag,
+  Layers,
+  Plus,
+  Star,
 } from "lucide-react";
 import { AdminMapPicker } from "@/features/admin/components/AdminMapPicker";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { provinces, categories, tags } from "@/constants/constants";
+import Image from "next/image";
 
 interface PriceOption {
   label: string;
@@ -598,60 +609,51 @@ export default function EditCardPage() {
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Category
                   </label>
-                  <select
+                  <Select
                     value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, category: value })
                     }
-                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   >
-                    <option value="">Select Category</option>
-                    <option value="place">Place</option>
-                    <option value="food">Food</option>
-                    <option value="drink">Drink</option>
-                    <option value="souvenir">Souvenir</option>
-                    <option value="event">Event</option>
-                  </select>
+                    <SelectTrigger className="w-full bg-white dark:bg-[#201512] border-gray-300 dark:border-gray-700 h-11 md:h-12 focus:border-[#E07A5F] focus:ring-[#E07A5F]">
+                      <div className="flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <SelectValue placeholder="Select category" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="w-full md:w-1/2">
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Province
                   </label>
-                  <select
+                  <Select
                     value={formData.province}
-                    onChange={(e) =>
-                      setFormData({ ...formData, province: e.target.value })
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, province: value })
                     }
-                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
                   >
-                    <option value="">Select Province</option>
-                    <option value="All of Cambodia">All of Cambodia</option>
-                    <option value="Banteay Meanchey">Banteay Meanchey</option>
-                    <option value="Battambang">Battambang</option>
-                    <option value="Kampong Cham">Kampong Cham</option>
-                    <option value="Kampong Chhnang">Kampong Chhnang</option>
-                    <option value="Kampong Speu">Kampong Speu</option>
-                    <option value="Kampong Thom">Kampong Thom</option>
-                    <option value="Kampot">Kampot</option>
-                    <option value="Kandal">Kandal</option>
-                    <option value="Kep">Kep</option>
-                    <option value="Koh Kong">Koh Kong</option>
-                    <option value="Kratie">Kratie</option>
-                    <option value="Mondulkiri">Mondulkiri</option>
-                    <option value="Oddar Meanchey">Oddar Meanchey</option>
-                    <option value="Pailin">Pailin</option>
-                    <option value="Phnom Penh">Phnom Penh</option>
-                    <option value="Preah Vihear">Preah Vihear</option>
-                    <option value="Prey Veng">Prey Veng</option>
-                    <option value="Pursat">Pursat</option>
-                    <option value="Ratanakiri">Ratanakiri</option>
-                    <option value="Siem Reap">Siem Reap</option>
-                    <option value="Sihanoukville">Sihanoukville</option>
-                    <option value="Stung Treng">Stung Treng</option>
-                    <option value="Svay Rieng">Svay Rieng</option>
-                    <option value="Takeo">Takeo</option>
-                    <option value="Tbong Khmum">Tbong Khmum</option>
-                  </select>
+                    <SelectTrigger className="w-full bg-white dark:bg-[#201512] border-gray-300 dark:border-gray-700 h-11 md:h-12 focus:border-[#E07A5F] focus:ring-[#E07A5F]">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <SelectValue placeholder="Select province" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-70 overflow-y-auto">
+                      {provinces.map((p) => (
+                        <SelectItem key={p} value={p}>
+                          {p}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
@@ -659,55 +661,77 @@ export default function EditCardPage() {
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Tags
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
+                  <div className="flex flex-col gap-2">
+                    <Select
                       value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && handleTagAdd()}
-                      className="flex-1 p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
-                      placeholder="e.g. adventure, cultural"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleTagAdd}
-                      className="px-4 py-2 bg-[#E07A5F] text-white rounded-md hover:bg-[#d1684e] transition-colors"
+                      onValueChange={(value) => {
+                        if (!formData.tags.includes(value)) {
+                          setFormData({
+                            ...formData,
+                            tags: [...formData.tags, value],
+                          });
+                          setNewTag("");
+                        }
+                      }}
                     >
-                      Add
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {formData.tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
-                      >
-                        {tag}
-                        <button
-                          type="button"
-                          onClick={() => handleTagRemove(tag)}
-                          className="hover:text-red-500"
+                      <SelectTrigger className="w-full bg-white dark:bg-[#201512] border-gray-300 dark:border-gray-700 h-11 md:h-12 focus:border-[#E07A5F] focus:ring-[#E07A5F]">
+                        <div className="flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          <SelectValue placeholder="Add tags..." />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60 overflow-y-auto">
+                        {tags
+                          .filter((tag) => !formData.tags.includes(tag))
+                          .map((tag) => (
+                            <SelectItem key={tag} value={tag}>
+                              {tag}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1 bg-[#E07A5F]/10 text-[#E07A5F] px-3 py-1.5 rounded-lg text-sm font-medium"
                         >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => handleTagRemove(tag)}
+                            className="hover:text-red-500 transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
                   </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    Select from dropdown to add tags.
+                  </p>
                 </div>
                 <div className="w-full md:w-48">
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     XP Points
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={formData.xpPoints}
-                    onChange={(e) =>
-                      setFormData({ ...formData, xpPoints: e.target.value })
-                    }
-                    className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
-                    placeholder="50"
-                  />
+                  <div className="relative">
+                    <Star className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.xpPoints}
+                      onChange={(e) =>
+                        setFormData({ ...formData, xpPoints: e.target.value })
+                      }
+                      className="pl-10 w-full py-2 md:py-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white transition-colors"
+                      placeholder="0"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    Reward for visiting.
+                  </p>
                 </div>
               </div>
             </div>
@@ -776,36 +800,42 @@ export default function EditCardPage() {
                   Main Cover Image
                 </label>
                 {formData.mainImage || formData.existingMainImage ? (
-                  <div className="relative aspect-[4/3] rounded-lg overflow-hidden border-2 border-gray-300 dark:border-gray-700">
-                    <img
+                  <div className="w-full aspect-4/3 rounded-xl border-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 relative overflow-hidden group">
+                    <Image
                       src={
                         formData.mainImage
                           ? URL.createObjectURL(formData.mainImage)
                           : formData.existingMainImage
                       }
-                      alt="Main"
-                      className="w-full h-full object-cover"
+                      alt="Main cover"
+                      fill
+                      className="object-cover"
                     />
                     <button
                       type="button"
                       onClick={handleRemoveMainImage}
-                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center aspect-[4/3] rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-[#E07A5F] cursor-pointer transition-colors">
-                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Upload main image
-                    </span>
+                  <label className="w-full aspect-4/3 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-center p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleMainImageUpload}
                       className="hidden"
                     />
+                    <div className="w-12 h-12 rounded-full bg-[#E07A5F]/10 text-[#E07A5F] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      <Plus className="w-6 h-6" />
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      Click to upload
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      PNG, JPG up to 5MB
+                    </p>
                   </label>
                 )}
               </div>
@@ -817,51 +847,49 @@ export default function EditCardPage() {
                   )
                 </label>
                 <div className="grid grid-cols-3 gap-3">
-                  {/* Existing gallery images */}
                   {formData.existingGalleryImages.map((photo) => (
                     <div
                       key={photo.id}
-                      className="relative aspect-square rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700"
+                      className="aspect-square rounded-lg border-2 border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 relative overflow-hidden group"
                     >
-                      <img
+                      <Image
                         src={photo.url}
                         alt="Gallery"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                       <button
                         type="button"
                         onClick={() =>
                           handleRemoveExistingGalleryImage(photo.id)
                         }
-                        className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                       >
                         <X className="w-3 h-3" />
                       </button>
                     </div>
                   ))}
-                  {/* New gallery images */}
                   {formData.galleryImages.map((file, index) => (
                     <div
                       key={index}
-                      className="relative aspect-square rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700"
+                      className="aspect-square rounded-lg border-2 border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 relative overflow-hidden group"
                     >
-                      <img
+                      <Image
                         src={URL.createObjectURL(file)}
                         alt={`Gallery ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveGalleryImage(index)}
-                        className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                       >
                         <X className="w-3 h-3" />
                       </button>
                     </div>
                   ))}
-                  {/* Upload button */}
-                  <label className="flex flex-col items-center justify-center aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-[#E07A5F] cursor-pointer transition-colors">
-                    <Upload className="w-6 h-6 text-gray-400" />
+                  <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer text-gray-600 hover:text-[#E07A5F] transition-colors">
                     <input
                       type="file"
                       accept="image/*"
@@ -869,6 +897,8 @@ export default function EditCardPage() {
                       onChange={handleGalleryImageUpload}
                       className="hidden"
                     />
+                    <Plus className="w-6 h-6" />
+                    <span className="text-xs font-medium mt-1">Add</span>
                   </label>
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
@@ -888,21 +918,21 @@ export default function EditCardPage() {
               </h3>
               <div className="flex flex-col gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">
                     Price Level
                   </label>
-                  <div className="flex gap-2">
-                    {["$", "$$", "$$$", "$$$$"].map((level) => (
+                  <div className="flex w-full rounded-xl bg-gray-100 dark:bg-gray-800 p-1">
+                    {["Free", "$", "$$", "$$$"].map((level) => (
                       <button
                         key={level}
                         type="button"
                         onClick={() =>
                           setFormData({ ...formData, priceLevel: level })
                         }
-                        className={`flex-1 py-2 rounded-md border transition-colors ${
+                        className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
                           formData.priceLevel === level
-                            ? "bg-[#E07A5F] text-white border-[#E07A5F]"
-                            : "border-gray-300 dark:border-gray-700 hover:border-[#E07A5F]"
+                            ? "bg-white dark:bg-[#2A201D] shadow-sm text-[#E07A5F] ring-1 ring-black/5 dark:ring-white/10"
+                            : "text-gray-600 hover:text-gray-900 dark:hover:text-white"
                         }`}
                       >
                         {level}
@@ -910,9 +940,9 @@ export default function EditCardPage() {
                     ))}
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">
-                    Price Options
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                    Price Breakdown
                   </label>
                   <div className="flex flex-col gap-3">
                     {formData.priceOptions.map((option, index) => (
@@ -923,33 +953,38 @@ export default function EditCardPage() {
                           onChange={(e) =>
                             updatePriceOption(index, "label", e.target.value)
                           }
-                          placeholder="Item name"
-                          className="flex-1 p-2 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white text-sm"
+                          className="grow p-2 rounded-md border border-gray-300 dark:border-gray-700 text-sm dark:bg-[#201512] dark:text-white"
+                          placeholder="Label (e.g. Adult)"
                         />
-                        <input
-                          type="text"
-                          value={option.price}
-                          onChange={(e) =>
-                            updatePriceOption(index, "price", e.target.value)
-                          }
-                          placeholder="5.00"
-                          className="w-24 p-2 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white text-sm"
-                        />
+                        <div className="w-24 relative">
+                          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={option.price}
+                            onChange={(e) =>
+                              updatePriceOption(index, "price", e.target.value)
+                            }
+                            className="w-full pl-5 py-2 rounded-md border border-gray-300 dark:border-gray-700 text-sm dark:bg-[#201512] dark:text-white"
+                            placeholder="0.00"
+                          />
+                        </div>
                         <button
                           type="button"
                           onClick={() => removePriceOption(index)}
-                          className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <X className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
                     <button
                       type="button"
                       onClick={addPriceOption}
-                      className="mt-2 px-4 py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:border-[#E07A5F] hover:text-[#E07A5F] transition-colors"
+                      className="text-sm text-[#E07A5F] font-medium flex items-center gap-1 mt-1 hover:underline self-start"
                     >
-                      + Add Price Option
+                      <Plus className="w-4 h-4" /> Add Option
                     </button>
                   </div>
                 </div>
@@ -966,19 +1001,19 @@ export default function EditCardPage() {
                 {formData.timeSlots.map((slot, index) => (
                   <div
                     key={index}
-                    className="p-4 border border-gray-200 dark:border-gray-800 rounded-lg"
+                    className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700"
                   >
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex gap-1">
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="flex gap-1.5 flex-wrap">
                         {["M", "T", "W", "Th", "F", "Sa", "Su"].map((day) => (
                           <button
                             key={day}
                             type="button"
                             onClick={() => toggleDay(index, day)}
-                            className={`w-8 h-8 rounded-md text-xs font-medium transition-colors ${
+                            className={`w-7 h-7 rounded-full text-xs font-medium border transition-all ${
                               slot.days.includes(day)
-                                ? "bg-[#E07A5F] text-white"
-                                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                                ? "bg-[#E07A5F] text-white border-[#E07A5F]"
+                                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:border-[#E07A5F]"
                             }`}
                           >
                             {day}
@@ -988,55 +1023,65 @@ export default function EditCardPage() {
                       <button
                         type="button"
                         onClick={() => removeTimeSlot(index)}
-                        className="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                        className="text-xs text-red-500 font-medium hover:text-red-700 flex items-center gap-1"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <X className="w-3 h-3" /> Remove
                       </button>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="time"
-                        value={slot.open}
-                        onChange={(e) =>
-                          updateTimeSlot(index, "open", e.target.value)
-                        }
-                        disabled={slot.closed}
-                        className="flex-1 p-2 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white text-sm disabled:opacity-50"
-                      />
-                      <span className="text-gray-600 dark:text-gray-400">
-                        to
-                      </span>
-                      <input
-                        type="time"
-                        value={slot.close}
-                        onChange={(e) =>
-                          updateTimeSlot(index, "close", e.target.value)
-                        }
-                        disabled={slot.closed}
-                        className="flex-1 p-2 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white text-sm disabled:opacity-50"
-                      />
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={slot.closed}
+                          onChange={(e) =>
+                            updateTimeSlot(index, "closed", e.target.checked)
+                          }
+                          className="rounded border-gray-300 text-[#E07A5F] focus:ring-[#E07A5F] h-4 w-4"
+                        />
+                        <label className="text-sm font-medium text-gray-900 dark:text-white">
+                          Closed
+                        </label>
+                      </div>
+                      {!slot.closed && (
+                        <div className="grid grid-cols-2 gap-4 items-center">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">
+                              Open
+                            </label>
+                            <input
+                              type="time"
+                              value={slot.open}
+                              onChange={(e) =>
+                                updateTimeSlot(index, "open", e.target.value)
+                              }
+                              className="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 px-2 dark:bg-[#201512] dark:text-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">
+                              Close
+                            </label>
+                            <input
+                              type="time"
+                              value={slot.close}
+                              onChange={(e) =>
+                                updateTimeSlot(index, "close", e.target.value)
+                              }
+                              className="w-full rounded-lg border-gray-300 dark:border-gray-700 text-sm py-1.5 px-2 dark:bg-[#201512] dark:text-white"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <label className="flex items-center gap-2 mt-3 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={slot.closed}
-                        onChange={(e) =>
-                          updateTimeSlot(index, "closed", e.target.checked)
-                        }
-                        className="rounded border-gray-300 text-[#E07A5F] focus:ring-[#E07A5F]"
-                      />
-                      <span className="text-gray-600 dark:text-gray-400">
-                        Closed
-                      </span>
-                    </label>
                   </div>
                 ))}
                 <button
                   type="button"
                   onClick={addTimeSlot}
-                  className="px-4 py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:border-[#E07A5F] hover:text-[#E07A5F] transition-colors"
+                  className="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-[#E07A5F] hover:border-[#E07A5F] hover:bg-[#E07A5F]/5 transition-all"
                 >
-                  + Add Time Slot
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Day Group
                 </button>
               </div>
             </div>
@@ -1053,15 +1098,18 @@ export default function EditCardPage() {
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                   Phone Number
                 </label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="w-full p-2 md:p-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
-                  placeholder="+855 12 345 678"
-                />
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    className="pl-9 w-full py-2 md:py-3 rounded-md border border-gray-300 dark:border-gray-700 focus:border-[#E07A5F] focus:ring-[#E07A5F] dark:bg-[#201512] dark:text-white"
+                    placeholder="+855 12 345 678"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
