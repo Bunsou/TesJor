@@ -129,20 +129,21 @@ export const listings = pgTable(
     lng: doublePrecision("lng"),
     mainImage: text("main_image"),
     priceLevel: priceLevelEnum("price_level"),
-    priceDetails: jsonb("price_details"), // Array of { label, price, currency }
-    operatingHours: jsonb("operating_hours"), // Object with day keys
-    contactInfo: jsonb("contact_info"), // { phone, facebook, website }
+    priceDetails: jsonb("price_details"),
+    operatingHours: jsonb("operating_hours"),
+    contactInfo: jsonb("contact_info"),
     googlePlaceId: text("google_place_id"),
     views: integer("views").default(0).notNull(),
     avgRating: decimal("avg_rating", { precision: 3, scale: 2 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => ({
-    categoryIdx: index("listings_category_idx").on(table.category),
-    slugIdx: index("listings_slug_idx").on(table.slug),
-    titleIdx: index("listings_title_idx").on(table.title),
-    latLngIdx: index("listings_lat_lng_idx").on(table.lat, table.lng),
-  })
+  // CHANGE THIS SECTION
+  (table) => [
+    index("listings_category_idx").on(table.category),
+    index("listings_slug_idx").on(table.slug),
+    index("listings_title_idx").on(table.title),
+    index("listings_lat_lng_idx").on(table.lat, table.lng),
+  ]
 );
 
 // ========================================
@@ -161,9 +162,7 @@ export const listingPhotos = pgTable(
     caption: text("caption"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => ({
-    listingIdIdx: index("listing_photos_listing_id_idx").on(table.listingId),
-  })
+  (table) => [index("listing_photos_listing_id_idx").on(table.listingId)]
 );
 
 // Reviews
@@ -181,10 +180,10 @@ export const reviews = pgTable(
     content: text("content"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => ({
-    listingIdIdx: index("reviews_listing_id_idx").on(table.listingId),
-    userIdIdx: index("reviews_user_id_idx").on(table.userId),
-  })
+  (table) => [
+    index("reviews_listing_id_idx").on(table.listingId),
+    index("reviews_user_id_idx").on(table.userId),
+  ]
 );
 
 // User Progress (simplified for unified listings)
@@ -203,14 +202,11 @@ export const userProgress = pgTable(
     visitedAt: timestamp("visited_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => ({
-    userIdIdx: index("user_progress_user_id_idx").on(table.userId),
-    listingIdIdx: index("user_progress_listing_id_idx").on(table.listingId),
-    userListingIdx: index("user_progress_user_listing_idx").on(
-      table.userId,
-      table.listingId
-    ),
-  })
+  (table) => [
+    index("user_progress_user_id_idx").on(table.userId),
+    index("user_progress_listing_id_idx").on(table.listingId),
+    index("user_progress_user_listing_idx").on(table.userId, table.listingId),
+  ]
 );
 
 // Type exports for TypeScript

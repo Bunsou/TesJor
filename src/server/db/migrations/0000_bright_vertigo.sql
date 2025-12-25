@@ -1,5 +1,6 @@
 CREATE TYPE "public"."category" AS ENUM('place', 'food', 'drink', 'souvenir', 'event');--> statement-breakpoint
 CREATE TYPE "public"."price_level" AS ENUM('$', '$$', '$$$', 'Free');--> statement-breakpoint
+CREATE TYPE "public"."province" AS ENUM('All of Cambodia', 'Banteay Meanchey', 'Battambang', 'Kampong Cham', 'Kampong Chhnang', 'Kampong Speu', 'Kampong Thom', 'Kampot', 'Kandal', 'Kep', 'Koh Kong', 'Kratie', 'Mondulkiri', 'Oddar Meanchey', 'Pailin', 'Phnom Penh', 'Preah Sihanouk', 'Preah Vihear', 'Prey Veng', 'Pursat', 'Ratanakiri', 'Siem Reap', 'Stung Treng', 'Svay Rieng', 'Takeo', 'Tboung Khmum');--> statement-breakpoint
 CREATE TYPE "public"."user_role" AS ENUM('user', 'admin');--> statement-breakpoint
 CREATE TABLE "accounts" (
 	"id" text PRIMARY KEY NOT NULL,
@@ -30,12 +31,15 @@ CREATE TABLE "listings" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"slug" text NOT NULL,
 	"category" "category" NOT NULL,
+	"tags" text[] DEFAULT '{}' NOT NULL,
 	"title" text NOT NULL,
 	"title_kh" text,
+	"xp_points" integer DEFAULT 0 NOT NULL,
 	"description" text NOT NULL,
+	"province" "province" NOT NULL,
 	"address_text" text,
-	"lat" double precision NOT NULL,
-	"lng" double precision NOT NULL,
+	"lat" double precision,
+	"lng" double precision,
 	"main_image" text,
 	"price_level" "price_level",
 	"price_details" jsonb,
@@ -86,6 +90,7 @@ CREATE TABLE "users" (
 	"name" text NOT NULL,
 	"image" text,
 	"role" "user_role" DEFAULT 'user' NOT NULL,
+	"xp_points" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")

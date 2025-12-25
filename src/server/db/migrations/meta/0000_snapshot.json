@@ -1,5 +1,5 @@
 {
-  "id": "7d75ffd0-27fd-48ea-8ec9-fb1866f9b1cf",
+  "id": "516018fc-a00f-4780-adae-d4a7283d1bfd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -216,6 +216,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "tags": {
+          "name": "tags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
         "title": {
           "name": "title",
           "type": "text",
@@ -228,9 +235,23 @@
           "primaryKey": false,
           "notNull": false
         },
+        "xp_points": {
+          "name": "xp_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "description": {
           "name": "description",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "province": {
+          "name": "province",
+          "type": "province",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -244,13 +265,13 @@
           "name": "lat",
           "type": "double precision",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "lng": {
           "name": "lng",
           "type": "double precision",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "main_image": {
           "name": "main_image",
@@ -767,6 +788,13 @@
           "notNull": true,
           "default": "'user'"
         },
+        "xp_points": {
+          "name": "xp_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -870,6 +898,38 @@
         "$$",
         "$$$",
         "Free"
+      ]
+    },
+    "public.province": {
+      "name": "province",
+      "schema": "public",
+      "values": [
+        "All of Cambodia",
+        "Banteay Meanchey",
+        "Battambang",
+        "Kampong Cham",
+        "Kampong Chhnang",
+        "Kampong Speu",
+        "Kampong Thom",
+        "Kampot",
+        "Kandal",
+        "Kep",
+        "Koh Kong",
+        "Kratie",
+        "Mondulkiri",
+        "Oddar Meanchey",
+        "Pailin",
+        "Phnom Penh",
+        "Preah Sihanouk",
+        "Preah Vihear",
+        "Prey Veng",
+        "Pursat",
+        "Ratanakiri",
+        "Siem Reap",
+        "Stung Treng",
+        "Svay Rieng",
+        "Takeo",
+        "Tboung Khmum"
       ]
     },
     "public.user_role": {
