@@ -12,6 +12,7 @@ export { ImageCarousel } from "./components/ImageCarousel";
 export { Breadcrumb } from "./components/Breadcrumb";
 export { ItemHeader } from "./components/ItemHeader";
 export { OperatingHours } from "./components/OperatingHours";
+export { PricingDetails } from "./components/PricingDetails";
 export { ReviewsSection } from "./components/ReviewsSection";
 export { ActionHub } from "./components/ActionHub";
 export { MapPreview } from "./components/MapPreview";

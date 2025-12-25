@@ -10,12 +10,14 @@ import {
   Breadcrumb,
   ItemHeader,
   OperatingHours,
+  PricingDetails,
   ReviewsSection,
   ActionHub,
   MapPreview,
   RelatedListings,
 } from "@/features/listings";
 import { OperatingHoursProps } from "../listings/components/OperatingHours";
+import { PricingDetailsProps } from "../listings/components/PricingDetails";
 
 interface Review {
   id: string;
@@ -148,6 +150,15 @@ export default function ExploreDetailClient({
                 item.operatingHours as OperatingHoursProps["operatingHours"]
               }
             />
+
+            {/* Pricing Details */}
+            <PricingDetails
+              priceDetails={
+                item.priceDetails as PricingDetailsProps["priceDetails"]
+              }
+              priceLevel={item.priceLevel}
+            />
+
             <div className="hidden md:block">
               <ReviewsSection
                 item={item}
