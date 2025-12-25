@@ -192,9 +192,11 @@ export default function ReviewsPage() {
               Manage and moderate reviews from the community.
             </p>
           </div>
-          <div className="text-xs font-medium px-3 py-1 bg-white dark:bg-[#2A201D] rounded-full border border-gray-200 dark:border-gray-800 text-gray-600">
-            <span className="text-[#E07A5F] font-bold">{totalItems}</span> Total
-            Reviews
+          <div className="flex items-center gap-3">
+            <div className="text-xs font-medium px-3 py-1 bg-white dark:bg-[#2A201D] rounded-full border border-gray-200 dark:border-gray-800 text-gray-600">
+              <span className="text-[#E07A5F] font-bold">{totalItems}</span>{" "}
+              Total Reviews
+            </div>
           </div>
         </div>
 

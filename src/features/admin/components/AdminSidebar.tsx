@@ -17,7 +17,7 @@ import {
 const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/create", label: "Create Card", icon: PlusCircle },
-  { href: "/admin/places", label: "All Places", icon: List },
+  { href: "/admin/cards", label: "All Cards", icon: List },
   { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/explore", label: "Go to Explore", icon: Home },

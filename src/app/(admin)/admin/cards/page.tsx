@@ -54,7 +54,7 @@ const getCategoryLabel = (category: string) => {
   return labels[category] || category;
 };
 
-export default function AllPlacesPage() {
+export default function AllCardsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -93,7 +93,7 @@ export default function AllPlacesPage() {
     if (debouncedSearch) params.set("search", debouncedSearch);
 
     const queryString = params.toString();
-    router.push(`/admin/places${queryString ? `?${queryString}` : ""}`, {
+    router.push(`/admin/cards${queryString ? `?${queryString}` : ""}`, {
       scroll: false,
     });
   }, [currentPage, categoryFilter, provinceFilter, debouncedSearch, router]);
@@ -108,7 +108,7 @@ export default function AllPlacesPage() {
     if (debouncedSearch) params.set("search", debouncedSearch);
 
     const queryString = params.toString();
-    router.push(`/admin/places${queryString ? `?${queryString}` : ""}`, {
+    router.push(`/admin/cards${queryString ? `?${queryString}` : ""}`, {
       scroll: false,
     });
   }, [currentPage, categoryFilter, provinceFilter, debouncedSearch, router]);
@@ -188,10 +188,10 @@ export default function AllPlacesPage() {
         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
           <span className="hover:text-[#E07A5F] cursor-pointer">Admin</span>
           <ChevronRight className="w-4 h-4" />
-          <span className="hover:text-[#E07A5F] cursor-pointer">Places</span>
+          <span className="hover:text-[#E07A5F] cursor-pointer">Cards</span>
           <ChevronRight className="w-4 h-4" />
           <span className="font-medium text-gray-900 dark:text-white">
-            All Places
+            All Cards
           </span>
         </div>
         <div className="flex gap-3">
@@ -220,7 +220,7 @@ export default function AllPlacesPage() {
           <div className="flex items-center gap-3">
             <div className="text-xs font-medium px-3 py-1 bg-white dark:bg-[#2A201D] rounded-full border border-gray-200 dark:border-gray-800 text-gray-600">
               <span className="text-[#E07A5F] font-bold">{totalItems}</span>{" "}
-              Total Places
+              Total Cards
             </div>
           </div>
         </div>
@@ -393,7 +393,7 @@ export default function AllPlacesPage() {
                           </button>
                           <button
                             onClick={() =>
-                              router.push(`/admin/places/${listing.id}/edit`)
+                              router.push(`/admin/cards/${listing.id}/edit`)
                             }
                             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 hover:text-[#E07A5F] transition-colors"
                             title="Edit"

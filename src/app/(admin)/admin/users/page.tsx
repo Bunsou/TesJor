@@ -156,14 +156,22 @@ export default function UsersPage() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col gap-6 pb-20">
-        {/* Page Header */}
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            User Management
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            View and manage all {totalItems} registered users on TesJor.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          {/* Page Header */}
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+              User Management
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              View and manage all {totalItems} registered users on TesJor.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-xs font-medium px-3 py-1 bg-white dark:bg-[#2A201D] rounded-full border border-gray-200 dark:border-gray-800 text-gray-600">
+              <span className="text-[#E07A5F] font-bold">{totalItems}</span>{" "}
+              Total Users
+            </div>
+          </div>
         </div>
 
         {/* Filters */}

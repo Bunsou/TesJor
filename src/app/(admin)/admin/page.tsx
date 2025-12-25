@@ -95,7 +95,7 @@ export default function AdminDashboardPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-              title="All cards"
+              title="All Cards"
               value={stats ? formatNumber(stats.totalCards) : "0"}
               icon={MapPin}
               iconColor="text-[#E07A5F]"
@@ -146,7 +146,7 @@ export default function AdminDashboardPage() {
                 className="px-4 py-2 bg-[#E07A5F]/10 hover:bg-[#E07A5F]/20 text-[#E07A5F] rounded-xl font-medium text-sm transition-colors flex items-center gap-2"
               >
                 <PlusCircle className="w-4 h-4" />
-                Add New Place
+                Add New Card
               </button>
               <button
                 onClick={() => (window.location.href = "/admin/users")}
