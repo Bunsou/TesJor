@@ -15,6 +15,15 @@ import {
 } from "lucide-react";
 import { getDefaultImage } from "@/lib/default-images";
 import { useDebounce } from "@/hooks/useDebounce";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface Listing {
   id: string;
@@ -74,6 +83,11 @@ export default function AllCardsPage() {
   );
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [listingToDelete, setListingToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   // Debounce search query
   const debouncedSearch = useDebounce(searchQuery, 500);
@@ -155,15 +169,22 @@ export default function AllCardsPage() {
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this listing?")) return;
+  const openDeleteModal = (id: string, title: string) => {
+    setListingToDelete({ id, title });
+    setDeleteModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!listingToDelete) return;
+
+    const toastId = toast.loading("Deleting listing...");
 
     try {
-      const res = await fetch(`/api/admin/listings/${id}`, {
+      const res = await fetch(`/api/admin/listings/${listingToDelete.id}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        setListings(listings.filter((l) => l.id !== id));
+        setListings(listings.filter((l) => l.id !== listingToDelete.id));
         setTotalItems((prev) => prev - 1);
 
         // If we deleted the last item on this page and we're not on page 1, go back one page
@@ -171,13 +192,16 @@ export default function AllCardsPage() {
           setCurrentPage((prev) => prev - 1);
         }
 
-        alert("Listing deleted successfully");
+        toast.success("Listing deleted successfully", { id: toastId });
       } else {
-        alert("Failed to delete listing");
+        toast.error("Failed to delete listing", { id: toastId });
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete listing");
+      toast.error("Failed to delete listing", { id: toastId });
+    } finally {
+      setDeleteModalOpen(false);
+      setListingToDelete(null);
     }
   };
 
@@ -401,7 +425,9 @@ export default function AllCardsPage() {
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(listing.id)}
+                            onClick={() =>
+                              openDeleteModal(listing.id, listing.title)
+                            }
                             className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 hover:text-red-500 transition-colors"
                             title="Delete"
                           >
@@ -511,6 +537,38 @@ export default function AllCardsPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Listing</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {listingToDelete?.title}
+              </span>
+              ? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <button
+              type="button"
+              onClick={() => setDeleteModalOpen(false)}
+              className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
+            >
+              Delete
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

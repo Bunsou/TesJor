@@ -5,6 +5,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronRight, Search, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useDebounce } from "@/hooks/useDebounce";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -24,6 +33,12 @@ export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<{
+    id: string;
+    name: string;
+    email: string;
+  } | null>(null);
 
   // Get state from URL
   const searchQuery = searchParams.get("search") || "";
@@ -64,17 +79,24 @@ export default function UsersPage() {
     fetchUsers();
   }, [currentPage, debouncedSearch, dateFilter, roleFilter, itemsPerPage]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this user?")) return;
+  const openDeleteModal = (id: string, name: string, email: string) => {
+    setUserToDelete({ id, name, email });
+    setDeleteModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!userToDelete) return;
+
+    const toastId = toast.loading("Deleting user...");
 
     try {
-      const response = await fetch(`/api/admin/users/${id}`, {
+      const response = await fetch(`/api/admin/users/${userToDelete.id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
         // Update state
-        setUsers(users.filter((u) => u.id !== id));
+        setUsers(users.filter((u) => u.id !== userToDelete.id));
         const newTotal = totalItems - 1;
         setTotalItems(newTotal);
 
@@ -83,12 +105,17 @@ export default function UsersPage() {
         if (currentPage > totalPages && currentPage > 1) {
           updateURLParams({ page: (currentPage - 1).toString() });
         }
+
+        toast.success("User deleted successfully", { id: toastId });
       } else {
-        alert("Failed to delete user");
+        toast.error("Failed to delete user", { id: toastId });
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("Failed to delete user");
+      toast.error("Failed to delete user", { id: toastId });
+    } finally {
+      setDeleteModalOpen(false);
+      setUserToDelete(null);
     }
   };
 
@@ -350,7 +377,9 @@ export default function UsersPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end gap-2">
                           <button
-                            onClick={() => handleDelete(user.id)}
+                            onClick={() =>
+                              openDeleteModal(user.id, user.name, user.email)
+                            }
                             className="p-1.5 rounded-lg text-gray-600 hover:text-red-500 hover:bg-red-500/10 transition-colors"
                             title="Delete User"
                           >
@@ -503,6 +532,39 @@ export default function UsersPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {userToDelete?.name}
+              </span>{" "}
+              ({userToDelete?.email})? This action cannot be undone and will
+              remove all associated data.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <button
+              type="button"
+              onClick={() => setDeleteModalOpen(false)}
+              className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
+            >
+              Delete
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

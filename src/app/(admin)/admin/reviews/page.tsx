@@ -6,6 +6,15 @@ import { ChevronRight, Search, Trash2 } from "lucide-react";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { useDebounce } from "@/hooks/useDebounce";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface Review {
   id: string;
@@ -58,6 +67,12 @@ export default function ReviewsPage() {
   );
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState<{
+    id: string;
+    userName: string;
+    listingTitle: string;
+  } | null>(null);
 
   // Debounce search query
   const debouncedSearch = useDebounce(searchQuery, 500);
@@ -118,15 +133,26 @@ export default function ReviewsPage() {
     fetchReviews();
   }, [currentPage, ratingFilter, sortFilter, debouncedSearch]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this review?")) return;
+  const openDeleteModal = (
+    id: string,
+    userName: string,
+    listingTitle: string
+  ) => {
+    setReviewToDelete({ id, userName, listingTitle });
+    setDeleteModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!reviewToDelete) return;
+
+    const toastId = toast.loading("Deleting review...");
 
     try {
-      const res = await fetch(`/api/admin/reviews/${id}`, {
+      const res = await fetch(`/api/admin/reviews/${reviewToDelete.id}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        setReviews(reviews.filter((r) => r.id !== id));
+        setReviews(reviews.filter((r) => r.id !== reviewToDelete.id));
         setTotalItems((prev) => prev - 1);
 
         // If we deleted the last item on this page and we're not on page 1, go back one page
@@ -134,13 +160,16 @@ export default function ReviewsPage() {
           setCurrentPage((prev) => prev - 1);
         }
 
-        alert("Review deleted successfully");
+        toast.success("Review deleted successfully", { id: toastId });
       } else {
-        alert("Failed to delete review");
+        toast.error("Failed to delete review", { id: toastId });
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete review");
+      toast.error("Failed to delete review", { id: toastId });
+    } finally {
+      setDeleteModalOpen(false);
+      setReviewToDelete(null);
     }
   };
 
@@ -355,7 +384,13 @@ export default function ReviewsPage() {
                       <td className="p-5 align-top text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button
-                            onClick={() => handleDelete(review.id)}
+                            onClick={() =>
+                              openDeleteModal(
+                                review.id,
+                                review.userName,
+                                review.listingTitle
+                              )
+                            }
                             className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-200"
                             title="Delete"
                           >
@@ -463,6 +498,42 @@ export default function ReviewsPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Review</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete the review from{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {reviewToDelete?.userName}
+              </span>{" "}
+              for{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {reviewToDelete?.listingTitle}
+              </span>
+              ? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <button
+              type="button"
+              onClick={() => setDeleteModalOpen(false)}
+              className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
+            >
+              Delete
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
