@@ -389,8 +389,8 @@ export default function CreateCardPage() {
       const result = await response.json();
       toast.success("Card published successfully!");
 
-      // Redirect to places page
-      window.location.href = "/admin/places";
+      // Redirect to cards page
+      window.location.href = "/admin/cards";
     } catch (error) {
       console.error("Submit error:", error);
       toast.error(
