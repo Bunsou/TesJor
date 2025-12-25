@@ -47,7 +47,7 @@ export default function CreateCardPage() {
     description: "",
     category: "",
     province: "",
-    tags: ["outdoors", "family-friendly"] as string[],
+    tags: [] as string[],
     xpPoints: "",
     address: "",
     lat: "",
