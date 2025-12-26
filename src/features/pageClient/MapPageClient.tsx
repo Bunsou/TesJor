@@ -70,15 +70,16 @@ export default function MapPageClient({
 
   // Center map on target location when map is ready
   useEffect(() => {
-    if (targetLocation && mapRef.current) {
-      // Small delay to ensure map is fully initialized
-      const timer = setTimeout(() => {
-        mapRef.current?.panTo(targetLocation);
-        mapRef.current?.setZoom(15);
-      }, 100);
-      return () => clearTimeout(timer);
+    if (targetLocation && mapRef.current && !isLoading) {
+      // Use requestAnimationFrame for smooth transition without black screen
+      requestAnimationFrame(() => {
+        if (mapRef.current) {
+          mapRef.current.panTo(targetLocation);
+          mapRef.current.setZoom(16);
+        }
+      });
     }
-  }, [targetLocation]);
+  }, [targetLocation, isLoading]);
 
   const handleMarkerClick = (id: string) => {
     if (id === "user-location") return;
@@ -100,7 +101,7 @@ export default function MapPageClient({
       <GoogleMapContainer
         ref={mapRef}
         center={targetLocation || userLocation || undefined}
-        zoom={targetLocation ? 15 : 10}
+        zoom={targetLocation ? 16 : 10}
         markers={markers}
         onMarkerClick={handleMarkerClick}
         className="w-full h-full"
