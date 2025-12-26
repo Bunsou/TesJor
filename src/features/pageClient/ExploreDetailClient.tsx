@@ -70,8 +70,39 @@ export default function ExploreDetailClient({
 
   const handleGetDirections = () => {
     if (!data?.item.lat || !data?.item.lng) return;
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${data.item.lat},${data.item.lng}`;
-    window.open(url, "_blank");
+
+    // Try to get user's current location with high accuracy
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Use user's current location as origin with full precision
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+
+          // Log accuracy for debugging
+          console.log("Location accuracy:", position.coords.accuracy, "meters");
+          console.log("User location:", userLat, userLng);
+
+          const url = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${data.item.lat},${data.item.lng}&travelmode=driving`;
+          window.open(url, "_blank");
+        },
+        (error) => {
+          // If location access is denied or fails, open without origin (Google Maps will prompt)
+          console.error("Location error:", error.code, error.message);
+          const url = `https://www.google.com/maps/dir/?api=1&destination=${data.item.lat},${data.item.lng}`;
+          window.open(url, "_blank");
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      // Browser doesn't support geolocation, open without origin
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.item.lat},${data.item.lng}`;
+      window.open(url, "_blank");
+    }
   };
 
   if (isLoading) {
