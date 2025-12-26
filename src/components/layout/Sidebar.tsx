@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Home, Map, Bookmark, User, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/hooks/useSession";
@@ -23,6 +23,7 @@ const adminNavItem = {
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { session, isLoading } = useSession();
   const isAdmin = session?.user?.role === "admin";
 
@@ -44,10 +45,10 @@ export function Sidebar() {
             const isActive = pathname.startsWith(href);
             return (
               <li key={href}>
-                <Link
-                  href={href}
+                <button
+                  onClick={() => router.push(href)}
                   className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors w-full text-left",
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-foreground-muted hover:bg-accent hover:text-primary-foreground"
@@ -55,7 +56,7 @@ export function Sidebar() {
                 >
                   <Icon className="w-5 h-5" />
                   <span className="font-medium">{label}</span>
-                </Link>
+                </button>
               </li>
             );
           })}
