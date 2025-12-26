@@ -33,6 +33,7 @@ export const tags = [
   "ancient",
   "art gallery",
   "beach",
+  "city",
   "cultural",
   "family-friendly",
   "historical",
