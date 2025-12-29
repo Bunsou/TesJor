@@ -53,19 +53,21 @@ export function ActionHub({
           <span className="material-symbols-outlined text-sm">
             <Zap size={16} className="md:w-5 md:h-5" />
           </span>
-          +{item.xpPoints} XP
+          +{item.xpPoints ?? 0} XP
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 md:gap-3">
-        <button
-          onClick={onGetDirections}
-          className="col-span-1 md:col-span-2 w-full px-4 md:px-5 py-3 md:py-4 rounded-xl bg-[#E07A5F] hover:bg-[#c66a50] text-white font-bold text-sm transition-all shadow-lg shadow-[#E07A5F]/30 hover:shadow-[#E07A5F]/40 flex items-center justify-center gap-2 transform active:scale-[0.98] min-h-[48px]"
-        >
-          <span className="material-symbols-outlined">
-            <MapPinned size={18} className="md:w-5 md:h-5" />
-          </span>
-          Get Directions
-        </button>
+        {typeof item.lat === 'number' && typeof item.lng === 'number' && !isNaN(item.lat) && !isNaN(item.lng) && (
+          <button
+            onClick={onGetDirections}
+            className="col-span-1 md:col-span-2 w-full px-4 md:px-5 py-3 md:py-4 rounded-xl bg-[#E07A5F] hover:bg-[#c66a50] text-white font-bold text-sm transition-all shadow-lg shadow-[#E07A5F]/30 hover:shadow-[#E07A5F]/40 flex items-center justify-center gap-2 transform active:scale-[0.98] min-h-[48px]"
+          >
+            <span className="material-symbols-outlined">
+              <MapPinned size={18} className="md:w-5 md:h-5" />
+            </span>
+            {"Get Directions"}
+          </button>
+        )}
         <button
           onClick={() =>
             handleAuthRequired(
@@ -125,11 +127,11 @@ export function ActionHub({
           {isBookmarked ? "Saved" : "Bookmark"}
         </button>
       </div>
-      {!isLoading && !session && (
+      {!isLoading && !session ? (
         <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 text-center">
           Sign in to bookmark or mark as visited
         </p>
-      )}
+      ) : null}
       <SignInModal
         isOpen={showSignInModal}
         onClose={() => setShowSignInModal(false)}

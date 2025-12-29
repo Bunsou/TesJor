@@ -213,7 +213,10 @@ export default function ExploreDetailClient({
               />
             </div>
 
-            {item.lat && item.lng && (
+            {typeof item.lat === "number" &&
+            typeof item.lng === "number" &&
+            !isNaN(item.lat) &&
+            !isNaN(item.lng) ? (
               <div className="order-1 md:order-2">
                 <MapPreview
                   lat={item.lat}
@@ -222,7 +225,7 @@ export default function ExploreDetailClient({
                   province={item.province}
                 />
               </div>
-            )}
+            ) : null}
 
             {/* You might also like */}
             <div className="order-3">
