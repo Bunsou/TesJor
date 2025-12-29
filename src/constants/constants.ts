@@ -28,6 +28,7 @@ export const provinces = [
 ];
 
 export const tags = [
+  "All Types",
   "beach",
   "mountain",
   "museum",
