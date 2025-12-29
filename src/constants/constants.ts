@@ -28,33 +28,15 @@ export const provinces = [
 ];
 
 export const tags = [
-  "All Types",
-  "adventure",
-  "ancient",
-  "art gallery",
   "beach",
-  "city",
-  "cultural",
-  "family-friendly",
-  "historical",
-  "international",
-  "island",
-  "local",
   "mountain",
   "museum",
-  "nature",
-  "night market",
-  "outdoors",
-  "religious",
-  "romantic",
-  "shopping mall",
-  "street food",
   "temple",
-  "unesco",
+  "night market",
   "waterfall",
+  "local",
+  "festival",
   "wildlife",
-  "village",
-  "zoo",
 ];
 
 export const categories = [
