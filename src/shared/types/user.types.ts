@@ -40,7 +40,6 @@ export interface UserProgress {
   placeId?: string | null;
   eventId?: string | null;
   foodId?: string | null;
-  drinkId?: string | null;
   souvenirId?: string | null;
   createdAt: Date;
 }
@@ -50,7 +49,6 @@ export interface UserStats {
   totalBookmarked: number;
   placesVisited: number;
   eventsVisited: number;
-  foodsVisited: number;
-  drinksVisited: number;
+  foodVisited: number;
   souvenirsVisited: number;
 }

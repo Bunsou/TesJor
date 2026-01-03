@@ -10,7 +10,7 @@ export const TERMS_OF_SERVICE = {
     {
       title: "2. Use of Service",
       content:
-        "TesJor provides a platform for discovering and exploring places, events, food, drinks, and souvenirs. You agree to use the service only for lawful purposes and in accordance with these Terms of Service.",
+        "TesJor provides a platform for discovering and exploring places, events, food, and souvenirs. You agree to use the service only for lawful purposes and in accordance with these Terms of Service.",
     },
     {
       title: "3. User Accounts",

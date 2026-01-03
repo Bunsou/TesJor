@@ -21,11 +21,6 @@ const getCategoryStyle = (category: string) => {
         bg: "bg-amber-100 dark:bg-amber-900/30",
         text: "text-amber-600 dark:text-amber-400",
       };
-    case "drink":
-      return {
-        bg: "bg-purple-100 dark:bg-purple-900/30",
-        text: "text-purple-600 dark:text-purple-400",
-      };
     case "souvenir":
       return {
         bg: "bg-pink-100 dark:bg-pink-900/30",

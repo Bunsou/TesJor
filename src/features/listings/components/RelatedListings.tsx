@@ -14,8 +14,7 @@ const getCategoryLabel = (category: string): string => {
   const labels: Record<string, string> = {
     place: "Place",
     event: "Event",
-    food: "Food",
-    drink: "Drink",
+    food: "Food & Drink",
     souvenir: "Souvenir",
   };
   return labels[category] || category;
@@ -26,7 +25,6 @@ const getCategoryColor = (category: string): string => {
     place: "text-blue-600 dark:text-blue-400",
     event: "text-purple-600 dark:text-purple-400",
     food: "text-orange-600 dark:text-orange-400",
-    drink: "text-green-600 dark:text-green-400",
     souvenir: "text-pink-600 dark:text-pink-400",
   };
   return colors[category] || "text-gray-600 dark:text-gray-400";

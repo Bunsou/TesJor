@@ -9,7 +9,7 @@ export type ListingWithDistance = Listing & {
   distance?: number; // Distance in kilometers (optional, for nearby/map features)
 };
 
-// export type Category = "place" | "food" | "drink" | "souvenir" | "event";
+// export type Category = "place" | "food" | "souvenir" | "event";
 // export type PriceLevel = "$" | "$$" | "$$$" | "Free";
 
 // export interface PriceDetail {

@@ -16,7 +16,6 @@ function getCategoryStyle(category: string) {
     place: "bg-green-600/90",
     event: "bg-blue-500/90",
     food: "bg-orange-500/90",
-    drink: "bg-purple-500/90",
     souvenir: "bg-pink-500/90",
   };
   return styles[category] || "bg-[#E07A5F]/90";

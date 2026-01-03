@@ -43,7 +43,6 @@ export const tags = [
 export const categories = [
   { label: "Places", value: "place" },
   { label: "Events", value: "event" },
-  { label: "Foods", value: "food" },
-  { label: "Drinks", value: "drink" },
+  { label: "Food & Drink", value: "food" },
   { label: "Souvenirs", value: "souvenir" },
 ];

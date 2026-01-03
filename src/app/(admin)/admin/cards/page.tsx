@@ -42,8 +42,6 @@ const getCategoryColor = (category: string) => {
     place:
       "bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400 border-orange-100 dark:border-orange-500/20",
     food: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border-blue-100 dark:border-blue-500/20",
-    drink:
-      "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 border-green-100 dark:border-green-500/20",
     souvenir:
       "bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400 border-purple-100 dark:border-purple-500/20",
     event:
@@ -55,8 +53,7 @@ const getCategoryColor = (category: string) => {
 const getCategoryLabel = (category: string) => {
   const labels: Record<string, string> = {
     place: "Place",
-    food: "Food",
-    drink: "Drink",
+    food: "Food & Drink",
     souvenir: "Souvenir",
     event: "Event",
   };
@@ -260,8 +257,7 @@ export default function AllCardsPage() {
             >
               <option value="">All Categories</option>
               <option value="place">Place</option>
-              <option value="food">Food</option>
-              <option value="drink">Drink</option>
+              <option value="food">Food & Drink</option>
               <option value="souvenir">Souvenir</option>
               <option value="event">Event</option>
             </select>
@@ -342,7 +338,6 @@ export default function AllCardsPage() {
                                   listing.category as
                                     | "place"
                                     | "food"
-                                    | "drink"
                                     | "souvenir"
                                     | "event"
                                 )

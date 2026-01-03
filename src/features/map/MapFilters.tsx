@@ -42,17 +42,10 @@ const CATEGORY_CONFIG = [
   },
   {
     value: "food",
-    label: "Food",
+    label: "Food & Drink",
     icon: UtensilsCrossed,
     color: "text-amber-500",
     bgColor: "bg-amber-500",
-  },
-  {
-    value: "drink",
-    label: "Drinks",
-    icon: Coffee,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500",
   },
   {
     value: "souvenir",

@@ -59,13 +59,12 @@ export function formatPriceRange(min?: number, max?: number): string {
 
 // Category utilities
 export function getCategoryDisplayName(
-  category: "places" | "events" | "foods" | "drinks" | "souvenirs"
+  category: "places" | "events" | "food" | "souvenirs"
 ): string {
   const names = {
     places: "Places",
     events: "Events",
-    foods: "Foods",
-    drinks: "Drinks",
+    food: "Food & Drink",
     souvenirs: "Souvenirs",
   };
   return names[category];

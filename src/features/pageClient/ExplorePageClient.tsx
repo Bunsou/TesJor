@@ -36,13 +36,8 @@ const categories: CategoryOption[] = [
   },
   {
     id: "food",
-    label: "Foods",
+    label: "Food & Drink",
     icon: <Utensils className="h-4 w-4 md:h-5 md:w-5" />,
-  },
-  {
-    id: "drink",
-    label: "Drinks",
-    icon: <Wine className="h-4 w-4 md:h-5 md:w-5" />,
   },
   {
     id: "souvenir",

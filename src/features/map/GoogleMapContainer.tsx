@@ -215,8 +215,7 @@ function createInfoWindowContent(
     { bg: string; text: string; name: string }
   > = {
     place: { bg: "#FEF3C7", text: "#92400E", name: "Place" },
-    food: { bg: "#FEE2E2", text: "#991B1B", name: "Food" },
-    drink: { bg: "#E0E7FF", text: "#3730A3", name: "Drink" },
+    food: { bg: "#FEE2E2", text: "#991B1B", name: "Food & Drink" },
     event: { bg: "#D1FAE5", text: "#065F46", name: "Event" },
     souvenir: { bg: "#FCE7F3", text: "#831843", name: "Souvenir" },
   };

@@ -17,8 +17,6 @@ export function CategoryBadge({
       event:
         "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
       food: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
-      drink:
-        "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
       souvenir:
         "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
     };
@@ -37,7 +35,7 @@ export function CategoryBadge({
         category
       )} ${className}`}
     >
-      {category}
+      {category === "food" ? "Food & Drink" : category}
     </span>
   );
 }

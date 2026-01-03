@@ -4,8 +4,7 @@ const CATEGORY_OPTIONS = [
   { id: "all", label: "All", icon: "apps" },
   { id: "place", label: "Cultural", icon: "temple_buddhist" },
   { id: "event", label: "Events", icon: "celebration" },
-  { id: "food", label: "Food", icon: "restaurant" },
-  { id: "drink", label: "Drinks", icon: "local_cafe" },
+  { id: "food", label: "Food & Drink", icon: "restaurant" },
   { id: "souvenir", label: "Shops", icon: "storefront" },
 ];
 

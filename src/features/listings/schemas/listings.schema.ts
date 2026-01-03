@@ -1,13 +1,7 @@
 import { z } from "zod";
 
 // Category enum
-export const categoryEnum = z.enum([
-  "place",
-  "food",
-  "drink",
-  "souvenir",
-  "event",
-]);
+export const categoryEnum = z.enum(["place", "food", "souvenir", "event"]);
 
 // Price level enum
 export const priceLevelEnum = z.enum(["$", "$$", "$$$", "Free"]);

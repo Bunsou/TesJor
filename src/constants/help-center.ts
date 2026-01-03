@@ -5,7 +5,7 @@ export const HELP_CENTER = {
     {
       title: "Getting Started",
       content:
-        "Welcome to TesJor! To get started, simply sign in with your Google account. Once signed in, you can explore places, events, food, drinks, and souvenirs. Use the search and filter features to find exactly what you're looking for.",
+        "Welcome to TesJor! To get started, simply sign in with your Google account. Once signed in, you can explore places, events, food, and souvenirs. Use the search and filter features to find exactly what you're looking for.",
     },
     {
       title: "How to Bookmark Places",
@@ -25,7 +25,7 @@ export const HELP_CENTER = {
     {
       title: "Using Filters and Search",
       content:
-        "Use the category tabs (Places, Events, Food, Drinks, Souvenirs) to browse specific types of content. The search bar lets you find items by name. You can also filter by price range to match your budget.",
+        "Use the category tabs (Places, Events, Food, Souvenirs) to browse specific types of content. The search bar lets you find items by name. You can also filter by price range to match your budget.",
     },
     {
       title: "Viewing Your Saved Items",

@@ -261,7 +261,7 @@ const sampleListings: NewListing[] = [
   },
 
   // ========================================
-  // FOODS
+  // FOOD
   // ========================================
   {
     slug: generateSlug("Fish Amok"),
@@ -353,11 +353,11 @@ const sampleListings: NewListing[] = [
   },
 
   // ========================================
-  // DRINKS
+  // DRINKS (now categorized as food)
   // ========================================
   {
     slug: generateSlug("Palm Juice"),
-    category: "drink",
+    category: "food",
     tags: ["traditional", "sweet", "natural", "refreshing"],
     title: "Palm Juice (Tuk Tnout Choo)",
     titleKh: "ទឹកត្នោតជ្រូក",
@@ -374,7 +374,7 @@ const sampleListings: NewListing[] = [
   },
   {
     slug: generateSlug("Iced Coffee"),
-    category: "drink",
+    category: "food",
     tags: ["coffee", "iced", "traditional", "breakfast"],
     title: "Teuk Krola Paeng (Iced Coffee)",
     titleKh: "ទឹកកាហ្វេប៉េងខ្មៅ",
@@ -391,7 +391,7 @@ const sampleListings: NewListing[] = [
   },
   {
     slug: generateSlug("Sugarcane Juice"),
-    category: "drink",
+    category: "food",
     tags: ["juice", "sweet", "fresh", "natural"],
     title: "Sugarcane Juice (Tuk Ampov)",
     titleKh: "ទឹកអំពៅ",
@@ -408,7 +408,7 @@ const sampleListings: NewListing[] = [
   },
   {
     slug: generateSlug("Num Tkak Cho"),
-    category: "drink",
+    category: "food",
     tags: ["smoothie", "traditional", "healthy", "breakfast"],
     title: "Num Tkak Cho (Lime Shake)",
     titleKh: "នំត្កាកឈូ",
@@ -767,7 +767,7 @@ const sampleListings: NewListing[] = [
   },
 
   // ========================================
-  // ADDITIONAL FOODS
+  // ADDITIONAL FOOD
   // ========================================
   {
     slug: generateSlug("Kuy Teav"),
@@ -873,11 +873,11 @@ const sampleListings: NewListing[] = [
   },
 
   // ========================================
-  // ADDITIONAL DRINKS
+  // ADDITIONAL DRINKS (now categorized as food)
   // ========================================
   {
     slug: generateSlug("Coconut Water"),
-    category: "drink",
+    category: "food",
     tags: ["coconut", "fresh", "natural", "refreshing"],
     title: "Fresh Coconut Water (Teuk Doh)",
     titleKh: "ទឹកដូង",
@@ -894,7 +894,7 @@ const sampleListings: NewListing[] = [
   },
   {
     slug: generateSlug("Fruit Shake"),
-    category: "drink",
+    category: "food",
     tags: ["smoothie", "fruit", "fresh", "healthy"],
     title: "Cambodian Fruit Shake",
     titleKh: "ទឹកផ្លែឈើ",
@@ -911,7 +911,7 @@ const sampleListings: NewListing[] = [
   },
   {
     slug: generateSlug("Golden Muscle Wine"),
-    category: "drink",
+    category: "food",
     tags: ["wine", "traditional", "herbal", "tonic"],
     title: "Golden Muscle Wine",
     titleKh: "ស្រាសាច់ចំណេញ",
@@ -928,7 +928,7 @@ const sampleListings: NewListing[] = [
   },
   {
     slug: generateSlug("Angkor Beer"),
-    category: "drink",
+    category: "food",
     tags: ["beer", "local", "refreshing", "popular"],
     title: "Angkor Beer",
     titleKh: "ស្រាបៀរអង្គរ",

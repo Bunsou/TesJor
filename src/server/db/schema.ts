@@ -18,7 +18,6 @@ export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 export const categoryEnum = pgEnum("category", [
   "place",
   "food",
-  "drink",
   "souvenir",
   "event",
 ]);
