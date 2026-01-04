@@ -11,9 +11,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "TesJor - Discover Hidden Cambodia",
+  title: "TesJor - Unlock the Real Cambodia Beyond the Temples",
   description:
-    "Your gamified companion to explore authentic Cambodian experiences beyond Angkor Wat. Discover hidden villages, local cuisine, and cultural treasures.",
+    "Your guiding companion to explore authentic Cambodian experiences beyond Angkor Wat. Discover hidden villages, local cuisine, and cultural treasures.",
   keywords: [
     "Cambodia travel",
     "hidden gems",
