@@ -1,14 +1,10 @@
 import { NextRequest } from "next/server";
-import { asyncHandler, requireAuth } from "@/server/middleware";
+import { asyncHandler } from "@/server/middleware";
 import { sendSuccessResponse } from "@/shared/utils";
 import { log } from "@/shared/utils";
 import { getAllListings } from "@/server/services/listings";
 
 export const GET = asyncHandler(async (request: NextRequest) => {
-  // Require authentication
-  await requireAuth(request);
-
-  console.log("Hello 11");
   // Get category filter from query params
   const { searchParams } = new URL(request.url);
   const categoryParam = searchParams.get("category");
