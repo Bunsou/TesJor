@@ -3,12 +3,24 @@
 const isDevelopment =
   typeof process !== "undefined" && process.env?.NODE_ENV === "development";
 
+const errorReplacer = (_key: string, value: unknown) => {
+  if (value instanceof Error) {
+    return {
+      name: value.name,
+      message: value.message,
+      stack: value.stack,
+      ...(value.cause ? { cause: value.cause } : {}),
+    };
+  }
+  return value;
+};
+
 const formatMessage = (level: string, message: string, meta?: unknown) => {
   const timestamp = new Date().toISOString();
   let msg = `${timestamp} [${level.toUpperCase()}]: ${message}`;
 
   if (meta && Object.keys(meta as object).length > 0) {
-    msg += `\n${JSON.stringify(meta, null, 2)}`;
+    msg += `\n${JSON.stringify(meta, errorReplacer, 2)}`;
   }
 
   return msg;
