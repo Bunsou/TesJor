@@ -13,7 +13,7 @@ import {
   PricingDetails,
   ReviewsSection,
   ActionHub,
-  MapPreview,
+  // MapPreview,
   RelatedListings,
 } from "@/features/listings";
 import { OperatingHoursProps } from "../listings/components/OperatingHours";
@@ -213,6 +213,7 @@ export default function ExploreDetailClient({
               />
             </div>
 
+            {/* Map preview disabled: Google Maps Embed API requires billing.
             {typeof item.lat === "number" &&
             typeof item.lng === "number" &&
             !isNaN(item.lat) &&
@@ -226,6 +227,7 @@ export default function ExploreDetailClient({
                 />
               </div>
             ) : null}
+            */}
 
             {/* You might also like */}
             <div className="order-3">
